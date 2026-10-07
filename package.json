@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/motion.mjs && node tests/stress.mjs",
+    "build": "node scripts/build-site.mjs",
+    "test": "node tests/versions.mjs && node tests/motion.mjs && node tests/stress.mjs",
     "test:stress": "node tests/stress.mjs --rounds=10"
   },
   "devDependencies": {

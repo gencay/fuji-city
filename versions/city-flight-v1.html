@@ -122,7 +122,8 @@
       transform: rotate(-2deg);
     }
     .aperture { width: 200px; height: 200px; overflow: hidden; background: var(--cp-film-road); }
-    canvas { display: block; width: 200px; height: 200px; }
+    canvas { display: block; width: 200px; height: 200px; cursor: crosshair; touch-action: manipulation; }
+    canvas:focus-visible { outline: 2px solid var(--cp-film-white); outline-offset: -3px; }
     figcaption { padding: 16px 0 18px; }
     .handwritten { font: italic 18px/1.3 Georgia, "Times New Roman", serif; }
     .film-meta { display: flex; justify-content: space-between; margin-top: 9px; font-size: 8px; letter-spacing: .08em; }
@@ -173,14 +174,14 @@
 <!-- CITY VERSION NAV START -->
       <nav class="version-bar" aria-label="City flight version history">
         <details class="version-picker">
-          <summary aria-label="Version history, v0, archived">v0</summary>
+          <summary aria-label="Version history, v1, archived">v1</summary>
           <div class="version-panel">
-            <p><strong>Historical snapshot · v0</strong><br>The first miniature</p>
+            <p><strong>Historical snapshot · v1</strong><br>Click a lane</p>
             <p>Original simulation preserved; only this version navigator was added. Historical limitations remain.</p>
             <ol class="version-list">
-              <li><a href="city-flight.html"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations with 102 seeded architectural motifs, including Antalya&#39;s Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.</span></a></li>
-              <li><a href="city-flight-v0.html" aria-current="page"><strong>v0 — The first miniature</strong><span>200 px procedural city, pedestrians, traffic and faded Chrome-style film.</span></a></li>
-              <li><a href="city-flight-v1.html"><strong>v1 — Click a lane</strong><span>Lane-click cars, legal directions, keyboard aiming and an original WAV chime.</span></a></li>
+              <li><a href="../city-flight.html"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations with 102 seeded architectural motifs, including Antalya&#39;s Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.</span></a></li>
+              <li><a href="city-flight-v0.html"><strong>v0 — The first miniature</strong><span>200 px procedural city, pedestrians, traffic and faded Chrome-style film.</span></a></li>
+              <li><a href="city-flight-v1.html" aria-current="page"><strong>v1 — Click a lane</strong><span>Lane-click cars, legal directions, keyboard aiming and an original WAV chime.</span></a></li>
               <li><a href="city-flight-v2.html"><strong>v2 — Helicopter recovery</strong><span>Rooftop helicopters lift crashed vehicles into a collection bay.</span></a></li>
               <li><a href="city-flight-v3.html"><strong>v3 — Films, cities and motorcycles</strong><span>20 film approximations, seven named cities, blue motorcycles, filtering and continuous rotor audio.</span></a></li>
               <li><a href="city-flight-v4.html"><strong>v4 — A living soundtrack</strong><span>Generative music, safer ambient traffic, local crash queues, water falls and night lighting.</span></a></li>
@@ -201,8 +202,8 @@
 <!-- CITY VERSION NAV END -->
     <figure>
       <div class="aperture">
-        <canvas id="city" width="400" height="400" role="img"
-          aria-label="A procedural bird's-eye flight over a miniature city, with moving cars and walking people, in faded vintage color.">
+        <canvas id="city" width="400" height="400" role="img" tabindex="0" aria-describedby="spawn-help"
+          aria-label="Interactive bird's-eye city. Click a road lane to add a car. Keyboard: arrow keys move the crosshair; Enter or Space adds a car.">
           Your browser needs Canvas support to show the city.
         </canvas>
       </div>
@@ -214,8 +215,10 @@
     <div class="controls" aria-label="Film controls">
       <button id="pause" type="button" aria-pressed="false">Pause</button>
       <button id="new" type="button">New roll</button>
+      <button id="sound" type="button" aria-pressed="true" aria-label="Spawn sound">Sound on</button>
     </div>
     <p class="note">200 × 200 · made as you fly<br>no footage. no map. just a passing moment.</p>
+    <p class="note" id="spawn-help">Click a lane to add a car.<br>Keyboard: arrows to aim, Enter to add.</p>
     <p id="status" role="status" aria-live="polite"></p>
   </main>
   <script>
@@ -241,7 +244,14 @@
       const ROAD = 30;
       const ZOOM = .72;
       const FRAME_TIME = 1000 / 24;
+      const carPaints = ["car", "white", "red", "roof-blue", "black", "gold"];
       const tiles = new Map();
+      const spawnedCars = [];
+      const activeSounds = new Set();
+      const aim = { x: SIZE / 2, y: SIZE / 2 };
+      let keyboardAim = false;
+      let screenToWorld;
+      let soundEnabled = true;
       const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
       const deviceTheme = matchMedia("(prefers-color-scheme: dark)");
       let seed = newSeed();
@@ -261,6 +271,105 @@
         return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
       }
       const mod = (n, m) => ((n % m) + m) % m;
+      function pick(items) {
+        return items[Math.floor(newSeed() / 4294967296 * items.length)];
+      }
+      function laneRules(road, axis, lane) {
+        return {
+          axis, road, lane,
+          dir: lane ? -1 : 1,
+          speed: 14 + hash(road, axis, 300 + lane) * 7,
+          across: road * BLOCK + (lane ? 9 : 21)
+        };
+      }
+      function lanesAt(x, y) {
+        const lanes = [];
+        for (let axis = 0; axis < 2; axis++) {
+          const cross = axis ? x : y;
+          const local = mod(cross, BLOCK);
+          if (local >= ROAD) continue;
+          const road = Math.floor(cross / BLOCK);
+          // The center marking is equally close to both lanes; junctions admit both axes.
+          const choices = Math.abs(local - ROAD / 2) < 1 ? [0, 1] : [local < ROAD / 2 ? 1 : 0];
+          for (const lane of choices) lanes.push(laneRules(road, axis, lane));
+        }
+        return lanes;
+      }
+      function makeSpawnWav() {
+        const rate = 22050;
+        const count = Math.round(rate * .48);
+        const bytes = new ArrayBuffer(44 + count * 2);
+        const wav = new DataView(bytes);
+        const text = (offset, value) => [...value].forEach((char, i) => wav.setUint8(offset + i, char.charCodeAt(0)));
+        text(0, "RIFF"); wav.setUint32(4, bytes.byteLength - 8, true);
+        text(8, "WAVE"); text(12, "fmt "); wav.setUint32(16, 16, true);
+        wav.setUint16(20, 1, true); wav.setUint16(22, 1, true);
+        wav.setUint32(24, rate, true); wav.setUint32(28, rate * 2, true);
+        wav.setUint16(32, 2, true); wav.setUint16(34, 16, true);
+        text(36, "data"); wav.setUint32(40, count * 2, true);
+        // Original felt-like pluck: a soft attack, glassy partials, and a short rising answer.
+        for (let i = 0; i < count; i++) {
+          const t = i / rate;
+          let sample = 0;
+          for (const [start, frequency, gain] of [[0, 523.25, .29], [.065, 783.99, .16]]) {
+            const age = t - start;
+            if (age < 0) continue;
+            const envelope = (1 - Math.exp(-age * 650)) * Math.exp(-age * 12);
+            sample += gain * envelope * (
+              Math.sin(2 * Math.PI * frequency * age) +
+              .22 * Math.sin(2 * Math.PI * frequency * 2.003 * age) +
+              .06 * Math.sin(2 * Math.PI * frequency * 3.98 * age)
+            );
+          }
+          const fade = Math.min(1, (count - 1 - i) / (rate * .025));
+          wav.setInt16(44 + i * 2, Math.round(Math.max(-1, Math.min(1, sample * fade)) * 32767), true);
+        }
+        return bytes;
+      }
+      const spawnSoundUrl = URL.createObjectURL(new Blob([makeSpawnWav()], { type: "audio/wav" }));
+      function stopSounds() {
+        for (const audio of activeSounds) audio.pause();
+        activeSounds.clear();
+      }
+      function playSpawnSound() {
+        if (!soundEnabled) return;
+        if (activeSounds.size >= 6) {
+          const oldest = activeSounds.values().next().value;
+          oldest.pause();
+          activeSounds.delete(oldest);
+        }
+        const audio = new Audio(spawnSoundUrl);
+        audio.volume = .65;
+        activeSounds.add(audio);
+        audio.addEventListener("ended", () => activeSounds.delete(audio), { once: true });
+        audio.play().catch(error => {
+          const wasActive = activeSounds.delete(audio);
+          if (error.name === "AbortError" && !wasActive) return;
+          console.error("City spawn sound could not play:", error);
+          status.textContent = "Car added, but sound could not play. Check your browser's audio permissions.";
+        });
+      }
+      function spawnAt(screenX, screenY) {
+        const point = screenToWorld.transformPoint({
+          x: screenX * canvas.width / SIZE,
+          y: screenY * canvas.height / SIZE
+        });
+        const choices = lanesAt(point.x, point.y);
+        if (!choices.length) {
+          status.textContent = "Choose a road lane, not a building or sidewalk.";
+          return;
+        }
+        const rules = pick(choices);
+        spawnedCars.push({
+          ...rules,
+          start: rules.axis ? point.y : point.x,
+          born: time,
+          paint: pick(carPaints)
+        });
+        status.textContent = paused ? "Car added. Press Play to set it moving." : "Car added to the lane.";
+        playSpawnSound();
+        draw();
+      }
       function rect(g, fill, x, y, w, h) {
         g.fillStyle = colors[fill];
         g.fillRect(x, y, w, h);
@@ -426,14 +535,12 @@
         ctx.restore();
       }
       function traffic(cameraX, cameraY, radius) {
-        const paints = ["car", "white", "red", "roof-blue", "black", "gold"];
         for (let axis = 0; axis < 2; axis++) {
           const cross = axis ? cameraX : cameraY;
           const along = axis ? cameraY : cameraX;
           for (let road = Math.floor((cross - radius) / BLOCK); road <= Math.ceil((cross + radius) / BLOCK); road++) {
             for (let lane = 0; lane < 2; lane++) {
-              const dir = lane ? -1 : 1;
-              const speed = 14 + hash(road, axis, 300 + lane) * 7;
+              const { dir, speed, across } = laneRules(road, axis, lane);
               const travel = time * speed * dir;
               const spacing = 70;
               // Enumerate moving world-space slots, not screen-space spawns.
@@ -442,14 +549,26 @@
               for (let slot = first; slot <= last; slot++) {
                 if (hash(road, slot, 310 + axis * 2 + lane) < .26) continue;
                 const pos = slot * spacing + travel + hash(road, slot, 320 + lane) * 22;
-                const across = road * BLOCK + (lane ? 9 : 21);
-                const shade = paints[Math.floor(hash(road, slot, 330 + axis + lane) * paints.length)];
+                const shade = carPaints[Math.floor(hash(road, slot, 330 + axis + lane) * carPaints.length)];
                 car(axis ? across : pos, axis ? pos : across,
                   axis * Math.PI / 2 + (dir < 0 ? Math.PI : 0),
                   shade, hash(road, slot, 340 + lane) < .12);
               }
             }
           }
+        }
+      }
+      function spawnedTraffic(cameraX, cameraY, radius) {
+        for (let i = spawnedCars.length - 1; i >= 0; i--) {
+          const vehicle = spawnedCars[i];
+          const pos = vehicle.start + (time - vehicle.born) * vehicle.speed * vehicle.dir;
+          const x = vehicle.axis ? vehicle.across : pos;
+          const y = vehicle.axis ? pos : vehicle.across;
+          if (Math.abs(x - cameraX) > radius || Math.abs(y - cameraY) > radius) {
+            spawnedCars.splice(i, 1);
+            continue;
+          }
+          car(x, y, vehicle.axis * Math.PI / 2 + (vehicle.dir < 0 ? Math.PI : 0), vehicle.paint, false);
         }
       }
       const grains = Array.from({ length: 8 }, (_, index) => {
@@ -483,6 +602,7 @@
         ctx.rotate(angle);
         ctx.scale(ZOOM, ZOOM);
         ctx.translate(-cameraX, -cameraY);
+        screenToWorld = ctx.getTransform().inverse();
         const radius = 235;
         const visible = new Set();
         const blocks = [];
@@ -498,8 +618,16 @@
         // Evict departed blocks; deterministic coordinates reproduce them if revisited.
         for (const key of tiles.keys()) if (!visible.has(key)) tiles.delete(key);
         traffic(cameraX, cameraY, radius);
+        spawnedTraffic(cameraX, cameraY, radius);
         for (const [bx, by] of blocks) people(bx, by);
         ctx.restore();
+        if (keyboardAim) {
+          ctx.strokeStyle = colors.white;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(aim.x - 4, aim.y - 4, 8, 8);
+          ctx.strokeStyle = colors.black;
+          ctx.strokeRect(aim.x - 5, aim.y - 5, 10, 10);
+        }
         ctx.globalAlpha = .07;
         rect(ctx, "warm", 0, 0, SIZE, SIZE);
         ctx.globalAlpha = .055;
@@ -534,6 +662,32 @@
         document.getElementById("pause").setAttribute("aria-pressed", String(paused));
         if (!paused && !document.hidden) request = requestAnimationFrame(tick);
       }
+      canvas.addEventListener("click", event => {
+        keyboardAim = false;
+        // offsetX/Y are element-local, undoing the paper's CSS rotation before the camera inverse.
+        spawnAt(event.offsetX * SIZE / canvas.clientWidth, event.offsetY * SIZE / canvas.clientHeight);
+      });
+      canvas.addEventListener("keydown", event => {
+        const moves = { ArrowLeft: [-4, 0], ArrowRight: [4, 0], ArrowUp: [0, -4], ArrowDown: [0, 4] };
+        if (moves[event.key]) {
+          event.preventDefault();
+          keyboardAim = true;
+          aim.x = Math.max(5, Math.min(SIZE - 5, aim.x + moves[event.key][0]));
+          aim.y = Math.max(5, Math.min(SIZE - 5, aim.y + moves[event.key][1]));
+          draw();
+        } else if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          if (!event.repeat) spawnAt(aim.x, aim.y);
+        }
+      });
+      canvas.addEventListener("focus", () => { keyboardAim = true; draw(); });
+      canvas.addEventListener("blur", () => { keyboardAim = false; draw(); });
+      document.getElementById("sound").addEventListener("click", () => {
+        soundEnabled = !soundEnabled;
+        document.getElementById("sound").textContent = soundEnabled ? "Sound on" : "Sound off";
+        document.getElementById("sound").setAttribute("aria-pressed", String(soundEnabled));
+        if (!soundEnabled) stopSounds();
+      });
       document.getElementById("pause").addEventListener("click", () => {
         paused = !paused;
         status.textContent = paused ? "A moment, held still." : "";
@@ -544,6 +698,8 @@
         time = 0;
         frame = 0;
         tiles.clear();
+        spawnedCars.length = 0;
+        stopSounds();
         roll++;
         document.getElementById("roll").textContent = "ROLL " + String(roll).padStart(3, "0");
         status.textContent = "A new city. A different afternoon.";
@@ -561,6 +717,7 @@
         }
       });
       document.addEventListener("visibilitychange", syncPlayback);
+      document.addEventListener("visibilitychange", () => { if (document.hidden) stopSounds(); });
       if (paused) status.textContent = "Motion is off. Press Play to take flight.";
       draw();
       syncPlayback();

@@ -1,5 +1,5 @@
 {
-  "current": "city-flight.html",
+  "current": "../city-flight.html",
   "policy": "Keep historical versions immutable. Preserve a new milestone before major changes; city-flight.html remains current.",
   "versions": [
     {
@@ -12,7 +12,7 @@
         "method": "saved snapshot",
         "at": "2026-10-07T04:53:11Z"
       },
-      "archiveSha256": "22e44b2250080044b0b486615207eb06bff8de11fc33b0af4d0211010e5d4ad3"
+      "archiveSha256": "3f3797a0707488d74631ded375e44feaaf952550d15ac13b8e1d9829e2a25af6"
     },
     {
       "version": 1,
@@ -27,7 +27,7 @@
           "2026-10-07T04:55:30.124Z"
         ]
       },
-      "archiveSha256": "cdc6bd9abacc54d75087f393a7dc2868a418c9e5429a45db7d5a8f667db3af35"
+      "archiveSha256": "ca7149a0c30be0b482a55e417e0a3f1e091484c549ce007053135fe0444deb4b"
     },
     {
       "version": 2,
@@ -39,7 +39,7 @@
         "method": "saved snapshot",
         "at": "2026-10-07T05:31:09Z"
       },
-      "archiveSha256": "b079a5e032def18b526ef790ffff160bff9fe16bd121c9e2c5896711859a3f82"
+      "archiveSha256": "3772f5d000941cd01caf4a24d92b4434393e2b283065018338eabb6728352ace"
     },
     {
       "version": 3,
@@ -51,7 +51,7 @@
         "method": "saved snapshot",
         "at": "2026-10-07T05:53:59Z"
       },
-      "archiveSha256": "b164a0c161ffe676a8a005a06b86ff39ae43ed24e7a75bb1c814202f82a7f4a8"
+      "archiveSha256": "134c47c7ccc6ba78be2651c08e25796d63d0b8890fb76eed994eb5d5c8fbbdde"
     },
     {
       "version": 4,
@@ -69,7 +69,7 @@
           "2026-10-07T06:01:30.809Z"
         ]
       },
-      "archiveSha256": "5577420f3ff3c5eae6a80f8e8148d7a7ea82b22c1211a3ffd7815b6e4c8f20ec"
+      "archiveSha256": "b68d2affc9d11f4c742105129b0ca738f6ccc95fc1be75320cdb4515aa728f82"
     },
     {
       "version": 5,
@@ -81,7 +81,7 @@
         "method": "saved snapshot",
         "at": "2026-10-07T06:21:52Z"
       },
-      "archiveSha256": "44d4ec51c3f9da220681d44b0cecc03875c1b305ea87e24e5bee82925b06e11b"
+      "archiveSha256": "373965ee22a70cb5c0703e750489bc940430a163465d1d1cdafc4819c570df3d"
     },
     {
       "version": 6,
@@ -93,7 +93,7 @@
         "method": "saved snapshot",
         "at": "2026-10-07T06:40:41Z"
       },
-      "archiveSha256": "50b032db2e76cff0bd70e4a780c6b70eb49e91d8b9bd8eaa38552eccbc887ed4"
+      "archiveSha256": "4d20d64b2baaf944e879a709eb1919dc40508c9cfeb59b0a9423d9d7f12be120"
     },
     {
       "version": 7,
@@ -105,7 +105,7 @@
         "method": "saved snapshot",
         "at": "2026-10-07T07:01:28Z"
       },
-      "archiveSha256": "562cacd711fd73f23972abcaef836d0321121b88ce8a45f7b3b20fec2fbe8de0"
+      "archiveSha256": "322a43732bcaf87b34e91148f7f08a4bf18c53c89206b6af641cbb3919bf839a"
     },
     {
       "version": 8,
@@ -129,7 +129,7 @@
         ],
         "historicalCaveat": "First implementation; some junction turns were still over-conservative."
       },
-      "archiveSha256": "5ca3d2938920d7b37a11275a7ec83c282dda799f1fdc8cb4ebca13506c9d69dc"
+      "archiveSha256": "a8ab9e5284033f8fe97568b7b4955bdaa2dfe63bbecaa5893c496439eefca9d4"
     },
     {
       "version": 9,
@@ -146,7 +146,7 @@
           "2026-10-07T07:22:50.834Z"
         ]
       },
-      "archiveSha256": "d701a53667045967db928abcc469cdd92d5ef4e4ecb9f9bb865ad2ed1d61bb79"
+      "archiveSha256": "84c4e73710ad9f541074b99d3b770590ec1092ee0b39e856bc23edfafc35ab81"
     },
     {
       "version": 10,
@@ -155,7 +155,7 @@
       "description": "30 city minutes per real second, eight original city-branded dials, governor safety interlocks and the first browsable archive.",
       "sourceSha256": "060049a1e1b82e3d6e812282d221b86d8f0986deaa3b65eb2c6ab1dc1e6966e1",
       "provenance": "Verified current implementation captured before the wide-city viewport milestone.",
-      "archiveSha256": "febbb423cd9a2696ff4e87b4b8376a4c3f058bead56035b27126c5d5da2fa5f8"
+      "archiveSha256": "2c281fb96d17fa38c1c2a419f09df82f37648f6eae2e8003dad22eb00c3e4ace"
     },
     {
       "version": 11,
@@ -164,7 +164,7 @@
       "description": "Constant-scale city sizes, full-window controls, adjustable downtown clocks with calmer hands, grab-to-turn reels and a live City Chronicle.",
       "sourceSha256": "fb1db15e04fa3429081a0b19c8c5c4cee1e735063159dd58c93f5c89c10834a1",
       "provenance": "Verified current implementation captured before the next city milestone.",
-      "archiveSha256": "7ad32727f68e2e987155e8203765f6881ceb51d54dcc1b57a8245c7aec6fe197"
+      "archiveSha256": "cb06d65c301bb76130b20eead7309c2d7f5b7edf1586871a3daf845feefeaf08"
     },
     {
       "version": 12,
@@ -173,7 +173,7 @@
       "description": "Full digital time, inline speed controls, 5x hand-speed limits, readable Chronicle ink, 30 FPS, city-specific paper tilts and separate Chronicle/media workers.",
       "sourceSha256": "63f394972302d5c0da94b3eaa56dbd4c529f6593ecb7089eb798c522fcc4ff9f",
       "provenance": "Verified current implementation captured before the next city milestone.",
-      "archiveSha256": "51c73cfa62da118323be0996268cd08a1fc025ebdff1cb0131296713f686bbd4"
+      "archiveSha256": "9bd5269666a1ae6b7cb35592be707794525e75e48afa0a99cd37cf6f1fbf4adb"
     },
     {
       "version": 13,
@@ -182,7 +182,7 @@
       "description": "Reference-style clock, 300 px / 30 FPS Drone default, restored Enlarge/Small control, Close up/Drone/Space zoom, four rendering and motion workers, and cached vehicle artwork.",
       "sourceSha256": "798afe2b8781402a4f98c4ded3c740d2c97cd7c68c5848f9cf46f55469f07831",
       "provenance": "Verified current implementation captured before the next city milestone.",
-      "archiveSha256": "eddd9b2a1fa42b80aac58e67bac6654f48495142356ac0698ac6e34ec3cb45fd"
+      "archiveSha256": "beecf38cf2eac367741cb84928f8adf299f1e1e6d42892fbab8c6f30c6ce2bb7"
     },
     {
       "version": 14,
@@ -191,11 +191,11 @@
       "description": "Light Gamified default with a separate collapsed style panel, city-specific lettering and films, crowd-responsive frame rates, stacked camera/print wheels, grouped Chronicle events and a larger recovery gallery; varied blocks, colored motorcycles, mini-roundabouts and fair traffic.",
       "sourceSha256": "98ed44e9076c253ff8d63108b325a8934995c8fbec3a9a67341246c699595e3f",
       "provenance": "Verified current implementation captured before the next city milestone.",
-      "archiveSha256": "49873af4f4f1c2456947ea195e05a1f745bb20d1e1b5713ff84583dc807d3d25"
+      "archiveSha256": "68e26b772b56df543396f29cbd8d94e6fa170a4cdc7bdaf025a3f19c65161315"
     },
     {
       "version": 15,
-      "file": "city-flight.html",
+      "file": "../city-flight.html",
       "title": "Nineteen cities, a hundred landmarks",
       "description": "19 destinations with 102 seeded architectural motifs, including Antalya's Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.",
       "sourceSha256": "1a7554e99db70193d4be338ad75de8294964472338f22e3f07b0bd32c6198352"

@@ -39,6 +39,7 @@ Tests use Playwright and do not ship with the deployed page.
 ```sh
 bun install
 bunx playwright install chromium
+bun tests/versions.mjs
 bun tests/motion.mjs
 bun tests/stress.mjs --rounds=10
 ```
@@ -51,6 +52,6 @@ Reports and screenshots are saved locally in ignored `test-results/`. Browser an
 
 ## Versions and deployment
 
-The in-page version picker preserves v0–v14 alongside the current v15. Archived simulation code is intentionally unchanged; old limitations remain.
+The in-page version picker preserves v0–v14 alongside the current v15. Archives live in [`versions/`](versions/), with the catalog at [`versions/manifest.json`](versions/manifest.json); catalog paths are relative to that folder. Only the current application stays in the repository root. Archived simulation code is intentionally unchanged; old limitations remain.
 
-Pushing `main` runs the GitHub Pages workflow. It publishes only the application, historical HTML files, and version catalog. The deployment creates `index.html` from the current application, so the repository keeps a single current source. Tests, dependencies, and local reports are not published.
+Pushing `main` runs the GitHub Pages workflow. `scripts/build-site.mjs` prepares the ignored `_site/` output, and `tests/versions.mjs` verifies source hashes and navigation before deployment. The site publishes the current application and the `versions/` folder, creating `index.html` from the current application so the repository keeps a single current source. Previously published flat archive URLs redirect to their new locations, preserving theme parameters and fragments; the old catalog URL remains compatible. Tests, dependencies, and local reports are not published.

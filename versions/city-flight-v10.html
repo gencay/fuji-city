@@ -150,7 +150,7 @@
     canvas:focus-visible { outline: 2px solid var(--cp-film-white); outline-offset: -3px; }
     figcaption { padding: 16px 0 18px; }
     .handwritten { font: italic 18px/1.3 Georgia, "Times New Roman", serif; }
-    .film-meta { display: grid; grid-template-columns: .7fr 1.8fr .7fr; gap: 3px; margin-top: 6px; font-size: 9px; letter-spacing: .04em; align-items: center; }
+    .film-meta { display: grid; grid-template-columns: .7fr 1.8fr .7fr; gap: 3px; margin-top: 26px; font-size: 9px; letter-spacing: .04em; align-items: center; }
     .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 12px 0 0; }
     button, select {
       min-height: 44px;
@@ -179,9 +179,11 @@
     figcaption button { background: var(--cp-film-paper); color: var(--cp-film-ink); border-color: var(--cp-film-ink); padding: 4px; font-size: 9px; }
     figcaption button:hover { background: var(--cp-film-paper); text-decoration: underline; }
     figcaption button:focus-visible { outline-color: var(--cp-film-ink); outline-offset: 1px; }
-    .wheel { --reel-row: 26px; position: relative; display: block; width: 100%; height: calc(var(--reel-row) * 3); padding: 0; overflow: hidden; perspective: 140px; touch-action: pan-x; user-select: none; cursor: ns-resize; line-height: 1.2; }
-    .wheel::before { content: ""; position: absolute; inset: var(--reel-row) 0; border-block: 1px solid var(--cp-border-strong); opacity: .35; pointer-events: none; }
-    .wheel-reel { display: block; pointer-events: none; }
+    .wheel { --reel-row: 26px; position: relative; display: block; width: 100%; height: 44px; padding: 0; overflow: visible; perspective: 140px; touch-action: pan-x; user-select: none; cursor: ns-resize; line-height: 1.2; }
+    .wheel::before { content: ""; position: absolute; inset: calc(50% - var(--reel-row) / 2) 0; border-block: 1px solid var(--cp-border-strong); opacity: .35; pointer-events: none; }
+    .wheel-reel { display: block; position: absolute; top: calc(50% - var(--reel-row) * 1.5); width: 100%; pointer-events: none; }
+    .wheel.is-wheeling { z-index: 2; }
+    figcaption:has(.is-wheeling) .wheel-help { visibility: hidden; }
     .wheel-readout, .wheel-neighbor { display: flex; align-items: center; justify-content: center; height: var(--reel-row); padding: 2px 5px; overflow-wrap: anywhere; }
     .wheel-readout { font-weight: 700; }
     .wheel-neighbor { font-size: inherit; font-weight: 700; opacity: 0; }
@@ -198,14 +200,38 @@
     .caption-options { max-width: 320px; margin: 0 auto; }
     .paper-tools { display: flex; align-items: center; justify-content: space-between; gap: 3px; padding-bottom: 10px; }
     .paper-tools > button { padding: 3px; min-width: 36px; font-size: 8px; background: var(--cp-film-paper); color: var(--cp-film-ink); border: 0; }
-    .wall-clock { width: 64px; flex: 0 0 64px; }
-    #clock { display: block; width: 60px; height: 60px; padding: 0; border: 0; border-radius: 50%; background: var(--cp-film-paper); color: var(--cp-film-ink); cursor: grab; touch-action: none; }
+    .wall-clock { width: 82px; flex: 0 0 82px; }
+    #clock { display: block; width: 78px; height: 78px; padding: 0; border: 0; border-radius: 50%; background: var(--cp-film-paper); color: var(--cp-film-ink); cursor: grab; touch-action: none; }
     #clock:active { cursor: grabbing; transform: none; }
     #clock svg { display: block; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
     .clock-face { fill: var(--cp-film-paper); stroke: var(--cp-film-ink); stroke-width: 2; }
     .clock-marks { fill: var(--cp-film-ink); font: 8px Georgia, serif; text-anchor: middle; }
     .clock-hand { stroke: var(--cp-film-ink); stroke-linecap: round; }
     .clock-second { stroke: var(--cp-accent); stroke-width: .8; }
+    .clock-bezel { fill: none; stroke: var(--cp-film-gold); stroke-width: 1; }
+    .clock-indices { stroke: var(--cp-film-ink); stroke-width: .6; fill: none; }
+    .clock-brand { fill: var(--cp-film-ink); text-anchor: middle; font: bold 4px Georgia, serif; letter-spacing: .5px; }
+    .clock-signature { fill: var(--cp-film-ink); text-anchor: middle; font: 2.8px "Segoe UI", sans-serif; letter-spacing: .35px; }
+    #clock[data-dial="atelier"] .clock-bezel { stroke-width: 1.8; }
+    #clock[data-dial="rathaus"] .clock-marks { font: bold 6px Georgia, serif; }
+    #clock[data-dial="rathaus"] .clock-bezel { stroke-dasharray: 2 1; stroke-width: 2; }
+    #clock[data-dial="bosphorus"] .clock-face { stroke: var(--cp-film-gold); }
+    #clock[data-dial="bosphorus"] .clock-bezel { stroke-dasharray: .6 1.2; stroke-width: 2; }
+    #clock[data-dial="bosphorus"] .clock-marks { font-size: 7px; }
+    #clock[data-dial="industrial"] .clock-bezel { stroke: var(--cp-film-ink); stroke-dasharray: 4 2; }
+    #clock[data-dial="industrial"] .clock-brand { font-family: Consolas, monospace; letter-spacing: .1px; }
+    #clock[data-dial="deco"] .clock-bezel { stroke-width: 2; stroke-dasharray: 10 1; }
+    #clock[data-dial="deco"] .clock-brand { font-family: "Segoe UI", sans-serif; letter-spacing: .7px; }
+    #clock[data-dial="westminster"] .clock-bezel { stroke: var(--cp-film-ink); stroke-width: .5; }
+    #clock[data-dial="westminster"] .clock-hand { stroke-width: 1.6; }
+    #clock[data-dial="balearic"] .clock-bezel { stroke: var(--cp-accent); stroke-dasharray: 1 2 3 2; stroke-width: 2; }
+    #clock[data-dial="balearic"] .clock-brand { font-style: italic; letter-spacing: 1px; }
+    #clock-flavor { display: block; font: 7px/1.4 Consolas, monospace; color: var(--cp-film-ink); }
+    .governor { max-width: 420px; margin: 12px auto; padding: 8px 12px; border: 1px solid var(--cp-border-strong); background: var(--cp-surface); color: var(--cp-text); }
+    .governor summary { display: flex; align-items: center; min-height: 36px; }
+    .governor dl { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 12px 0; }
+    .governor dd { margin: 0; font-variant-numeric: tabular-nums; }
+    .governor [data-alert="true"] { color: var(--cp-danger); font-weight: bold; }
     #clock-readout { display: block; margin-top: 4px; font: 8px/1.5 Consolas, monospace; color: var(--cp-film-ink); white-space: nowrap; }
     .paper-tools .settings { display: block; margin: 0; }
     [hidden] { display: none !important; }
@@ -223,7 +249,6 @@
     body.expanded .paper-tools > button, body.expanded .controls button { font-size: 12px; padding: 6px; }
     body.expanded .film-meta { font-size: 12px; }
     body.expanded .caption-options { max-width: 420px; }
-    body.expanded .wheel { --reel-row: 34px; }
     body.expanded .wheel-help { font-size: 10px; }
     body.expanded .paper-tools .settings { margin: 0; }
     .note { margin: 0; color: var(--cp-text-muted); font-size: 10px; line-height: 1.8; }
@@ -278,12 +303,12 @@
 <!-- CITY VERSION NAV START -->
       <nav class="version-bar" aria-label="City flight version history">
         <details class="version-picker">
-          <summary aria-label="Version history, v8, archived">v8</summary>
+          <summary aria-label="Version history, v10, archived">v10</summary>
           <div class="version-panel">
-            <p><strong>Historical snapshot · v8</strong><br>Driving school and family homes</p>
+            <p><strong>Historical snapshot · v10</strong><br>Town clocks and traffic governor</p>
             <p>Original simulation preserved; only this version navigator was added. Historical limitations remain.</p>
             <ol class="version-list">
-              <li><a href="city-flight.html"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations with 102 seeded architectural motifs, including Antalya&#39;s Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.</span></a></li>
+              <li><a href="../city-flight.html"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations with 102 seeded architectural motifs, including Antalya&#39;s Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.</span></a></li>
               <li><a href="city-flight-v0.html"><strong>v0 — The first miniature</strong><span>200 px procedural city, pedestrians, traffic and faded Chrome-style film.</span></a></li>
               <li><a href="city-flight-v1.html"><strong>v1 — Click a lane</strong><span>Lane-click cars, legal directions, keyboard aiming and an original WAV chime.</span></a></li>
               <li><a href="city-flight-v2.html"><strong>v2 — Helicopter recovery</strong><span>Rooftop helicopters lift crashed vehicles into a collection bay.</span></a></li>
@@ -292,9 +317,9 @@
               <li><a href="city-flight-v5.html"><strong>v5 — Physics and paper controls</strong><span>Caption wheels, connected river bridges, physical falls and recovery, smaller argh effects and a day/night rocker.</span></a></li>
               <li><a href="city-flight-v6.html"><strong>v6 — Five AI player-designer reviews</strong><span>Review-driven gameplay, accessibility, audio and input refinements; larger view and neighboring reel options. These were AI reviews, not human playtests.</span></a></li>
               <li><a href="city-flight-v7.html"><strong>v7 — The size dial</strong><span>Hidden-at-rest reel neighbors and exact 100–1000 px sizes, originally defaulting to 200 px.</span></a></li>
-              <li><a href="city-flight-v8.html" aria-current="page"><strong>v8 — Driving school and family homes</strong><span>First handbook-informed home routing and analog-clock daylight implementation, with a 600 px default. No real license test or AI training; turn refinements followed in v9.</span></a></li>
+              <li><a href="city-flight-v8.html"><strong>v8 — Driving school and family homes</strong><span>First handbook-informed home routing and analog-clock daylight implementation, with a 600 px default. No real license test or AI training; turn refinements followed in v9.</span></a></li>
               <li><a href="city-flight-v9.html"><strong>v9 — Forgiving reels and refined driving</strong><span>Nearest-option release snapping, deferred resizing, one shared preview line, and refined legal junction turns.</span></a></li>
-              <li><a href="city-flight-v10.html"><strong>v10 — Town clocks and traffic governor</strong><span>30 city minutes per real second, eight original city-branded dials, governor safety interlocks and the first browsable archive.</span></a></li>
+              <li><a href="city-flight-v10.html" aria-current="page"><strong>v10 — Town clocks and traffic governor</strong><span>30 city minutes per real second, eight original city-branded dials, governor safety interlocks and the first browsable archive.</span></a></li>
               <li><a href="city-flight-v11.html"><strong>v11 — More city, not bigger pixels</strong><span>Constant-scale city sizes, full-window controls, adjustable downtown clocks with calmer hands, grab-to-turn reels and a live City Chronicle.</span></a></li>
               <li><a href="city-flight-v12.html"><strong>v12 — Compact clocks and tilted prints</strong><span>Full digital time, inline speed controls, 5x hand-speed limits, readable Chronicle ink, 30 FPS, city-specific paper tilts and separate Chronicle/media workers.</span></a></li>
               <li><a href="city-flight-v13.html"><strong>v13 — Clock tower and camera views</strong><span>Reference-style clock, 300 px / 30 FPS Drone default, restored Enlarge/Small control, Close up/Drone/Space zoom, four rendering and motion workers, and cached vehicle artwork.</span></a></li>
@@ -310,7 +335,11 @@
           <button id="clock" type="button" role="slider" aria-label="City time" aria-valuemin="0" aria-valuemax="86399" aria-valuenow="32400" aria-valuetext="09:00:00" aria-describedby="clock-help">
             <svg viewBox="0 0 60 60" aria-hidden="true">
               <circle class="clock-face" cx="30" cy="30" r="28"/>
-              <g class="clock-marks"><text x="30" y="12">12</text><text x="50" y="33">3</text><text x="30" y="54">6</text><text x="10" y="33">9</text></g>
+              <circle class="clock-bezel" cx="30" cy="30" r="25.7"/>
+              <g id="clock-indices" class="clock-indices"></g>
+              <g id="clock-numerals" class="clock-marks"></g>
+              <text id="clock-brand" class="clock-brand" x="30" y="22">SOMEWHERE</text>
+              <text id="clock-signature" class="clock-signature" x="30" y="41">CIVIC TIME</text>
               <g id="clock-hour"><path class="clock-hand" stroke-width="2.5" d="M30 32V17"/></g>
               <g id="clock-minute"><path class="clock-hand" stroke-width="1.5" d="M30 34V10"/></g>
               <g id="clock-second"><path class="clock-second" d="M30 36V8"/></g>
@@ -318,6 +347,7 @@
             </svg>
           </button>
           <output id="clock-readout" aria-hidden="true">09:00:00</output>
+          <span id="clock-flavor">Civic classic</span>
         </div>
         <button id="pause" type="button" aria-pressed="false">Pause</button>
         <button id="sound" type="button" aria-pressed="true" aria-label="City sound effects">Sound on</button>
@@ -337,7 +367,7 @@
           <button type="button" class="wheel" data-wheel-for="film"><span id="film-caption" data-wheel-value>CLASSIC CHROME</span></button>
           <button type="button" class="wheel" data-wheel-for="fps"><span data-wheel-value>24 FPS</span></button>
         </div>
-        <p class="wheel-help" id="wheel-help">Click to shuffle · drag or scroll to dial<br>Arrow keys to choose · Home/End to jump</p>
+        <p class="wheel-help" id="wheel-help">Click to shuffle · drag or scroll, then release to choose<br>Arrow keys to choose · Home/End to jump</p>
     <div class="settings" aria-label="City and film options" hidden>
       <label hidden>View size <select id="view-size">
         <option value="100">100 px</option><option value="200">200 px</option>
@@ -373,11 +403,24 @@
     <p id="aim-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
     <p id="status" role="status" aria-live="polite"></p>
     <div id="recovery" class="recovery" aria-label="Recovered cars, outside the city" hidden>Recovery bay</div>
+    <details class="governor" id="traffic-governor">
+      <summary>Traffic governor · <span id="governor-summary">checking roads</span></summary>
+      <p id="governor-status">A rule-based controller, not a trained traffic engineer.</p>
+      <dl>
+        <dt>Junctions checked nearby</dt><dd id="governor-junctions">0</dd>
+        <dt>Closed road approaches</dt><dd id="governor-closed">0</dd>
+        <dt>Drivers waiting at signals</dt><dd id="governor-queues">0</dd>
+        <dt>Safety interlocks active</dt><dd id="governor-holds">0</dd>
+      </dl>
+      <p>Coordinated green / amber / all-red phases, marked stop lines, pedestrian crossings, keep-clear exits, two-second following gaps, no U-turns, legal-side lanes, residential speed limits, accident closures and alternate home routes. Clearance uses real simulation seconds, never the accelerated town clock.</p>
+      <p>Checked roads with no safe exit stay closed. Occupied junctions and crossing pedestrians hold both vehicle approaches red. Wrecked approaches close until recovery. Camera-neighborhood audits refresh twice per simulation second.</p>
+      <p>This miniature models two-way residential grids, not every modern road type or local law: no motorway merges, roundabouts, dedicated cycle lanes, rail crossings, weather-dependent braking or emergency-vehicle priority. Governor diagnostics describe only the modeled streets.</p>
+    </details>
     <details>
       <summary>About the films &amp; places</summary>
       <p id="city-description"></p>
       <p id="film-description"></p>
-      <p id="clock-help">The wall clock runs at one city second per real second while playing. Drag around its face to wind time forward or backward (one revolution is 12 hours), or scroll by 15 minutes. Arrow keys adjust one minute; Shift + arrow adjusts 15 minutes; Page Up/Down adjusts one hour. Home selects sunrise at 06:00, End sunset at 21:00. The readout uses 24-hour time. Winding changes daylight and daily routines, not the physical history of cars.</p>
+      <p id="clock-help">The wall clock runs at 30 city minutes per real second while playing: a full day in 48 seconds. Drag around its face to wind time forward or backward (one revolution is 12 hours), or scroll by 15 minutes. Automatic clock movement pauses while dragging. Arrow keys adjust one minute; Shift + arrow adjusts 15 minutes; Page Up/Down adjusts one hour. Home selects sunrise at 06:00, End sunset at 21:00. The readout uses 24-hour time. Winding changes daylight and daily routines, not the physical history of cars. Original city-branded dials evoke local clockmaking, architecture and music; they are not Rolex products or replicas. Paris is atelier classic, Munich traditional Rathaus, Istanbul Bosphorus ornament, Seattle industrial punk, New York Art Deco, London Westminster and Ibiza Balearic modern.</p>
       <p>Sunrise is fixed at 06:00 and sunset at 21:00 for this miniature, with twilight on either side. The sun travels east to west (world east is right before camera rotation), casting long opposite shadows near the horizon and shorter shadows at midday. This is an idealized summer day, not date-, latitude- or weather-specific astronomy. Household lights gradually go out toward bedtime; streetlights remain on for safety.</p>
       <p>Drivers and riders use a hand-coded driving policy informed by official guidance, not a trained model or a real driving qualification. They keep a two-second following gap, observe signals and pedestrian phases, reserve clear junction exits, signal turns, and plan legal routes to their own family homes. Blocked roads trigger another route at a junction, never a pavement shortcut or an oncoming-lane escape. These two-way streets have only one lane per direction, so passing and motorcycle filtering are conservatively disabled in every city. Bikes accelerate briskly but share the same modeled residential speed ceiling. Night arrivals park at home while fewer new journeys begin.</p>
       <p>Driving references:
@@ -385,7 +428,7 @@
         <a href="https://www.gov.uk/guidance/the-highway-code/general-rules-techniques-and-advice-for-all-drivers-and-riders-103-to-158" target="_blank" rel="noreferrer">Highway Code: spacing and residential driving</a>;
         <a href="https://app.leg.wa.gov/rcw/default.aspx?cite=46.61.608" target="_blank" rel="noreferrer">Washington motorcycle lane rules</a>.
         Conservative shared rules are used where local law varies; this is not a complete legal model of any city.</p>
-      <p>Only the selected choice is shown at rest. Neighboring choices fade in as you dial and become clear at the center. Click city, film or FPS to shuffle; drag, scroll or use arrow keys to choose. The size dial replaces the roll counter: click to grow by 100 px, or dial up/down between 100 and 1000 px. Home and End select the limits. Size changes preserve the city and traffic; wide prints scroll inside their frame on smaller screens. The default enlarged print is 600 px; Small view or Escape selects the 200 px miniature. Frame rate does not change simulation speed.</p>
+      <p>Only the selected choice is shown at rest. The reels share one preview line between the city and film controls. Drag freely and release to snap to the nearest option; scrolling commits after a brief pause. Previews do not resize or regenerate the city. Escape cancels an unfinished selection. Click city, film or FPS to shuffle, or use arrow keys to choose. The size dial replaces the roll counter: click to grow by 100 px, or dial up/down between 100 and 1000 px. Home and End select the limits. Size changes preserve the city and traffic; wide prints scroll inside their frame on smaller screens. The default enlarged print is 600 px; Small view or Escape outside a selection chooses the 200 px miniature. Frame rate does not change simulation speed.</p>
       <button id="new" type="button">New roll</button>
       <p>Traffic is automatically tuned: a 25% motorcycle draw, personal cruising paces and a soft original generative score. New insertions forecast four seconds ahead; crowded clicks can still overwhelm braking. Crashes block nearby lanes, not the whole city, and only then dispatch a rescue helicopter. Homes and nearby journeys are procedural and recycled outside the camera's neighborhood; the homecoming count records arrivals actually simulated this roll.</p>
       <p>Every road over a finite river has a connected bridge, including north/south roads. Oceanfront roads cannot bridge an endless sea. Exposed banks have depth; pedestrians and wrecks can fall. Falls use gravity, crashes use mass-based impulses and ground friction, and rescue flight accelerates and brakes. Splash particles and ripples are clipped to open water, never land or bridges. This is a small stylized physics model, not a real-world driving simulator.</p>
@@ -478,7 +521,9 @@
       let filmId = "chrome";
       let nightEnabled = false;
       let clockSeconds = 9 * 3600;
+      const CITY_SECONDS_PER_SECOND = 1800;
       let lightMinute = -1;
+      let lastLightRefresh = -Infinity;
       let lastClockSecond = -1;
       let homecomings = 0;
       const households = new Map();
@@ -486,6 +531,9 @@
       const crossings = new Map();
       const crossingCycles = new Map();
       const roadEdges = new Map();
+      const governorRoads = new Map();
+      let nextGovernorAudit = 0;
+      let governorFaults = 0;
       let bikesEnabled = true;
       let bikeRatio = .25;
       let filteringEnabled = false;
@@ -558,7 +606,7 @@
         for (const binding of wheelBindings) {
           const {source, button, readout, previous, next, name} = binding;
           const options = wheelOptions(source), value = source.type === "checkbox" ? source.checked : source.value;
-          const index = Math.max(0, options.findIndex(option => option.value === value));
+          const index = binding.previewIndex ?? Math.max(0, options.findIndex(option => option.value === value));
           readout.textContent = options[index].label;
           const bounded = source.id === "view-size";
           previous.textContent = bounded && index === 0 ? "" : options[mod(index - 1, options.length)].label;
@@ -567,7 +615,7 @@
           button.setAttribute("aria-label", name);
           button.setAttribute("aria-valuemin", bounded ? "100" : "0");
           button.setAttribute("aria-valuemax", bounded ? "1000" : String(options.length - 1));
-          button.setAttribute("aria-valuenow", bounded ? value : String(index));
+          button.setAttribute("aria-valuenow", bounded ? options[index].value : String(index));
           button.setAttribute("aria-valuetext", options[index].label);
         }
       }
@@ -582,8 +630,6 @@
       function previewWheel(button, fraction) {
         const reel = clearWheelMotion(button);
         if (reducedMotion.matches) return;
-        if (button.dataset.wheelFor === "view-size"
-          && ((viewSize === 100 && fraction > 0) || (viewSize === 1000 && fraction < 0))) return;
         const row = parseFloat(getComputedStyle(button).getPropertyValue("--reel-row"));
         reel.style.transform = `translateY(${fraction * row}px)`;
         [...reel.children].forEach((node, index) => {
@@ -640,8 +686,8 @@
           button.setAttribute("role", "spinbutton");
           button.setAttribute("aria-describedby", "wheel-help");
           button.title = source.id === "view-size"
-            ? "Click to grow by 100 px; drag, scroll or use arrows to resize. Home: 100 px. End: 1000 px."
-            : "Click to shuffle; drag, scroll or use arrow keys to choose.";
+            ? "Drag or scroll to preview; release to resize. Click adds 100 px. Home: 100 px. End: 1000 px."
+            : "Click to shuffle; drag or scroll and release to choose the nearest option.";
           source.hidden = true; source.tabIndex = -1;
           const binding = {source, button, readout, previous, next, name};
           wheelBindings.push(binding);
@@ -659,10 +705,38 @@
           };
           const index = () => wheelOptions(source).findIndex(option =>
             option.value === (source.type === "checkbox" ? source.checked : source.value));
-          let drag = null, suppressClick = false, wheelDelta = 0, wheelAt = 0, wheelTimer;
-          const resetScroll = () => {
-            clearTimeout(wheelTimer); wheelDelta = 0; clearWheelMotion(button);
+          let drag = null, suppressClick = false, position = null, wheelTimer, settleTimer;
+          const normalize = value => source.id === "view-size"
+            ? Math.max(0, Math.min(wheelOptions(source).length - 1, value)) : value;
+          const preview = value => {
+            position = normalize(value);
+            const nearest = Math.round(position);
+            binding.previewIndex = mod(nearest, wheelOptions(source).length);
+            syncWheels();
+            button.classList.add("is-wheeling");
+            previewWheel(button, nearest - position);
           };
+          const finish = (commit = true) => {
+            clearTimeout(wheelTimer);
+            if (position === null) return;
+            const target = Math.round(position);
+            position = null; binding.previewIndex = null;
+            // Keep the nearest preview and its offset until the release animation has settled.
+            if (commit) select(target, 1, false);
+            else syncWheels();
+            settleWheel(button);
+            clearTimeout(settleTimer);
+            settleTimer=setTimeout(()=>button.classList.remove("is-wheeling"),reducedMotion.matches?0:180);
+          };
+          binding.finish = finish;
+          const begin = () => {
+            for (const other of wheelBindings) if (other !== binding) {
+              other.finish?.(); clearWheelMotion(other.button); other.button.classList.remove("is-wheeling");
+            }
+            clearTimeout(wheelTimer); clearTimeout(settleTimer);
+            if (position === null) position = index();
+          };
+          const resetScroll = () => { begin(); finish(); clearWheelMotion(button); };
           button.addEventListener("click", event => {
             if (event.detail > 0 && suppressClick) { suppressClick = false; return; }
             resetScroll();
@@ -671,23 +745,22 @@
           });
           button.addEventListener("pointerdown", event => {
             if (event.button !== 0) return;
-            resetScroll();
+            begin();
             suppressClick = false;
-            drag = {id: event.pointerId, y: event.clientY, index: index(), step: 0, moved: false};
+            drag = {id: event.pointerId, y: event.clientY, start: position, moved: false};
             button.setPointerCapture(event.pointerId);
           });
           button.addEventListener("pointermove", event => {
             if (!drag || drag.id !== event.pointerId) return;
             const distance = drag.y - event.clientY;
             if (Math.abs(distance) > 5) { drag.moved = true; suppressClick = true; }
-            const step = Math.trunc(distance / 22);
-            if (step !== drag.step) { select(drag.index + step, Math.sign(step - drag.step), false); drag.step = step; }
-            if (drag.moved) previewWheel(button, -(distance - step * 22) / 22);
+            const row = parseFloat(getComputedStyle(button).getPropertyValue("--reel-row"));
+            if (drag.moved) preview(drag.start + distance / row);
           });
           const endDrag = event => {
             if (!drag || drag.id !== event.pointerId) return;
             if (drag.moved || event.type === "pointercancel") suppressClick = true;
-            settleWheel(button);
+            finish(event.type !== "pointercancel");
             drag = null;
             if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
           };
@@ -697,23 +770,17 @@
           button.addEventListener("wheel", event => {
             if (event.ctrlKey || !event.deltaY || button.disabled) return;
             event.preventDefault();
-            clearTimeout(wheelTimer);
-            if (performance.now() - wheelAt > 180) wheelDelta = 0;
-            wheelAt = performance.now();
-            wheelDelta += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 78 : 1);
-            const steps = Math.trunc(wheelDelta / 36);
-            if (steps) {
-              wheelDelta -= steps * 36;
-              select(index() + steps, Math.sign(steps));
-            } else previewWheel(button, -wheelDelta / 36);
-            wheelTimer = setTimeout(() => {
-              wheelDelta = 0;
-              if (!steps) settleWheel(button);
-            }, steps ? 320 : 180);
+            if (drag) return;
+            begin();
+            preview(position + event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 78 : 1) / 36);
+            wheelTimer = setTimeout(() => finish(), 220);
           }, {passive: false});
+          button.addEventListener("blur", () => { if (!drag) finish(); });
           button.addEventListener("keydown", event => {
             const steps = {ArrowUp: 1, ArrowDown: -1, ArrowLeft: -1, ArrowRight: 1};
-            if (event.key in steps) { event.preventDefault(); resetScroll(); select(index() + steps[event.key], steps[event.key]); }
+            if (event.key === "Escape" && position !== null) {
+              event.preventDefault(); event.stopPropagation(); finish(false);
+            } else if (event.key in steps) { event.preventDefault(); resetScroll(); select(index() + steps[event.key], steps[event.key]); }
             else if (event.key === "Home" || event.key === "End") {
               event.preventDefault(); resetScroll(); select(event.key === "Home" ? 0 : wheelOptions(source).length - 1, 1);
             }
@@ -752,6 +819,42 @@
         return [Math.floor(seconds / 3600), Math.floor(seconds / 60) % 60, seconds % 60]
           .map(value => String(value).padStart(2, "0")).join(":");
       }
+      function styleTownClock() {
+        const profiles = {
+          original: ["civic", "Civic classic", "CIVIC TIME", ["12","3","6","9"]],
+          paris: ["atelier", "Atelier classic", "ATELIER", ["XII","III","VI","IX"]],
+          munich: ["rathaus", "Rathaus tradition", "RATHAUS", ["XII","III","VI","IX"]],
+          istanbul: ["bosphorus", "Bosphorus ornament", "BOSPHORUS", ["١٢","٣","٦","٩"]],
+          seattle: ["industrial", "Industrial punk", "SOUND / TIME", ["12","03","06","09"]],
+          newyork: ["deco", "Art Deco", "METROPOLITAN", ["12","3","6","9"]],
+          london: ["westminster", "Westminster", "WESTMINSTER", ["XII","III","VI","IX"]],
+          ibiza: ["balearic", "Balearic modern", "BALEARIC", ["12","•","6","•"]]
+        };
+        const [dial, flavor, signature, numerals] = profiles[cityId];
+        const clock = document.getElementById("clock");
+        clock.dataset.dial = dial;
+        clock.title = `${currentCity().name} · ${flavor} · 30 city minutes / second`;
+        document.getElementById("clock-brand").textContent = currentCity().name.toUpperCase();
+        document.getElementById("clock-signature").textContent = signature;
+        document.getElementById("clock-flavor").textContent = flavor;
+        const marks = document.getElementById("clock-numerals");
+        marks.replaceChildren();
+        for (const [i, [x,y]] of [[30,13],[48,32],[30,52],[12,32]].entries()) {
+          const mark = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          mark.setAttribute("x", x); mark.setAttribute("y", y);
+          mark.setAttribute("font-size", numerals[i].length > 2 ? "5" : "7");
+          mark.textContent = numerals[i]; marks.append(mark);
+        }
+        const indices = document.getElementById("clock-indices");
+        indices.replaceChildren();
+        for (let i=0;i<60;i++) {
+          const mark = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          const inner = i%5===0 ? 22 : 23.5;
+          mark.setAttribute("d", `M30 ${30-inner}V5.5`);
+          mark.setAttribute("transform", `rotate(${i*6} 30 30)`);
+          indices.append(mark);
+        }
+      }
       function syncClock() {
         const second = Math.floor(clockSeconds);
         if (second === lastClockSecond) return;
@@ -764,13 +867,13 @@
         clock.setAttribute("aria-valuetext", text);
         document.getElementById("clock-readout").textContent = text;
       }
-      function advanceClock(seconds) {
+      function advanceClock(seconds, forceLight = false) {
         clockSeconds = mod(clockSeconds + seconds, 86400);
         syncClock();
-        if (Math.floor(clockSeconds / 60) !== lightMinute) applyFilm();
+        if (Math.floor(clockSeconds / 60) !== lightMinute && (forceLight || time-lastLightRefresh>=.25)) applyFilm();
       }
       function setCityTime(seconds) {
-        advanceClock(seconds - clockSeconds);
+        advanceClock(seconds - clockSeconds, true);
         draw();
         status.textContent = `${clockText()} · ${daylight().street > .5 ? "Night lights" : "Daylight"}. Traffic keeps its journeys.`;
       }
@@ -823,6 +926,7 @@
       }
       function applyFilm() {
         lightMinute = Math.floor(clockSeconds / 60);
+        lastLightRefresh = time;
         const light = daylight();
         nightEnabled = light.street > 0;
         const film = films.find(item => item.id === filmId);
@@ -1898,9 +2002,59 @@
         vehicle.intent="Waiting for an accessible home route"; return false;
       }
       function signalPhase() { return mod(time,24); }
-      function signalGreen(axis) {
+      function governorRoad(node) {
+        const key=nodeKey(node);
+        if (!governorRoads.has(key)) governorRoads.set(key,{node,exits:[0,1,2,3].map(direction=>edgeOpen(node,direction))});
+        return governorRoads.get(key);
+      }
+      function wreckAtJunction(node) {
+        return incident && !incident.roadCleared && incident.cars.some(car=>
+          Math.abs(car.x-node.x*BLOCK-15)<35 && Math.abs(car.y-node.y*BLOCK-15)<35);
+      }
+      function governorHolds(node) {
+        const key=nodeKey(node);
+        return crossings.has(key) || junctionReservations.has(key) || !!wreckAtJunction(node)
+          || !governorRoad(node).exits.some(Boolean);
+      }
+      function signalState(axis, node = null) {
+        if (node && governorHolds(node)) return "red";
         const phase=signalPhase();
-        return axis===0 ? phase<7 : phase>=8 && phase<15;
+        if (axis===0) return phase<6 ? "green" : phase<7 ? "amber" : "red";
+        return phase>=8 && phase<14 ? "green" : phase>=14 && phase<15 ? "amber" : "red";
+      }
+      function signalGreen(axis, node = null) { return signalState(axis,node)==="green"; }
+      function legalLane(vehicle) {
+        const rules=laneRules(vehicle.road,vehicle.axis,vehicle.lane);
+        return vehicle.dir===rules.dir && Number.isFinite(vehicle.x+vehicle.y)
+          && Math.abs((vehicle.axis?vehicle.x:vehicle.y)-rules.across)<.1;
+      }
+      function auditTrafficGovernor() {
+        if (time<nextGovernorAudit) return;
+        nextGovernorAudit=time+.5;
+        const view=camera(), nearby=new Set();
+        let junctions=0,closed=0,holds=0;
+        for (let x=Math.floor((view.x-310)/BLOCK);x<=Math.ceil((view.x+310)/BLOCK);x++)
+          for (let y=Math.floor((view.y-310)/BLOCK);y<=Math.ceil((view.y+310)/BLOCK);y++) {
+            const node={x,y},key=nodeKey(node),road=governorRoad(node);
+            nearby.add(key);
+            if (!road.exits.some(Boolean)) continue;
+            junctions++;
+            closed+=road.exits.filter((open,direction)=>!open || !Number.isFinite(edgeCost(node,direction,null))).length;
+            if (governorHolds(node)) holds++;
+          }
+        for (const key of governorRoads.keys()) if (!nearby.has(key)) governorRoads.delete(key);
+        const vehicles=[...ambientTraffic.values(),...spawnedCars];
+        governorFaults=vehicles.filter(v=>!v.turn&&!v.parking&&(!legalLane(v)||!roadSupports(v))).length;
+        const queued=vehicles.filter(v=>v.waitSince!=null).length;
+        document.getElementById("governor-junctions").textContent=junctions;
+        document.getElementById("governor-closed").textContent=closed;
+        document.getElementById("governor-queues").textContent=queued;
+        document.getElementById("governor-holds").textContent=holds;
+        document.getElementById("governor-summary").textContent=governorFaults ? "safety hold" : incident ? "incident control" : "on duty";
+        const output=document.getElementById("governor-status");
+        output.dataset.alert=String(governorFaults>0);
+        output.textContent=governorFaults ? `${governorFaults} vehicles held: unsupported road position or illegal lane direction.`
+          : `${currentCity().left?"Left":"Right"}-hand streets. Signals coordinated; occupied junctions held red. ${incident&&!incident.roadCleared?"Incident roads are closed pending recovery.":"No road-position or lane-direction faults found in the active fleet."}`;
       }
       function updateCrossings() {
         const view=camera(), cycle=Math.floor(time/24);
@@ -1909,33 +2063,58 @@
         for (let bx=Math.floor((view.x-310)/BLOCK);bx<=Math.ceil((view.x+310)/BLOCK);bx++)
           for (let by=Math.floor((view.y-310)/BLOCK);by<=Math.ceil((view.y+310)/BLOCK);by++) {
             const key=`${bx},${by}`;
-            if (crossingCycles.get(key)===cycle || junctionReservations.has(key) || crossings.has(key)) continue;
+            if (crossingCycles.get(key)===cycle || junctionReservations.has(key) || crossings.has(key)
+              || wreckAtJunction({x:bx,y:by}) || !governorRoad({x:bx,y:by}).exits.some(Boolean)) continue;
             crossingCycles.set(key,cycle);
             if (hash(bx,by,3300+cycle)>.5*trafficDemand() || isWater(bx*BLOCK+15,by*BLOCK+34)) continue;
             crossings.set(key,{bx,by,born:time});
           }
       }
       function turnPoint(turn, t) {
-        const u=1-t;
-        return {x:u*u*turn.start.x+2*u*t*turn.control.x+t*t*turn.end.x,
-          y:u*u*turn.start.y+2*u*t*turn.control.y+t*t*turn.end.y,
-          angle:Math.atan2(2*u*(turn.control.y-turn.start.y)+2*t*(turn.end.y-turn.control.y),
-            2*u*(turn.control.x-turn.start.x)+2*t*(turn.end.x-turn.control.x))};
+        let distance=t*turn.length;
+        let segment=turn.segments.at(-1);
+        for (const candidate of turn.segments) {
+          segment=candidate;
+          if (distance<=candidate.length) break;
+          distance-=candidate.length;
+        }
+        const p=Math.min(1,distance/segment.length),u=1-p;
+        return {x:u*u*segment.start.x+2*u*p*segment.control.x+p*p*segment.end.x,
+          y:u*u*segment.start.y+2*u*p*segment.control.y+p*p*segment.end.y,
+          angle:Math.atan2(2*u*(segment.control.y-segment.start.y)+2*p*(segment.end.y-segment.control.y),
+            2*u*(segment.control.x-segment.start.x)+2*p*(segment.end.x-segment.control.x))};
       }
       function junctionTurn(vehicle, instruction) {
         const {node,direction}=instruction, rules=exitRules(node,direction);
         const start={x:vehicle.x,y:vehicle.y}, endAlong=(rules.axis?node.y:node.x)*BLOCK+(rules.dir>0?ROAD+15:-15);
         const end={x:rules.axis?rules.across:endAlong,y:rules.axis?endAlong:rules.across};
-        const control=vehicle.axis===rules.axis ? {x:(start.x+end.x)/2,y:(start.y+end.y)/2}
-          : vehicle.axis ? {x:start.x,y:end.y} : {x:end.x,y:start.y};
-        const turn={start,end,control,rules,key:nodeKey(node),t:0,length:0};
-        let previous=start;
-        for (let i=1;i<=20;i++) {const p=turnPoint(turn,i/20);turn.length+=Math.hypot(p.x-previous.x,p.y-previous.y);previous=p;}
+        const segments=[];
+        const add=(a,b,control={x:(a.x+b.x)/2,y:(a.y+b.y)/2})=>{
+          let length=0, previous=a;
+          for (let i=1;i<=20;i++) {
+            const t=i/20,u=1-t,p={x:u*u*a.x+2*u*t*control.x+t*t*b.x,y:u*u*a.y+2*u*t*control.y+t*t*b.y};
+            length+=Math.hypot(p.x-previous.x,p.y-previous.y);previous=p;
+          }
+          if (length>0) segments.push({start:a,end:b,control,length});
+        };
+        if (vehicle.axis===rules.axis) add(start,end);
+        else {
+          // Enter the junction straight before rounding the corner; a single broad curve cuts the pavement.
+          const corner=vehicle.axis?{x:start.x,y:end.y}:{x:end.x,y:start.y}, radius=6;
+          const approach=velocity({...vehicle,turn:null},radius), departure=velocity({...rules},radius);
+          const entry={x:corner.x-approach.x,y:corner.y-approach.y};
+          const exit={x:corner.x+departure.x,y:corner.y+departure.y};
+          add(start,entry);add(entry,exit,corner);add(exit,end);
+        }
+        const turn={start,end,segments,rules,key:nodeKey(node),t:0,length:segments.reduce((sum,s)=>sum+s.length,0)};
         return turn;
       }
       function canEnterJunction(vehicle, instruction, obstacles) {
         const key=nodeKey(instruction.node);
-        if (!signalGreen(vehicle.axis) || crossings.has(key) || junctionReservations.has(key)) return null;
+        if (!legalLane(vehicle) || !Number.isInteger(instruction.direction) || instruction.direction<0 || instruction.direction>3
+          || instruction.direction===mod(directionOf(vehicle)+2,4)
+          || !governorRoad(instruction.node).exits[instruction.direction]
+          || !signalGreen(vehicle.axis,instruction.node) || crossings.has(key) || junctionReservations.has(key)) return null;
         const turn=junctionTurn(vehicle,instruction);
         for (let i=0;i<=20;i++) {
           const p=turnPoint(turn,i/20), projected={...vehicle,...p,axis:turn.rules.axis};
@@ -2056,6 +2235,9 @@
             continue;
           }
           if (vehicle.parking) {parkAtHome(vehicle,dt,obstacles);continue;}
+          if (!vehicle.turn && (!legalLane(vehicle) || !roadSupports(vehicle))) {
+            vehicle.velocity=0; vehicle.intent="Traffic governor safety hold"; continue;
+          }
           if (!vehicle.home && time >= (vehicle.retryAt||0)) {
             assignHome(vehicle); vehicle.retryAt=time+5;
           }
@@ -2444,6 +2626,7 @@
             }
           }
         }
+        auditTrafficGovernor();
         for (let i = splashes.length - 1; i >= 0; i--) if (time - splashes[i].born >= 1.8) splashes.splice(i, 1);
         updatePedestrians(dt);
         if (incident) advanceRescue(dt);
@@ -2588,8 +2771,24 @@
         for (const [bx, by] of blocks) people(bx, by);
         for (const [bx, by] of blocks) {
           if (isWater(bx * BLOCK + 32, by * BLOCK + 32)) continue;
-          disc(ctx, signalGreen(0) ? "leaf-light" : "red", bx * BLOCK + 31, by * BLOCK + 25, 1.5);
-          disc(ctx, signalGreen(1) ? "leaf-light" : "red", bx * BLOCK + 25, by * BLOCK + 31, 1.5);
+          const node={x:bx,y:by};
+          if (!governorRoad(node).exits.some(Boolean)) continue;
+          for (const axis of [0,1]) {
+            const signal=signalState(axis,node);
+            const x=bx*BLOCK+(axis?25:34),y=by*BLOCK+(axis?34:25);
+            rect(ctx,"black",x-2,y-5,4,10);
+            for (const [i,state] of ["red","amber","green"].entries()) {
+              disc(ctx,signal===state ? state==="green"?"leaf-light":state==="amber"?"gold":"red" : "wall-dark",x,y-3+i*3,1.1);
+            }
+          }
+          // The south-side pedestrian signal phase crosses the vertical carriageway.
+          if (!isWater(bx*BLOCK+15,by*BLOCK+34) || isBridge(bx*BLOCK+15,by*BLOCK+34))
+            for (let x=1;x<ROAD;x+=4) rect(ctx,"line",bx*BLOCK+x,by*BLOCK+31,2,6);
+          for (const direction of [0,1,2,3]) {
+            if (!governorRoad(node).exits[mod(direction+2,4)]) continue;
+            const lane=exitRules(node,direction),along=(lane.axis?by:bx)*BLOCK+(lane.dir>0?-7:ROAD+7);
+            rect(ctx,"line",lane.axis?lane.across-5:along,lane.axis?along:lane.across-5,lane.axis?10:1,lane.axis?1:10);
+          }
         }
         for (const crossing of crossings.values()) {
           pedestrian(crossing.bx*BLOCK+(time-crossing.born)*4,crossing.by*BLOCK+34,Math.PI/2,0,"gold");
@@ -2641,7 +2840,7 @@
         const elapsed = now - lastFrame + .001;
         if (elapsed >= FRAME_TIME) {
           const steps = Math.floor(elapsed / FRAME_TIME);
-          advanceClock(steps * FRAME_TIME / 1000);
+          if (!clockDrag) advanceClock(steps * FRAME_TIME / 1000 * CITY_SECONDS_PER_SECOND);
           step(Math.min(steps * FRAME_TIME / 1000, .1));
           lastFrame += steps * FRAME_TIME;
           draw();
@@ -2748,6 +2947,7 @@
         recoveredCount = 0;
         homecomings = 0;
         households.clear(); junctionReservations.clear(); crossings.clear(); crossingCycles.clear(); roadEdges.clear();
+        governorRoads.clear(); nextGovernorAudit=0; governorFaults=0; lastLightRefresh=-Infinity;
         incident = null;
         frame = 0;
         tiles.clear();
@@ -2764,8 +2964,10 @@
         stopSounds();
         document.getElementById("city-caption").textContent = cityId === "original" ? "wish you were here." : currentCity().name + ", from above.";
         document.getElementById("city-description").textContent = currentCity().note;
+        styleTownClock();
         status.textContent = reseed ? "A new roll in " + currentCity().name + "." : "Back over the first landmark.";
         draw();
+        auditTrafficGovernor();
         syncWheels();
         syncPlayback();
       }
@@ -2880,9 +3082,11 @@
       document.getElementById("city-description").textContent = currentCity().note;
       mountWheels();
       syncClock();
+      styleTownClock();
       applyFilm();
       if (paused) status.textContent = "Motion is off. Press Play to take flight.";
       draw();
+      auditTrafficGovernor();
       syncPlayback();
     })();
   </script>

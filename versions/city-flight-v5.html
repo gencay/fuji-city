@@ -146,8 +146,8 @@
     canvas:focus-visible { outline: 2px solid var(--cp-film-white); outline-offset: -3px; }
     figcaption { padding: 16px 0 18px; }
     .handwritten { font: italic 18px/1.3 Georgia, "Times New Roman", serif; }
-    .film-meta { display: flex; justify-content: space-between; margin-top: 9px; font-size: 8px; letter-spacing: .08em; }
-    .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 32px 0 12px; }
+    .film-meta { display: grid; grid-template-columns: .8fr 1.7fr .7fr; gap: 3px; margin-top: 6px; font-size: 8px; letter-spacing: .04em; }
+    .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 12px 0 0; }
     button, select {
       min-height: 44px;
       padding: 8px 12px;
@@ -164,15 +164,58 @@
     select:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible {
       outline: 2px solid var(--cp-text); outline-offset: 3px;
     }
-    .settings { margin: 20px 0; text-align: left; display: grid; gap: 12px; }
-    .settings label { display: grid; gap: 4px; color: var(--cp-text-muted); font-size: 11px; }
+    .settings { margin: 12px 0 0; text-align: left; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .settings label { display: grid; align-content: start; gap: 2px; min-width: 0; color: var(--cp-film-ink); font-size: 9px; }
     .settings select { width: 100%; min-width: 0; font-size: 12px; }
-    .settings .check { display: flex; align-items: center; gap: 8px; min-height: 32px; }
+    .settings .check { display: grid; align-content: start; gap: 2px; }
     input[type="range"] { width: 100%; accent-color: var(--cp-text-muted); min-height: 24px; }
     input[type="checkbox"] { accent-color: var(--cp-text-muted); width: 16px; height: 16px; }
-    .settings fieldset { margin: 0; padding: 12px; border: 1px solid var(--cp-border); }
-    .settings legend { padding: 0 6px; font-size: 11px; color: var(--cp-text-muted); }
-    .settings .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .settings fieldset, .settings .pair { display: contents; }
+    .settings legend, .settings label > span { display: none; }
+    figcaption button { background: var(--cp-film-paper); color: var(--cp-film-ink); border-color: var(--cp-film-ink); padding: 4px; font-size: 9px; }
+    figcaption button:hover { background: var(--cp-film-paper); text-decoration: underline; }
+    figcaption button:focus-visible { outline-color: var(--cp-film-ink); outline-offset: 1px; }
+    .wheel { position: relative; display: grid; place-items: center; width: 100%; overflow: hidden; perspective: 140px; touch-action: pan-x; user-select: none; cursor: ns-resize; line-height: 1.2; }
+    .wheel::before, .wheel::after { position: absolute; right: 3px; opacity: .45; font-size: 7px; content: "▴"; top: 2px; }
+    .wheel::after { content: "▾"; top: auto; bottom: 2px; }
+    .wheel-readout { display: block; padding: 3px 7px; transform-origin: center; pointer-events: none; overflow-wrap: anywhere; }
+    .wheel:disabled { opacity: .4; cursor: not-allowed; }
+    .caption-city { border: 0; font: italic 18px/1.3 Georgia, "Times New Roman", serif; }
+    .film-meta button { border: 0; font: inherit; min-width: 0; }
+    .film-meta .wheel-readout { padding: 3px 1px; }
+    .film-meta .wheel::before, .film-meta .wheel::after { right: 0; font-size: 5px; }
+    .wheel-help { margin: 6px 0 0; font: 8px/1.5 Consolas, monospace; color: var(--cp-film-ink); opacity: .8; }
+    #reset-view { grid-column: auto; }
+    .caption-options { max-width: 320px; margin: 0 auto; }
+    .paper-tools { display: flex; align-items: center; justify-content: space-between; gap: 3px; padding-bottom: 10px; }
+    .paper-tools > button { padding: 3px; min-width: 36px; font-size: 8px; background: var(--cp-film-paper); color: var(--cp-film-ink); border: 0; }
+    .paper-tools .settings { display: block; margin: 0; }
+    .paper-tools .home-switch > span:first-child { display: none; }
+    .paper-tools .home-switch .rocker { width: 30px; height: 44px; font-size: 6px; }
+    .settings .home-switch { position: relative; justify-items: center; }
+    .settings .home-switch > span { display: block; }
+    .home-switch input {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 48px; margin: 0;
+      opacity: 0; cursor: pointer; z-index: 2;
+    }
+    .settings .home-switch .rocker {
+      display: grid; grid-template-rows: 1fr 1fr; place-items: center;
+      position: relative; width: 42px; height: 48px; padding: 3px;
+      border: 1px solid var(--cp-film-ink); border-radius: 3px;
+      background: var(--cp-film-ink); perspective: 100px; font: 7px/1 Consolas, monospace;
+    }
+    .rocker::before {
+      content: ""; position: absolute; inset: 3px; background: var(--cp-film-paper);
+      border-radius: 2px; transform: rotateX(14deg);
+      box-shadow: inset 0 -4px 0 var(--cp-border-strong);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .rocker span { position: relative; z-index: 1; color: var(--cp-film-ink); }
+    .home-switch input:checked + .rocker::before {
+      transform: rotateX(-14deg); box-shadow: inset 0 4px 0 var(--cp-border-strong);
+    }
+    .home-switch input:focus-visible + .rocker { outline: 2px solid var(--cp-film-ink); outline-offset: 3px; }
+    [hidden] { display: none !important; }
     #city-description, #film-description { margin: 0; font-size: 11px; color: var(--cp-text-muted); }
     details { margin-top: 20px; text-align: left; color: var(--cp-text-muted); font-size: 11px; }
     summary { cursor: pointer; min-height: 32px; }
@@ -187,14 +230,14 @@
     body.expanded figure { grid-column: 1; grid-row: 3 / span 6; width: 100%; transform: none; padding: 16px 16px 0; }
     body.expanded .aperture { width: 100%; height: auto; aspect-ratio: 1; }
     body.expanded #city { width: 100%; height: 100%; }
-    body.expanded .controls { margin: 0; }
-    body.expanded .settings { margin: 0; }
+    body.expanded .controls { margin-top: 12px; }
+    body.expanded .settings { margin-top: 12px; }
     body.expanded main > :not(figure):not(h1):not(.eyebrow) { grid-column: 2; }
     @media (max-width: 720px) {
       body.expanded { padding: 12px; }
       body.expanded main { display: block; max-width: 480px; }
       body.expanded figure { margin: 20px 0; }
-      body.expanded .settings { margin: 20px 0; }
+      body.expanded .settings { margin-top: 12px; }
     }
     .note { margin: 0; color: var(--cp-text-muted); font-size: 10px; line-height: 1.8; }
     #status { margin: 8px 0 0; color: var(--cp-text-muted); font-size: 11px; min-height: 18px; }
@@ -220,6 +263,7 @@
     @media (prefers-reduced-motion: reduce) {
       figure { transform: none; }
       button:active { transform: none; }
+      .rocker::before { transition: none; }
     }
   </style>
 <!-- CITY VERSION STYLE START -->
@@ -248,18 +292,18 @@
 <!-- CITY VERSION NAV START -->
       <nav class="version-bar" aria-label="City flight version history">
         <details class="version-picker">
-          <summary aria-label="Version history, v4, archived">v4</summary>
+          <summary aria-label="Version history, v5, archived">v5</summary>
           <div class="version-panel">
-            <p><strong>Historical snapshot · v4</strong><br>A living soundtrack</p>
+            <p><strong>Historical snapshot · v5</strong><br>Physics and paper controls</p>
             <p>Original simulation preserved; only this version navigator was added. Historical limitations remain.</p>
             <ol class="version-list">
-              <li><a href="city-flight.html"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations with 102 seeded architectural motifs, including Antalya&#39;s Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.</span></a></li>
+              <li><a href="../city-flight.html"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations with 102 seeded architectural motifs, including Antalya&#39;s Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.</span></a></li>
               <li><a href="city-flight-v0.html"><strong>v0 — The first miniature</strong><span>200 px procedural city, pedestrians, traffic and faded Chrome-style film.</span></a></li>
               <li><a href="city-flight-v1.html"><strong>v1 — Click a lane</strong><span>Lane-click cars, legal directions, keyboard aiming and an original WAV chime.</span></a></li>
               <li><a href="city-flight-v2.html"><strong>v2 — Helicopter recovery</strong><span>Rooftop helicopters lift crashed vehicles into a collection bay.</span></a></li>
               <li><a href="city-flight-v3.html"><strong>v3 — Films, cities and motorcycles</strong><span>20 film approximations, seven named cities, blue motorcycles, filtering and continuous rotor audio.</span></a></li>
-              <li><a href="city-flight-v4.html" aria-current="page"><strong>v4 — A living soundtrack</strong><span>Generative music, safer ambient traffic, local crash queues, water falls and night lighting.</span></a></li>
-              <li><a href="city-flight-v5.html"><strong>v5 — Physics and paper controls</strong><span>Caption wheels, connected river bridges, physical falls and recovery, smaller argh effects and a day/night rocker.</span></a></li>
+              <li><a href="city-flight-v4.html"><strong>v4 — A living soundtrack</strong><span>Generative music, safer ambient traffic, local crash queues, water falls and night lighting.</span></a></li>
+              <li><a href="city-flight-v5.html" aria-current="page"><strong>v5 — Physics and paper controls</strong><span>Caption wheels, connected river bridges, physical falls and recovery, smaller argh effects and a day/night rocker.</span></a></li>
               <li><a href="city-flight-v6.html"><strong>v6 — Five AI player-designer reviews</strong><span>Review-driven gameplay, accessibility, audio and input refinements; larger view and neighboring reel options. These were AI reviews, not human playtests.</span></a></li>
               <li><a href="city-flight-v7.html"><strong>v7 — The size dial</strong><span>Hidden-at-rest reel neighbors and exact 100–1000 px sizes, originally defaulting to 200 px.</span></a></li>
               <li><a href="city-flight-v8.html"><strong>v8 — Driving school and family homes</strong><span>First handbook-informed home routing and analog-clock daylight implementation, with a 600 px default. No real license test or AI training; turn refinements followed in v9.</span></a></li>
@@ -275,68 +319,68 @@
       </nav>
 <!-- CITY VERSION NAV END -->
     <figure>
+      <div class="paper-tools" aria-label="Paper controls">
+        <div class="settings">
+          <label class="home-switch"><span>Day / night</span>
+            <input id="night" type="checkbox" role="switch" aria-label="Night flight">
+            <span class="rocker" aria-hidden="true"><span>DAY</span><span>NIGHT</span></span>
+          </label>
+        </div>
+        <button id="pause" type="button" aria-pressed="false">Pause</button>
+        <button id="sound" type="button" aria-pressed="true" aria-label="City sound effects">Sound on</button>
+        <button id="fullscreen" type="button" aria-pressed="false">Full screen</button>
+      </div>
       <div class="aperture">
         <canvas id="city" width="400" height="400" role="img" tabindex="0" aria-describedby="spawn-help"
-          aria-label="Interactive bird's-eye city. Click a road lane to add the selected vehicle. Keyboard: arrow keys move the crosshair; Enter or Space adds a vehicle.">
+          aria-label="Interactive bird's-eye city. Click a road lane to add a random car or motorcycle. Keyboard: arrow keys move the crosshair; Enter or Space adds a vehicle.">
           Your browser needs Canvas support to show the city.
         </canvas>
       </div>
       <figcaption>
-        <span class="handwritten" id="city-caption">wish you were here.</span>
-        <div class="film-meta"><span id="roll">ROLL 001</span><span id="film-caption">CLASSIC CHROME</span><span>24 FPS</span></div>
-      </figcaption>
-    </figure>
-    <div class="controls" aria-label="Film controls">
-      <button id="pause" type="button" aria-pressed="false">Pause</button>
-      <button id="new" type="button">New roll</button>
-      <button id="sound" type="button" aria-pressed="true" aria-label="City sound effects">Sound on</button>
-      <button id="collisions" type="button" aria-pressed="true">Collisions on</button>
-      <button id="fullscreen" type="button" aria-pressed="false">Full screen</button>
-      <button id="reset-view" type="button">Revisit landmark</button>
-    </div>
-    <div class="settings" aria-label="City and film options">
-      <label>Destination <select id="destination">
-        <option value="original">Somewhere / original</option>
+        <div class="caption-options">
+        <button type="button" class="wheel caption-city" data-wheel-for="destination"><span id="city-caption" data-wheel-value>Somewhere</span></button>
+        <div class="film-meta">
+          <button id="new" type="button" title="Expose a new random roll"><span id="roll" class="wheel-readout">ROLL 001</span></button>
+          <button type="button" class="wheel" data-wheel-for="film"><span id="film-caption" data-wheel-value>CLASSIC CHROME</span></button>
+          <button type="button" class="wheel" data-wheel-for="fps"><span data-wheel-value>24 FPS</span></button>
+        </div>
+        <p class="wheel-help" id="wheel-help">Click to shuffle · drag up/down to dial<br>Arrow keys to choose · Home/End to jump</p>
+    <div class="settings" aria-label="City and film options" hidden>
+      <label hidden>Destination <select id="destination">
+        <option value="original">Somewhere</option>
         <option value="paris">Paris</option><option value="munich">Munich</option>
         <option value="istanbul">Istanbul</option><option value="seattle">Seattle</option>
         <option value="newyork">New York</option><option value="london">London</option>
         <option value="ibiza">Ibiza</option>
       </select></label>
-      <p id="city-description"></p>
-      <label>Film simulation <select id="film" aria-describedby="film-description"></select></label>
-      <p id="film-description"></p>
-      <label class="check"><input id="night" type="checkbox">Night flight / lights on</label>
-      <fieldset>
-        <legend>Traffic / blue Sportster S</legend>
-        <label class="check"><input id="motorcycles" type="checkbox" checked>Motorcycles</label>
-        <label>Motorcycle share <span><output id="bike-ratio-value">25%</output> of generated traffic</span>
-          <input id="bike-ratio" type="range" min="0" max="70" step="5" value="25">
-        </label>
-        <label class="check"><input id="filtering" type="checkbox" checked>Fast lane filtering</label>
-        <label>On lane click <select id="spawn-kind">
-          <option value="car">Car</option><option value="bike">Blue Sportster S</option>
-          <option value="mixed">Random / traffic mix</option>
-        </select></label>
-      </fieldset>
-      <div class="pair">
-        <label>Traffic pace <select id="traffic-speed"><option value=".65">Sunday drive</option>
-          <option value="1" selected>Normal</option><option value="1.5">Lively</option></select></label>
-        <label>Flight pace <select id="flight-speed"><option value=".6">Hover slowly</option>
-          <option value="1" selected>Cruise</option><option value="1.65">Swift</option></select></label>
-      </div>
-      <label class="check"><input id="music" type="checkbox" checked>Mellow generative soundtrack</label>
-      <label>Music + city volume <input id="volume" type="range" min="0" max="100" value="35"></label>
+      <label hidden>Film simulation <select id="film" aria-describedby="film-description"></select></label>
+      <label hidden>Frame rate <select id="fps">
+        <option value="12">12 FPS</option><option value="18">18 FPS</option>
+        <option value="24" selected>24 FPS</option><option value="30">30 FPS</option>
+        <option value="48">48 FPS</option><option value="60">60 FPS</option>
+      </select></label>
     </div>
+    <div class="controls" aria-label="Film controls">
+      <button id="collisions" type="button" aria-pressed="true">Collisions on</button>
+      <button id="reset-view" type="button">Revisit landmark</button>
+    </div>
+        </div>
+      </figcaption>
+    </figure>
     <p class="note">200 × 200 · made as you fly<br>no footage. no map. just a passing moment.</p>
-    <p class="note" id="spawn-help">Click a lane to add your selected vehicle. Traffic tries to keep its distance;<br>crowded clicks can cause chaos. Keyboard: arrows to aim, Enter to add.</p>
+    <p class="note" id="spawn-help">Click a lane for a random car or blue motorcycle.<br>Traffic keeps its distance; crowded clicks can cause chaos.<br>Keyboard: arrows to aim, Enter to add.</p>
     <p id="status" role="status" aria-live="polite"></p>
     <div id="recovery" class="recovery" aria-label="Recovered cars, outside the city" hidden>Recovery bay</div>
     <details>
       <summary>About the films &amp; places</summary>
+      <p id="city-description"></p>
+      <p id="film-description"></p>
+      <p>Caption thumbwheels: click for a different random choice, drag upward/downward to browse, or use the arrow keys, Home and End. Click the roll number for a fresh procedural city. Frame rate changes the film cadence without changing simulation speed.</p>
+      <p>Traffic is automatically tuned: a 25% motorcycle draw, fast filtering, normal cruise and a soft original generative score. Every driver has a personal pace and passing preference, using clear gaps rather than teleporting. New insertions forecast four seconds ahead; crowded clicks can still overwhelm braking. Crashes block nearby lanes, not the whole city, and only then dispatch a rescue helicopter.</p>
+      <p>Every road over a finite river has a connected bridge, including north/south roads. Oceanfront roads cannot bridge an endless sea. Exposed banks have depth; pedestrians and wrecks can fall. Falls use gravity, crashes use mass-based impulses and ground friction, and rescue flight accelerates and brakes. Splash particles and ripples are clipped to open water, never land or bridges. This is a small stylized physics model, not a real-world driving simulator. The paper's rocker switches between daylight and lit-window night flight.</p>
       <p>All 20 X100VI film modes, including ACROS and Monochrome filter variants, are represented by original palette approximations. These are not Fujifilm's proprietary simulations. Film grading also colors the paper and interface.</p>
       <p>The cities are endless, reseeded impressions, not navigable maps. Landmarks recur as the camera travels. Munich adds orderly signal phases; London uses left-hand traffic. Motorcycle filtering is a fictional simulation setting, not a claim about local road law.</p>
       <p>The blue motorcycle is a tiny top-view interpretation of a 2023 Harley-Davidson Sportster S: fat tires, blue tank, low seat and twin high-side exhausts. All audio is original, synthesized locally. Enable sound with an interaction; pause or mute silences it.</p>
-      <p>The original generative score uses slow, spacious chords, soft bell plucks and a quiet bass pulse; no game recording or melody is used. Music can be switched off separately. Ambient vehicles keep persistent positions, yield at junctions and brake before water. Filtering motorcycles steer around cars only into clear gaps. Clicked vehicles choose the least risky lane and speed over a four-second forecast, but a crowded insertion or later traffic change can still cause a crash. Only crashes involving player vehicles dispatch a helicopter; nearby traffic queues, not the entire city. Exposed riverbanks have shaded drop-offs; wandering pedestrians can slip over an edge. Water losses get a brief cartoon splash instead of a rescue. Night flight adds illuminated windows, streetlights and headlights without changing the selected film.</p>
       <p>References:
         <a href="https://fujifilm-dsc.com/en/manual/x100vi/menu_shooting/image_quality_setting/#film_simulation" target="_blank" rel="noreferrer">Fujifilm manual</a>;
         <a href="https://www.louvre.fr/en/explore/the-palace" target="_blank" rel="noreferrer">Louvre</a>;
@@ -436,7 +480,8 @@
       const BLOCK = 152;
       const ROAD = 30;
       const ZOOM = .72;
-      const FRAME_TIME = 1000 / 24;
+      let FRAME_TIME = 1000 / 24;
+      const wheelBindings = [];
       const carPaints = ["car", "white", "red", "roof-blue", "black", "gold"];
       const tiles = new Map();
       const spawnedCars = [];
@@ -480,6 +525,118 @@
       let request = null;
       let frame = 0;
 
+      function wheelOptions(source) {
+        if (source.tagName === "SELECT") return [...source.options].filter(option => !option.disabled)
+          .map(option => ({ value: option.value, label: option.textContent }));
+        if (source.type === "checkbox") return [false, true].map(value => ({ value,
+          label: source.id === "night" ? value ? "Night" : "Day" : value ? "On" : "Off" }));
+        const min = Number(source.min), max = Number(source.max), step = Number(source.step) || 1;
+        return Array.from({length: Math.floor((max - min) / step) + 1}, (_, index) =>
+          ({ value: String(min + index * step), label: min + index * step + "%" }));
+      }
+      function syncWheels() {
+        for (const binding of wheelBindings) {
+          const {source, button, readout, name} = binding;
+          const options = wheelOptions(source), value = source.type === "checkbox" ? source.checked : source.value;
+          const index = Math.max(0, options.findIndex(option => option.value === value));
+          readout.textContent = options[index].label;
+          button.disabled = source.disabled;
+          button.setAttribute("aria-label", name);
+          button.setAttribute("aria-valuemin", "0");
+          button.setAttribute("aria-valuemax", String(options.length - 1));
+          button.setAttribute("aria-valuenow", String(index));
+          button.setAttribute("aria-valuetext", options[index].label);
+        }
+      }
+      function spinWheel(button, direction = 1) {
+        if (reducedMotion.matches) return;
+        const readout = button.querySelector(".wheel-readout");
+        if (!readout) return;
+        for (const animation of readout.getAnimations()) animation.cancel();
+        readout.animate([
+          {transform: `translateY(${direction * 65}%) rotateX(${-direction * 75}deg)`, opacity: .15},
+          {transform: "translateY(0) rotateX(0)", opacity: 1}
+        ], {duration: 230, easing: "cubic-bezier(.2,.7,.2,1)"});
+      }
+      function mountWheels() {
+        for (const source of document.querySelectorAll(".settings select, .settings input:not(#night)")) {
+          let button = document.querySelector(`[data-wheel-for="${source.id}"]`);
+          const label = source.closest("label");
+          const name = [...label.childNodes].filter(node => node.nodeType === Node.TEXT_NODE)
+            .map(node => node.textContent.trim()).filter(Boolean).join(" ");
+          if (!button) {
+            button = document.createElement("button");
+            button.type = "button"; button.className = "wheel"; button.dataset.wheelFor = source.id;
+            label.appendChild(button);
+          }
+          let readout = button.querySelector("[data-wheel-value]");
+          if (!readout) { readout = document.createElement("span"); button.appendChild(readout); }
+          readout.classList.add("wheel-readout");
+          button.setAttribute("role", "spinbutton");
+          button.setAttribute("aria-describedby", "wheel-help");
+          button.title = "Click to shuffle; drag vertically or use arrow keys to choose.";
+          source.hidden = true; source.tabIndex = -1;
+          const binding = {source, button, readout, name};
+          wheelBindings.push(binding);
+          source.addEventListener("change", syncWheels);
+          source.addEventListener("input", syncWheels);
+          const select = (index, direction) => {
+            const options = wheelOptions(source), choice = options[mod(index, options.length)];
+            if (source.type === "checkbox") source.checked = choice.value;
+            else source.value = choice.value;
+            source.dispatchEvent(new Event(source.type === "range" ? "input" : "change", {bubbles: true}));
+            syncWheels(); spinWheel(button, direction);
+          };
+          const index = () => wheelOptions(source).findIndex(option =>
+            option.value === (source.type === "checkbox" ? source.checked : source.value));
+          let drag = null, suppressUntil = 0;
+          button.addEventListener("click", () => {
+            if (performance.now() < suppressUntil) return;
+            const count = wheelOptions(source).length;
+            if (count > 1) select(index() + 1 + Math.floor(newSeed() / 4294967296 * (count - 1)), 1);
+          });
+          button.addEventListener("pointerdown", event => {
+            if (event.button !== 0) return;
+            drag = {id: event.pointerId, y: event.clientY, index: index(), step: 0, moved: false};
+            button.setPointerCapture(event.pointerId);
+          });
+          button.addEventListener("pointermove", event => {
+            if (!drag || drag.id !== event.pointerId) return;
+            const distance = drag.y - event.clientY;
+            if (Math.abs(distance) > 5) drag.moved = true;
+            const step = Math.trunc(distance / 22);
+            if (step !== drag.step) { select(drag.index + step, Math.sign(step - drag.step)); drag.step = step; }
+          });
+          const endDrag = event => {
+            if (!drag || drag.id !== event.pointerId) return;
+            if (drag.moved || event.type === "pointercancel") suppressUntil = performance.now() + 350;
+            if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
+            drag = null;
+          };
+          button.addEventListener("pointerup", endDrag);
+          button.addEventListener("pointercancel", endDrag);
+          button.addEventListener("keydown", event => {
+            const steps = {ArrowUp: -1, ArrowDown: 1, ArrowLeft: -1, ArrowRight: 1};
+            if (event.key in steps) { event.preventDefault(); select(index() + steps[event.key], steps[event.key]); }
+            else if (event.key === "Home" || event.key === "End") {
+              event.preventDefault(); select(event.key === "Home" ? 0 : wheelOptions(source).length - 1, 1);
+            }
+          });
+        }
+        const rollButton = document.getElementById("new");
+        rollButton.addEventListener("click", () => spinWheel(rollButton));
+        let rollY = null;
+        rollButton.style.touchAction = "pan-x";
+        rollButton.addEventListener("pointerdown", event => { rollY = event.clientY; rollButton.setPointerCapture(event.pointerId); });
+        rollButton.addEventListener("pointerup", event => {
+          if (rollY !== null && Math.abs(event.clientY - rollY) > 22) {
+            // Pointer capture keeps the ensuing click on the roll, including after a vertical drag.
+            spinWheel(rollButton, Math.sign(rollY - event.clientY));
+          }
+          rollY = null;
+        });
+        syncWheels();
+      }
       function newSeed() {
         return crypto.getRandomValues(new Uint32Array(1))[0];
       }
@@ -558,7 +715,7 @@
       }
       function isBridge(x, y) {
         return !currentCity().coast && isWater(x, y)
-          && mod(Math.floor(y / BLOCK), 3) === 0 && mod(y, BLOCK) < ROAD;
+          && (mod(x, BLOCK) < ROAD || mod(y, BLOCK) < ROAD);
       }
       function drivable(x, y) {
         return (mod(x, BLOCK) < ROAD || mod(y, BLOCK) < ROAD) && (!isWater(x, y) || isBridge(x, y));
@@ -606,7 +763,6 @@
           const choices = Math.abs(local - ROAD / 2) < 1 ? [0, 1] : [local < ROAD / 2 ? 1 : 0];
           for (const lane of choices) {
             const rules = laneRules(road, axis, lane);
-            if (isWater(x, y) && axis !== 0) continue;
             if (drivable(axis ? rules.across : x, axis ? y : rules.across)) lanes.push(rules);
           }
         }
@@ -854,8 +1010,7 @@
           status.textContent = "Choose a road lane, not a building or sidewalk.";
           return;
         }
-        const selection = document.getElementById("spawn-kind").value;
-        const kind = bikesEnabled && (selection === "bike" || selection === "mixed" && newSeed() / 4294967296 < bikeRatio) ? "bike" : "car";
+        const kind = newSeed() / 4294967296 < bikeRatio ? "bike" : "car";
         const { vehicle, safe } = planSpawn(point, choices, kind);
         vehicle.id = "spawn:" + nextCarId++;
         vehicle.paint = kind === "bike" ? "bike-blue" : pick(carPaints);
@@ -929,11 +1084,11 @@
         }
         // Raised earth, a dark vertical face and a waterline make unbridged banks visibly hazardous.
         for (let y = 0; y < BLOCK; y += 4) {
-          if (!coast && mod(by, 3) === 0 && y < ROAD + 4) continue;
           const a = waterBounds(oy + y), b = waterBounds(oy + y + 4);
           for (const side of coast ? ["left"] : ["left", "right"]) {
             const x1 = a[side] - ox, x2 = b[side] - ox;
             const inward = side === "left" ? 1 : -1;
+            if (!coast && (mod(a[side], BLOCK) < ROAD + 3 || y < ROAD + 3)) continue;
             polygon(g, "wall-dark", [[x1, y], [x2, y + 4], [x2 + inward * 5, y + 9], [x1 + inward * 5, y + 5]]);
             stroke(g, "sand", 2, [[x1 - inward, y], [x2 - inward, y + 4]]);
             g.globalAlpha = .36;
@@ -952,14 +1107,30 @@
           }
         }
         g.globalAlpha = 1;
-        if (!coast && mod(by, 3) === 0) {
+        if (!coast) {
+          g.save();
+          g.beginPath();
+          for (let y = 0; y < BLOCK; y += 4) {
+            const a = waterBounds(oy + y), b = waterBounds(oy + y + 4);
+            g.moveTo(a.left - ox, y); g.lineTo(a.right - ox, y);
+            g.lineTo(b.right - ox, y + 4); g.lineTo(b.left - ox, y + 4); g.closePath();
+          }
+          g.clip();
+          rect(g, "shadow", 0, ROAD, BLOCK, 5);
+          rect(g, "shadow", ROAD, 0, 5, BLOCK);
+          rect(g, "road", 0, 0, BLOCK, ROAD);
+          rect(g, "road", 0, 0, ROAD, BLOCK);
+          for (const edge of [1, ROAD - 1]) {
+            stroke(g, "line", 1, [[ROAD, edge], [BLOCK, edge]]);
+            stroke(g, "line", 1, [[edge, ROAD], [edge, BLOCK]]);
+          }
+          for (let position = ROAD + 6; position < BLOCK; position += 12) {
+            rect(g, "line", position, 15, 5, .7);
+            rect(g, "line", 15, position, .7, 5);
+          }
+          g.restore();
           const bank = waterBounds(oy + 15);
           const l = bank.left - ox - 5, r = bank.right - ox + 5;
-          rect(g, "walk", l, 0, r - l, ROAD + 3);
-          rect(g, "road", l, 1, r - l, ROAD - 2);
-          stroke(g, "line", 1, [[l, 2], [r, 2]]);
-          stroke(g, "line", 1, [[l, 28], [r, 28]]);
-          for (let x = Math.ceil(l / 12) * 12; x < r; x += 12) rect(g, "line", x, 15, 5, .7);
           if (cityId === "istanbul" || cityId === "newyork") {
             for (const x of [l + 12, r - 12]) {
               rect(g, "wall", x - 2, 0, 4, 6);
@@ -985,7 +1156,8 @@
         }
         const river = waterBounds(oy + 107);
         const boatX = (coast ? river.left + 48 : (river.left + river.right) / 2) - ox;
-        if (boatX > 0 && boatX < BLOCK) {
+        if (boatX > 0 && boatX < BLOCK && !isBridge(ox + boatX, oy + 107)
+          && !isBridge(ox + boatX - 5, oy + 107) && !isBridge(ox + boatX + 5, oy + 107)) {
           polygon(g, "white", [[boatX, 91], [boatX + 4, 99], [boatX + 4, 116],
             [boatX - 4, 116], [boatX - 4, 99]]);
           rect(g, "roof-blue", boatX - 2, 102, 4, 9);
@@ -1299,7 +1471,7 @@
         const p = mod(hash(bx, by, 240 + i) * side * 4 + at * speed * direction, side * 4);
         const edge = Math.floor(p / side), f = p % side;
         const coords = [[lo + f, lo], [hi, lo + f], [hi - f, hi], [lo, hi - f]][edge];
-        return { x: bx * BLOCK + coords[0], y: by * BLOCK + coords[1],
+        return { x: bx * BLOCK + coords[0], y: by * BLOCK + coords[1], speed,
           angle: edge * Math.PI / 2 + (direction < 0 ? Math.PI : 0) };
       }
       function updatePedestrians(dt) {
@@ -1413,7 +1585,6 @@
                     const pos = slot * spacing + travel + hash(road, slot, 320 + lane) * 22;
                     const across = vehicleAcross(rules, kind, pos);
                     const x = axis ? across : pos, y = axis ? pos : across;
-                    if (axis === 1 && isWater(x, y)) continue;
                     if (!drivable(x, y) || !drivable(x + (axis ? 0 : 5), y + (axis ? 5 : 0))
                       || !drivable(x - (axis ? 0 : 5), y - (axis ? 5 : 0))) continue;
                     const long = kind === "car" && hash(road, slot, 340 + lane) < .12;
@@ -1421,7 +1592,7 @@
                       : carPaints[Math.floor(hash(road, slot, 330 + axis + lane) * carPaints.length)];
                     if (kind === "car" && cityId === "newyork" && hash(road, slot, 2150) < .55) paint = "gold";
                     if (kind === "car" && cityId === "london" && long) paint = "red";
-                    vehicles.push({ ...rules, across, id, kind, speed, x, y, long, paint,
+                    vehicles.push({ ...rules, across, id, kind, speed, x, y, long, paint, personality: hash(road, slot, 2950 + salt),
                       angle: axis * Math.PI / 2 + (rules.dir < 0 ? Math.PI : 0) });
                   }
                 }
@@ -1442,7 +1613,8 @@
           && Math.abs(a.y - b.y) < fa.y + fb.y + gap;
       }
       function cruiseSpeed(vehicle) {
-        return vehicle.speed * trafficPace * (vehicle.kind === "bike" && filteringEnabled ? 2.8 : 1);
+        return (vehicle.speed || 0) * trafficPace * (.92 + .16 * (vehicle.personality ?? .5))
+          * (vehicle.kind === "bike" && filteringEnabled ? 2.8 : 1);
       }
       function velocity(vehicle, speed = vehicle.velocity ?? cruiseSpeed(vehicle)) {
         return { x: vehicle.axis ? 0 : vehicle.dir * speed, y: vehicle.axis ? vehicle.dir * speed : 0 };
@@ -1467,7 +1639,7 @@
       function roadSupports(vehicle, x = vehicle.x, y = vehicle.y) {
         const f = footprint(vehicle);
         return [[x - f.x, y - f.y], [x + f.x, y - f.y], [x - f.x, y + f.y], [x + f.x, y + f.y]]
-          .every(([px, py]) => drivable(px, py) && !(vehicle.axis === 1 && isWater(px, py)));
+          .every(([px, py]) => drivable(px, py));
       }
       function populateTraffic() {
         const view = camera(), initial = !trafficInitialized;
@@ -1490,13 +1662,14 @@
       function planSpawn(point, choices, kind) {
         const view = camera(), traffic = trafficVehicles(view.x, view.y, 360);
         let best = null, bestClearance = -1;
+        const personality = newSeed() / 4294967296;
         // Prefer a random cruising pace, then try slower/faster alternatives and other legal lanes.
         const preference = .9 + newSeed() / 4294967296 * .2;
         for (const rules of choices) {
           const along = rules.axis ? point.y : point.x;
           const across = vehicleAcross(rules, kind, along);
           for (const factor of [preference, .75, 1.2, .5, .3]) {
-            const vehicle = { ...rules, kind, speed: rules.speed * factor, long: false,
+            const vehicle = { ...rules, kind, speed: rules.speed * factor, long: false, personality,
               x: rules.axis ? across : along, y: rules.axis ? along : across,
               across, angle: rules.axis * Math.PI / 2 + (rules.dir < 0 ? Math.PI : 0) };
             vehicle.velocity = cruiseSpeed(vehicle);
@@ -1517,7 +1690,13 @@
         return { vehicle: best, safe: false };
       }
       function loseInWater(entity, person = false) {
+        if (!isWater(entity.x, entity.y) || isBridge(entity.x, entity.y)) return;
+        const motion = person ? {x: Math.cos(entity.angle) * (entity.speed || 4), y: Math.sin(entity.angle) * (entity.speed || 4)}
+          : {x: entity.crashVx ?? velocity(entity).x, y: entity.crashVy ?? velocity(entity).y};
         splashes.push({ x: entity.x, y: entity.y, born: time, person, angle: entity.angle || 0,
+          vx: motion.x, vy: motion.y, height: 7, gravity: 90,
+          fontSize: 5 + hash(Math.floor(time * 1000), splashes.length, 2960) * 2,
+          tilt: (hash(Math.floor(time * 1000), splashes.length, 2961) - .5) * .2,
           paint: entity.paint, kind: entity.kind, long: entity.long });
         if (splashes.length > 16) splashes.shift();
         const p = worldToScreen?.transformPoint(entity);
@@ -1562,38 +1741,42 @@
                 speed = 0; break;
               }
             }
-            if (player && !wrecks.length) {
-              for (const other of vehicles) {
-                if (other === vehicle) continue;
-                if (conflictTime(vehicle, other, .65, velocity(vehicle, speed), velocity(other), 1) !== Infinity) {
-                  // Player cars have finite braking: a late, crowded insertion can still be too close.
-                  speed = Math.max(0, Math.min(speed, (vehicle.velocity || 0) - dt * 36));
-                  break;
-                }
+          }
+          if (player && !wrecks.length) {
+            for (const other of vehicles) {
+              if (other === vehicle) continue;
+              if (conflictTime(vehicle, other, .65, velocity(vehicle, speed), velocity(other), 1) !== Infinity) {
+                // Player cars have finite braking: a late, crowded insertion can still be too close.
+                speed = Math.max(0, Math.min(speed, (vehicle.velocity || 0) - dt * 36));
+                break;
               }
             }
-            // Even player traffic brakes for an established wreck or the queue immediately ahead.
-            if (player && wrecks.length) {
-              for (const other of obstacles) {
-                if (other === vehicle) continue;
-                const hit = conflictTime(vehicle, other, .8, velocity(vehicle, speed), {x: 0, y: 0}, 1);
-                if (hit !== Infinity) speed = Math.min(speed, speed * Math.max(0, (hit - .04) / .8));
-              }
+          }
+          // Even player traffic brakes for an established wreck or the queue immediately ahead.
+          if (player && wrecks.length) {
+            for (const other of obstacles) {
+              if (other === vehicle) continue;
+              const hit = conflictTime(vehicle, other, .8, velocity(vehicle, speed), {x: 0, y: 0}, 1);
+              if (hit !== Infinity) speed = Math.min(speed, speed * Math.max(0, (hit - .04) / .8));
             }
           }
           vehicle.velocity = speed;
           const motion = velocity(vehicle);
           vehicle.x += motion.x * dt; vehicle.y += motion.y * dt;
-          // Filtering changes move sideways only when the target gap is clear.
+          // Stable personal passing preferences avoid a fresh random direction every frame.
           const rules = laneRules(vehicle.road, vehicle.axis, vehicle.lane);
           let targetAcross = rules.across;
-          if (vehicle.kind === "bike" && filteringEnabled) {
-            const nearbyCars = obstacles.filter(other => other !== vehicle && other.kind !== "bike"
+          if (vehicle.kind !== "bike" || filteringEnabled) {
+            const nearbyCars = obstacles.filter(other => other !== vehicle
               && other.axis === vehicle.axis && other.road === vehicle.road
+              && (other.velocity ?? cruiseSpeed(other)) < cruiseSpeed(vehicle) * .9
+              && ((other[vehicle.axis ? "y" : "x"] - along) * vehicle.dir > 0
+                || Math.abs(vehicle[vehicle.axis ? "x" : "y"] - rules.across) > 1)
               && (other[vehicle.axis ? "y" : "x"] - along) * vehicle.dir > -15
               && (other[vehicle.axis ? "y" : "x"] - along) * vehicle.dir < 18 + cruiseSpeed(vehicle) * .8);
             if (nearbyCars.length) {
-              const options = [15, vehicle.lane ? 4 : 26].map(offset => vehicle.road * BLOCK + offset);
+              const options = ((vehicle.personality ?? .5) < .5 ? [15, vehicle.lane ? 3 : 27] : [vehicle.lane ? 3 : 27, 15])
+                .map(offset => vehicle.road * BLOCK + offset);
               const gap = options.find(across => {
                 const projected = { ...vehicle, [vehicle.axis ? "x" : "y"]: across };
                 return roadSupports(projected) && !obstacles.some(other => other !== vehicle && overlaps(projected, other, 1));
@@ -1602,41 +1785,90 @@
             }
           }
           const cross = vehicle.axis ? "x" : "y";
-          const lateral = Math.max(-dt * 9, Math.min(dt * 9, targetAcross - vehicle[cross]));
+          const lateralLimit = (vehicle.kind === "bike" ? 9 : 4) * Math.min(1, speed / 5);
+          const wanted = Math.max(-lateralLimit, Math.min(lateralLimit, (targetAcross - vehicle[cross]) * 5));
+          const previous = vehicle.lateralVelocity || 0;
+          vehicle.lateralVelocity = previous + Math.max(-dt * 24, Math.min(dt * 24, wanted - previous));
+          const lateral = vehicle.lateralVelocity * dt;
           const shifted = { ...vehicle, [cross]: vehicle[cross] + lateral };
           if (roadSupports(shifted) && !obstacles.some(other => other !== vehicle && overlaps(shifted, other, .8))) {
             vehicle[cross] = shifted[cross];
+          } else vehicle.lateralVelocity = 0;
+          if (speed > .1) {
+            vehicle.angle = Math.atan2(motion.y + (vehicle.axis ? 0 : vehicle.lateralVelocity),
+              motion.x + (vehicle.axis ? vehicle.lateralVelocity : 0));
           }
           vehicle.across = vehicle[cross];
-          if (player && isWater(vehicle.x, vehicle.y) && (vehicle.axis === 1 || !isBridge(vehicle.x, vehicle.y))) {
+          if (player && isWater(vehicle.x, vehicle.y) && !isBridge(vehicle.x, vehicle.y)) {
             loseInWater(vehicle);
             const index = spawnedCars.indexOf(vehicle);
             if (index !== -1) spawnedCars.splice(index, 1);
           }
         }
       }
+      function clipOpenWater(g) {
+        const view = camera(), left = view.x - 500, right = view.x + 500;
+        const top = Math.floor((view.y - 500) / 4) * 4, bottom = view.y + 500;
+        g.beginPath();
+        for (let y = top; y < bottom; y += 4) {
+          const a = waterBounds(y), b = waterBounds(y + 4);
+          g.moveTo(a.left, y); g.lineTo(Math.min(right, a.right), y);
+          g.lineTo(Math.min(right, b.right), y + 4); g.lineTo(b.left, y + 4); g.closePath();
+        }
+        g.clip();
+        if (!currentCity().coast) {
+          for (const axis of [0, 1]) {
+            g.beginPath(); g.rect(left, top, right - left, bottom - top);
+            const start = axis ? left : top, end = axis ? right : bottom;
+            for (let road = Math.floor(start / BLOCK); road <= Math.ceil(end / BLOCK); road++) {
+              if (axis) g.rect(road * BLOCK, top, ROAD, bottom - top);
+              else g.rect(left, road * BLOCK, right - left, ROAD);
+            }
+            g.clip("evenodd");
+          }
+        }
+      }
+      function splashState(splash, age) {
+        const impact = Math.sqrt(2 * splash.height / splash.gravity);
+        const travel = Math.min(age, impact);
+        return { impact, wetAge: Math.max(0, age - impact),
+          x: splash.x + splash.vx * travel, y: splash.y + splash.vy * travel,
+          height: Math.max(0, splash.height - splash.gravity * age * age / 2) };
+      }
       function drawSplashes() {
         for (const splash of splashes) {
           const age = time - splash.born, progress = age / 1.8;
-          ctx.save(); ctx.translate(splash.x, splash.y);
+          const {impact, wetAge, x, y, height} = splashState(splash, age);
+          ctx.save(); clipOpenWater(ctx); ctx.translate(x, y);
           ctx.globalAlpha = Math.min(1, (1 - progress) * 3);
-          if (age < .5) {
-            ctx.save(); ctx.scale(1 - age * 1.7, 1 - age * 1.7);
-            if (splash.person) pedestrian(0, 0, age * 5, 0, "red");
-            else drawVehicle({ ...splash, x: 0, y: 0, angle: splash.angle + age * 3 });
+          if (wetAge < .35) {
+            ctx.save(); ctx.translate(0, -height);
+            ctx.scale(Math.max(.05, 1 - wetAge * 2.8), Math.max(.05, 1 - wetAge * 2.8));
+            if (splash.person) pedestrian(0, 0, splash.angle + age * 2, 0, "red");
+            else drawVehicle({ ...splash, x: 0, y: 0, angle: splash.angle + age });
             ctx.restore();
           }
-          ctx.strokeStyle = colors.foam; ctx.lineWidth = 1;
-          for (const offset of [0, 4]) {
-            ctx.beginPath(); ctx.ellipse(0, 2, 3 + age * 10 + offset, 1.5 + age * 4 + offset / 2, 0, 0, Math.PI * 2); ctx.stroke();
+          if (age >= impact) {
+            ctx.strokeStyle = colors.foam; ctx.lineWidth = 1;
+            for (const delay of [0, .12]) {
+              const wave = wetAge - delay;
+              if (wave < 0) continue;
+              ctx.beginPath(); ctx.ellipse(0, 2, 2 + wave * 14, 1 + wave * 7, 0, 0, Math.PI * 2); ctx.stroke();
+            }
+            for (let i = 0; i < 7; i++) {
+              const theta = i * Math.PI * 2 / 7;
+              const z = 19 * wetAge - splash.gravity * wetAge * wetAge / 2;
+              if (z >= 0) disc(ctx, "foam", Math.cos(theta) * wetAge * 17, Math.sin(theta) * wetAge * 8 - z, 1);
+            }
           }
-          for (let i = 0; i < 7; i++) {
-            const theta = i * Math.PI * 2 / 7;
-            disc(ctx, "foam", Math.cos(theta) * age * 17, Math.sin(theta) * age * 8 - Math.sin(Math.min(1, age) * Math.PI) * 9, 1);
-          }
-          ctx.font = "bold 11px Consolas, monospace"; ctx.textAlign = "center";
-          ctx.lineWidth = 3; ctx.strokeStyle = colors.black; ctx.fillStyle = colors.white;
-          ctx.strokeText("argh!", 0, -9 - age * 8); ctx.fillText("argh!", 0, -9 - age * 8);
+          ctx.restore();
+          ctx.save(); ctx.translate(x, y - 6 - age * 4);
+          ctx.globalAlpha = Math.min(1, (1 - progress) * 3);
+          const pop = 1 + .08 * Math.sin(Math.min(1, age / .25) * Math.PI);
+          ctx.rotate(splash.tilt * Math.exp(-age * 2)); ctx.scale(pop, pop);
+          ctx.font = `bold ${splash.fontSize}px Consolas, monospace`; ctx.textAlign = "center";
+          ctx.lineWidth = 1.4; ctx.strokeStyle = colors.black; ctx.fillStyle = colors.white;
+          ctx.strokeText("argh!", 0, 0); ctx.fillText("argh!", 0, 0);
           ctx.restore();
         }
       }
@@ -1682,7 +1914,26 @@
         return nearest;
       }
       function beginCollision(cars) {
-        for (const vehicle of cars) vehicle.velocity = 0;
+        const [first, second] = cars;
+        const mass = vehicle => vehicle.kind === "bike" ? .3 : vehicle.long ? 2 : 1;
+        const a = velocity(first), b = velocity(second);
+        const fa = footprint(first), fb = footprint(second);
+        const dx = second.x - first.x, dy = second.y - first.y;
+        const overlapX = fa.x + fb.x - Math.abs(dx), overlapY = fa.y + fb.y - Math.abs(dy);
+        const horizontal = overlapX < overlapY;
+        const normal = horizontal ? {x: Math.sign(dx) || 1, y: 0} : {x: 0, y: Math.sign(dy) || 1};
+        const inverseA = 1 / mass(first), inverseB = 1 / mass(second);
+        const relative = (b.x - a.x) * normal.x + (b.y - a.y) * normal.y;
+        const impulse = Math.max(0, -1.12 * relative / (inverseA + inverseB));
+        const separation = Math.max(0, Math.min(overlapX, overlapY)) + .1;
+        cars.forEach((vehicle, index) => {
+          const sign = index ? 1 : -1, inverse = index ? inverseB : inverseA, motion = index ? b : a;
+          vehicle.x += normal.x * separation * sign * inverse / (inverseA + inverseB);
+          vehicle.y += normal.y * separation * sign * inverse / (inverseA + inverseB);
+          vehicle.crashVx = motion.x + sign * impulse * inverse * normal.x;
+          vehicle.crashVy = motion.y + sign * impulse * inverse * normal.y;
+          vehicle.velocity = 0;
+        });
         const x = (cars[0].x + cars[1].x) / 2;
         const y = (cars[0].y + cars[1].y) / 2;
         let heli = closestHelicopter(x, y);
@@ -1720,16 +1971,23 @@
           }
         }
       }
-      function moveToward(point, target, distance) {
+      function moveToward(point, target, distance, dt) {
         const dx = target.x - point.x, dy = target.y - point.y;
         const length = Math.hypot(dx, dy);
-        if (length > .01) point.angle = Math.atan2(dy, dx);
-        if (length <= distance) {
+        const maxSpeed = distance / dt, acceleration = maxSpeed * 2;
+        if (length <= .5 && Math.hypot(point.vx || 0, point.vy || 0) < acceleration * dt + 1) {
           point.x = target.x; point.y = target.y;
+          point.vx = point.vy = 0;
           return true;
         }
-        point.x += dx / length * distance;
-        point.y += dy / length * distance;
+        const speed = Math.min(maxSpeed, Math.sqrt(2 * acceleration * Math.max(0, length - .3)));
+        const vx = length ? dx / length * speed : 0, vy = length ? dy / length * speed : 0;
+        const changeX = vx - (point.vx || 0), changeY = vy - (point.vy || 0);
+        const change = Math.hypot(changeX, changeY), blend = Math.min(1, acceleration * dt / Math.max(change, .001));
+        point.vx = (point.vx || 0) + changeX * blend;
+        point.vy = (point.vy || 0) + changeY * blend;
+        point.x += point.vx * dt; point.y += point.vy * dt;
+        if (Math.hypot(point.vx, point.vy) > .1) point.angle = Math.atan2(point.vy, point.vx);
         return false;
       }
       function pagePoint(x, y) {
@@ -1748,6 +2006,27 @@
       }
       function advanceRescue(dt) {
         const rescue = incident;
+        if (rescue.stage === "approach") {
+          for (let i = rescue.cars.length - 1; i >= 0; i--) {
+            const vehicle = rescue.cars[i];
+            const vx = vehicle.crashVx || 0, vy = vehicle.crashVy || 0, speed = Math.hypot(vx, vy);
+            const nextSpeed = Math.max(0, speed - 60 * dt), ratio = speed ? nextSpeed / speed : 0;
+            vehicle.x += vx * (1 + ratio) / 2 * dt;
+            vehicle.y += vy * (1 + ratio) / 2 * dt;
+            vehicle.crashVx = vx * ratio; vehicle.crashVy = vy * ratio;
+            if (isWater(vehicle.x, vehicle.y) && !isBridge(vehicle.x, vehicle.y)) {
+              loseInWater(vehicle); rescue.cars.splice(i, 1);
+            }
+          }
+          if (rescue.cars.length) {
+            rescue.x = rescue.cars.reduce((sum, vehicle) => sum + vehicle.x, 0) / rescue.cars.length;
+            rescue.y = rescue.cars.reduce((sum, vehicle) => sum + vehicle.y, 0) / rescue.cars.length;
+          } else {
+            rescue.heli.screen = pagePoint(rescue.heli.x, rescue.heli.y);
+            rescue.stage = "exit"; rescue.roadCleared = true;
+            status.textContent = "The wrecks fell into the water. The helicopter is returning without cargo.";
+          }
+        }
         if (rescue.stage === "waiting") {
           rescue.heli = closestHelicopter(rescue.x, rescue.y);
           if (rescue.heli) {
@@ -1758,7 +2037,7 @@
         }
         const heli = rescue.heli;
         if (rescue.stage === "approach") {
-          if (moveToward(heli, { x: rescue.x, y: rescue.y - 16 }, dt * (heli.speed || 65))) {
+          if (moveToward(heli, { x: rescue.x, y: rescue.y - 16 }, dt * (heli.speed || 65), dt)) {
             rescue.stage = "pickup";
             rescue.elapsed = 0;
             status.textContent = "Winching the wrecks clear. Nearby vehicles are queuing; other streets are moving.";
@@ -1776,7 +2055,7 @@
           }
         } else if (rescue.stage === "carry") {
           const bay = recovery.getBoundingClientRect();
-          if (moveToward(heli.screen, { x: bay.left + bay.width / 2, y: bay.top - 10 }, dt * (heli.speed || 65) * 2.5)) {
+          if (moveToward(heli.screen, { x: bay.left + bay.width / 2, y: bay.top - 10 }, dt * (heli.speed || 65) * 2.5, dt)) {
             rescue.stage = "drop";
             rescue.elapsed = 0;
             playSound("pickup");
@@ -1792,7 +2071,7 @@
           }
         } else if (rescue.stage === "exit") {
           const target = { x: heli.screen.x < innerWidth / 2 ? -40 : innerWidth + 40, y: -40 };
-          if (moveToward(heli.screen, target, dt * (heli.speed || 65) * 3.3)) {
+          if (moveToward(heli.screen, target, dt * (heli.speed || 65) * 3.3, dt)) {
             helicopters.delete(heli.id);
             incident = null;
             collisionAfter = time + 3;
@@ -1886,7 +2165,7 @@
             const dropX = bay.left + 17 + finalIndex % 4 * 25;
             const dropY = bay.top + 25 + Math.floor(finalIndex / 4) * 15;
             const cx = liftX + (dropX - liftX) * lower;
-            const cy = liftY + (dropY - liftY) * lower;
+            const cy = liftY + (dropY - liftY) * lower * lower;
             air.strokeStyle = colors.black;
             air.lineWidth = .5;
             air.beginPath(); air.moveTo(point.x, point.y); air.lineTo(cx, cy); air.stroke();
@@ -2096,6 +2375,7 @@
         document.getElementById("city-description").textContent = currentCity().note;
         status.textContent = reseed ? "A new roll in " + currentCity().name + "." : "Back over the first landmark.";
         draw();
+        syncWheels();
         syncPlayback();
       }
       document.getElementById("new").addEventListener("click", () => resetCity());
@@ -2123,42 +2403,9 @@
         status.textContent = nightEnabled ? "Night flight. House lights, streetlamps and headlights are on." : "Back to daylight.";
         draw();
       });
-      document.getElementById("motorcycles").addEventListener("change", event => {
-        bikesEnabled = event.target.checked;
-        document.getElementById("bike-ratio").disabled = !bikesEnabled;
-        document.getElementById("filtering").disabled = !bikesEnabled;
-        document.querySelector('#spawn-kind option[value="bike"]').disabled = !bikesEnabled;
-        if (!bikesEnabled) {
-          for (const [id, vehicle] of ambientTraffic) if (vehicle.kind === "bike") ambientTraffic.delete(id);
-          for (let i = spawnedCars.length - 1; i >= 0; i--) {
-            if (spawnedCars[i].kind === "bike") spawnedCars.splice(i, 1);
-          }
-          if (document.getElementById("spawn-kind").value === "bike") document.getElementById("spawn-kind").value = "car";
-        }
-        draw();
-      });
-      document.getElementById("bike-ratio").addEventListener("input", event => {
-        bikeRatio = Number(event.target.value) / 100;
-        document.getElementById("bike-ratio-value").textContent = event.target.value + "%";
-        draw();
-      });
-      document.getElementById("filtering").addEventListener("change", event => {
-        filteringEnabled = event.target.checked;
-        status.textContent = filteringEnabled ? "Motorcycles use the lane gap at up to 2.8× their cruising pace."
-          : "Filtering off. Motorcycles share car lanes at normal pace.";
-        draw();
-      });
-      document.getElementById("traffic-speed").addEventListener("change", event => { trafficPace = Number(event.target.value); });
-      document.getElementById("flight-speed").addEventListener("change", event => { flightPace = Number(event.target.value); });
-      document.getElementById("volume").addEventListener("input", event => {
-        soundVolume = Number(event.target.value) / 100;
-        for (const audio of activeSounds) audio.volume = soundVolume * .4;
-        syncRotorSound();
-      });
-      document.getElementById("music").addEventListener("change", event => {
-        musicEnabled = event.target.checked;
-        unlockAudio();
-        syncRotorSound();
+      document.getElementById("fps").addEventListener("change", event => {
+        FRAME_TIME = 1000 / Number(event.target.value);
+        lastFrame = null;
       });
       function setExpanded(value) {
         expanded = value;
@@ -2222,6 +2469,7 @@
         }
       });
       document.getElementById("city-description").textContent = currentCity().note;
+      mountWheels();
       applyFilm();
       if (paused) status.textContent = "Motion is off. Press Play to take flight.";
       draw();
