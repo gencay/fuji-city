@@ -16,6 +16,8 @@ The application is the self-contained [`city-flight.html`](city-flight.html). Op
 
 The default is a **600 px Polaroid, Close up, Auto 30 FPS**, in Gamified Light Paper. Reduced-motion preference starts the simulation paused. The 176 px desktop clock has stacked faster/slower controls on its right.
 
+In the two-column layout, the photo stays near the top of the viewport while the sidebar scrolls, until the shared layout ends. Tall prints remain scrollable at the end; single-column mobile layouts use normal document scrolling so the photo cannot cover the controls. Full-window mode retains its independently scrolling sidebar. The small "Somewhere," label leaves the selected city as the main heading.
+
 ## Controls
 
 Click a road to add a randomly painted vehicle. Each shuffled pair contains a car and a motorcycle. New vehicles start at their planned cruising speed; a temporarily unavailable home no longer freezes them mid-road. They continue along legal roads and retry their home search. Red lights, pedestrians, wrecks, blocked exits, and close traffic still require a stop. A deliberately paused city stays paused.
@@ -40,6 +42,7 @@ Tests use Playwright and do not ship with the deployed page.
 bun install
 bunx playwright install chromium
 bun tests/versions.mjs
+bun tests/layout.mjs
 bun tests/motion.mjs
 bun tests/stress.mjs --rounds=10
 ```
