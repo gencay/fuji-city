@@ -1,0 +1,13 @@
+{
+  "name": "fuji-city",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/motion.mjs && node tests/stress.mjs",
+    "test:stress": "node tests/stress.mjs --rounds=10"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}
