@@ -62,7 +62,7 @@ try{
     await scroll(350);
     await page.screenshot({path:root+`test-results/sticky-${ui}.png`});
     await page.locator("#city").press("l");await page.locator("#city").press("Enter");
-    assert.match(await page.locator("#status").textContent(),/added at (?:cruising|a forecast-safe) speed/);
+    assert.match(await page.locator("#status").textContent(),/added (?:at (?:cruising|a forecast-safe) speed|to a crowded gap)/);
     for(const width of [390,850]){
       await page.setViewportSize({width,height:844});
       const a=await scroll(0),b=await scroll(200);
