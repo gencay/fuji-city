@@ -485,10 +485,40 @@
   .version-list a:hover, .version-list a[aria-current="page"] { text-decoration: underline; }
   .version-list strong, .version-list span { display: block; }
   .version-list span { margin-top: 4px; font: 11px/1.5 "Segoe UI", sans-serif; }
+
+  .city-notes .version-bar, body.full-view .city-notes .version-bar { position: relative; inset: auto; width: 100%; margin: 0 0 16px; justify-content: flex-start; }
+  .city-notes .version-picker { width: 100%; }
+  .city-notes .version-panel, body.full-view .city-notes .version-panel { position: static; width: 100%; max-height: min(60dvh, 520px); box-sizing: border-box; box-shadow: none; }
+  html body:has(> .version-pager) { padding-top: 104px; }
+  .version-pager { position: fixed; inset: 0 0 auto; z-index: 100; height: 88px; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-sizing: border-box; background: var(--cp-surface); color: var(--cp-text); border-bottom: 1px solid var(--cp-border-strong); }
+  .version-step { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 0 0 88px; height: 72px; box-sizing: border-box; border: 1px solid var(--cp-border-strong); color: var(--cp-text); background: var(--cp-surface); text-decoration: none; text-align: center; font: 11px/1.5 Consolas, "Courier New", monospace; }
+  .version-step svg { display: block; width: 44px; height: 44px; }
+  a.version-step:hover { background: var(--cp-surface-soft); border-color: var(--cp-text); }
+  a.version-step:focus-visible { outline: 3px solid var(--cp-text); outline-offset: 2px; }
+  .version-step[aria-disabled="true"] { color: var(--cp-text-muted); border-style: dashed; }
+  .version-position { min-width: 0; text-align: center; font: 12px/1.5 Consolas, "Courier New", monospace; }
+  html body.full-view:has(> .version-pager) { padding-top: 88px; }
+  html body.full-view:has(> .version-pager) > main,
+  html body.full-view:has(> .version-pager) .city-layout { height: calc(100dvh - 88px); }
+  @media (min-width: 851px) {
+    html body.full-view:has(> .version-pager) .city-layout > main,
+    html body.full-view:has(> .version-pager) .city-journal { height: calc(100dvh - 88px); }
+  }
+  @media (max-height: 500px) and (min-width: 650px) {
+    html[data-ui] body.full-view:has(> .version-pager) .city-layout > main,
+    html[data-ui] body.full-view:has(> .version-pager) .city-journal { height: calc(100dvh - 88px); }
+  }
 </style>
 <!-- CITY VERSION STYLE END -->
 </head>
 <body class="expanded">
+<!-- CITY VERSION NAV START -->
+<nav class="version-pager" aria-label="Browse archived versions">
+  <a class="version-step" rel="prev" href="city-flight-v13.html" aria-label="Previous version: v13" title="Previous version: v13"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M30 8L14 24L30 40"/></svg><span>v13</span></a>
+  <span class="version-position">Archive<br><strong>v14</strong></span>
+  <a class="version-step" rel="next" href="../city-flight.html" aria-label="Next version: v15 current" title="Next version: v15 current"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M18 8L34 24L18 40"/></svg><span>v15 current</span></a>
+</nav>
+<!-- CITY VERSION NAV END -->
   <div class="city-layout">
   <main>
     <figure>
@@ -4100,6 +4130,8 @@
 <script>
   (() => {
     const picker = document.querySelector(".version-picker");
+    const extras = document.querySelector(".city-extras");
+    if (extras) extras.prepend(picker.closest(".version-bar"));
     document.addEventListener("keydown", event => {
       if (event.key === "Escape" && picker.open) {
         event.preventDefault(); event.stopImmediatePropagation();
@@ -4114,7 +4146,7 @@
     });
     const theme = new URLSearchParams(location.search).get("scoutTheme");
     if (theme === "dark" || theme === "light") {
-      for (const link of picker.querySelectorAll("a")) link.search = "?scoutTheme=" + theme;
+      for (const link of document.querySelectorAll(".version-list a, .version-pager a")) link.search = "?scoutTheme=" + theme;
     }
   })();
 </script>

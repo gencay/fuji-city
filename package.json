@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-site.mjs",
-    "test": "node tests/versions.mjs && node tests/layout.mjs && node tests/motion.mjs && node tests/stress.mjs",
+    "test": "node tests/versions.mjs && node tests/onboarding.mjs && node tests/navigation.mjs && node tests/layout.mjs && node tests/clock.mjs && node tests/postcards.mjs && node tests/wheels.mjs && node tests/motion.mjs && node tests/rescue.mjs && node tests/stress.mjs",
     "test:stress": "node tests/stress.mjs --rounds=10"
   },
   "devDependencies": {

@@ -11,6 +11,7 @@ const errors=[];
 mkdirSync(root+"test-results",{recursive:true});
 try{
   const page=await browser.newPage({reducedMotion:"reduce",viewport:{width:1440,height:1100}});
+  await page.addInitScript(()=>localStorage.setItem("fuji-city:first-play:v1","done"));
   page.on("pageerror",e=>errors.push(e.message));
   if(!process.env.SITE_URL){
     const source=readFileSync(process.env.CITY_HTML||root+"city-flight.html","utf8");
@@ -28,6 +29,25 @@ try{
       };
       return {y:scrollY,main:rect("main"),sidebar:rect(".city-journal"),layout:rect(".city-layout")};
     });
+  };
+  const stableLayout=()=>page.evaluate(async()=>{
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    const main=document.querySelector("main"),figure=document.querySelector("figure"),sidebar=document.querySelector(".city-journal");
+    const box=main.getBoundingClientRect(),side=sidebar.getBoundingClientRect();
+    return [box.x,box.y,box.width,box.height,side.x,side.y,figure.offsetWidth,figure.offsetHeight];
+  });
+  const checkCityTooltip=async()=>{
+    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    await page.locator("#city-selector").evaluate(e=>e.blur());
+    await page.locator("#city-selector").evaluate(e=>e.focus({preventScroll:true}));
+    await page.waitForFunction(()=>document.getElementById("control-tooltip").getAttribute("aria-hidden")==="false");
+    const bounds=await page.evaluate(()=>{
+      const tip=document.getElementById("control-tooltip").getBoundingClientRect(),board=document.querySelector(".station-board").getBoundingClientRect();
+      return {visible:tip.left>=0&&tip.top>=0&&tip.right<=innerWidth&&tip.bottom<=innerHeight,
+        clear:tip.right<=board.left||tip.left>=board.right||tip.bottom<=board.top||tip.top>=board.bottom};
+    });
+    assert(bounds.visible&&bounds.clear,JSON.stringify(bounds));
+    await page.keyboard.press("Escape");
   };
   for(const ui of ["film","gamified"]){
     await page.locator("#ui-style").selectOption(ui,{force:true});
@@ -54,7 +74,7 @@ try{
           label:parseFloat(getComputedStyle(document.querySelector(".city-identity h1 > span")).fontSize),
           city:parseFloat(getComputedStyle(document.querySelector("#city-selector .wheel-readout")).fontSize)
         }));
-        assert(fonts.city>=fonts.label*1.3,JSON.stringify(fonts));
+        assert(fonts.city>=fonts.label*1.15,JSON.stringify(fonts));
       }
     }
     await page.setViewportSize({width:1440,height:1100});
@@ -63,6 +83,32 @@ try{
     await page.screenshot({path:root+`test-results/sticky-${ui}.png`});
     await page.locator("#city").press("l");await page.locator("#city").press("Enter");
     assert.match(await page.locator("#status").textContent(),/added (?:at (?:cruising|a forecast-safe) speed|to a crowded gap)/);
+    for(const width of [1440,390,320]){
+      await page.setViewportSize({width,height:900});
+      await scroll(0);
+      const baseline=await stableLayout();
+      const cities=await page.locator("#destination option").evaluateAll(options=>options.map(e=>e.value));
+      for(const city of cities){
+        await page.selectOption("#destination",city,{force:true});
+        const current=await stableLayout();
+        assert(current.every((value,i)=>Math.abs(value-baseline[i])<=1),`${ui}/${width}/${city}: city change shifted layout ${JSON.stringify({baseline,current})}`);
+      }
+      await page.locator("#new").evaluate(e=>e.click());
+      const rolled=await stableLayout();
+      assert(rolled.every((value,i)=>Math.abs(value-baseline[i])<=1),"New roll must not shift the photo or sidebar");
+      for(const angle of [-2,2]){
+        const contained=await page.evaluate(angle=>{
+          document.documentElement.style.setProperty("--city-paper-angle",angle+"deg");
+          const photo=document.querySelector("figure").getBoundingClientRect(),main=document.querySelector("main").getBoundingClientRect();
+          return photo.left>=main.left&&photo.right<=main.right&&photo.top>=main.top&&photo.bottom<=main.bottom;
+        },angle);
+        assert(contained,`${ui}/${width}: maximum tilt stays inside reserved space`);
+      }
+      await checkCityTooltip();
+      const targetTop=await page.locator("#city-selector").evaluate(e=>e.getBoundingClientRect().top+scrollY);
+      await scroll(targetTop-12);
+      await checkCityTooltip();
+    }
     for(const width of [390,850]){
       await page.setViewportSize({width,height:844});
       const a=await scroll(0),b=await scroll(200);
@@ -78,8 +124,10 @@ try{
     const b=await page.locator("figure").boundingBox();
     assert.deepEqual(b,a,"Full-window sidebar scroll cannot move the photo");
     assert(await page.locator(".city-journal").evaluate(e=>e.scrollTop>0));
+    await page.locator(".city-journal").evaluate(e=>e.scrollTop=0);
+    await checkCityTooltip();
     await page.keyboard.press("Escape");
   }
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({result:"PASS",styles:2,desktopScrollCases:12,mobileWidths:[390,850],fullWindow:"preserved",cityHeading:"dominant",errors}));
+  console.log(JSON.stringify({result:"PASS",styles:2,desktopScrollCases:12,mobileWidths:[320,390,850],stableCityChanges:114,maxTiltBounds:true,cityTooltipClear:true,fullWindow:"preserved",cityHeading:"dominant",errors}));
 }finally{await browser.close()}

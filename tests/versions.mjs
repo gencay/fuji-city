@@ -17,9 +17,18 @@ for(const version of catalog.versions){
   const source=readFileSync(file,"utf8");
   assert.equal(hash(strip(source)),version.sourceSha256,version.file+" simulation hash");
   if(version.archiveSha256)assert.equal(hash(source),version.archiveSha256);
-  const nav=source.match(/<!-- CITY VERSION NAV START -->[\s\S]*?<!-- CITY VERSION NAV END -->/)[0];
+  const nav=[...source.matchAll(/<!-- CITY VERSION NAV START -->[\s\S]*?<!-- CITY VERSION NAV END -->/g)].map(match=>match[0]).join("\n");
   const links=[...nav.matchAll(/href="([^"]+)"/g)].map(match=>match[1]);
-  assert.equal(links.length,catalog.versions.length);
+  assert.equal(links.length,catalog.versions.length+(version.archiveSha256?(version.version===0?1:2):0));
+  if(version.archiveSha256){
+    assert(nav.includes('class="version-pager"'));
+    assert(nav.includes(`rel="next" href="${catalog.versions.find(v=>v.version===version.version+1).file}"`));
+    if(version.version===0)assert(nav.includes('aria-disabled="true"'));
+    else assert(nav.includes(`rel="prev" href="${catalog.versions.find(v=>v.version===version.version-1).file}"`));
+  }else{
+    assert(!nav.includes('class="version-pager"'));
+    assert(source.indexOf('class="city-extras"')<source.indexOf('class="version-picker"'));
+  }
   for(const link of links)assert(existsSync(path.resolve(path.dirname(file),link)),`${version.file} -> ${link}`);
   const deployed=path.resolve(root,"_site/versions",version.file);
   assert.equal(readFileSync(deployed,"utf8"),source);

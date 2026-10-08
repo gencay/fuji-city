@@ -33,7 +33,7 @@ const hook=`window.motionQA={
   release(){households.clear();time+=6},
   block(){
     const v=spawnedCars.at(-1),motion=velocity(v,8);
-    incident={roadCleared:false,cars:[{...v,id:"test-wreck",x:v.x+motion.x,y:v.y+motion.y,velocity:0}]};
+    incidents.push({roadCleared:false,cars:[{...v,id:"test-wreck",x:v.x+motion.x,y:v.y+motion.y,velocity:0}]});
   },
   crossing(){
     const v=spawnedCars.at(-1),instruction=departureRoute(v)[0],node=instruction.node;
@@ -50,6 +50,7 @@ const chrome=process.env.CHROME_PATH||"/Applications/Google Chrome.app/Contents/
 const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
 try {
   const page=await browser.newPage({viewport:{width:1440,height:1100},reducedMotion:"reduce"});
+  await page.addInitScript(()=>localStorage.setItem("fuji-city:first-play:v1","done"));
   await page.route("http://city.test/**",r=>r.fulfill({contentType:"text/html",body:source.replace(marker,hook+marker)}));
   await page.goto("http://city.test/");
   await page.waitForFunction(()=>motionQA.ready());

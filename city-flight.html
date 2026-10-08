@@ -17,7 +17,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&amp;family=Bodoni+Moda:wght@600&amp;family=Cinzel:wght@600&amp;family=Fira+Code:wght@600&amp;family=Libre+Caslon+Display&amp;family=Pacifico&amp;family=UnifrakturCook:wght@700&amp;family=UnifrakturMaguntia&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&amp;family=Bodoni+Moda:wght@600&amp;family=Caveat:wght@500&amp;family=Cinzel:wght@600&amp;family=Fira+Code:wght@600&amp;family=IM+Fell+English&amp;family=Libre+Caslon+Display&amp;family=Pacifico&amp;family=UnifrakturCook:wght@700&amp;family=UnifrakturMaguntia&amp;display=swap">
   <style>
     :root {
       color-scheme: light;
@@ -114,6 +114,10 @@
       --cp-london-wall: #b5a38a;
       --cp-ibiza-roof: #f3ebd8;
       --cp-ibiza-water: #45b7b3;
+      --cp-station-case: #101010;
+      --cp-station-face: #242424;
+      --cp-station-ink: #ffffff;
+      --cp-station-edge: #5c5c5c;
     }
     * { box-sizing: border-box; }
     body {
@@ -127,7 +131,7 @@
       color: var(--cp-text);
       font: 13px/1.6 "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    main { width: max(320px, calc(var(--city-view-size, 600px) * 88 / 79 + 4px + 2 * var(--paper-bleed-x, 0px))); max-width: 100%; text-align: center; }
+    main { display: flow-root; width: max(320px, calc(var(--city-view-size, 600px) * 88 / 79 + 4px + 2 * var(--paper-bleed-x, 0px))); max-width: 100%; text-align: center; }
     .eyebrow, .film-meta, button, .note {
       font-family: Consolas, "Courier New", Courier, monospace;
     }
@@ -140,6 +144,8 @@
     }
     h1 { margin: 0 0 28px; font: italic 26px/1.2 Georgia, "Times New Roman", serif; }
     figure {
+      position: relative;
+      container-type: inline-size;
       box-sizing: content-box;
       display: flex;
       flex-direction: column;
@@ -154,7 +160,7 @@
     }
     /* Approximate 88 x 107 mm print: 79 mm square image, 4.5 mm top/sides, 23.5 mm footer. */
     .view-window { width: calc(100% * 79 / 88); margin: calc(100% * 4.5 / 88) auto calc(100% * 23.5 / 88); overflow: auto; }
-    .aperture { width: var(--city-view-size, 600px); height: var(--city-view-size, 600px); overflow: hidden; background: var(--cp-film-road); }
+    .aperture { position: relative; width: var(--city-view-size, 600px); height: var(--city-view-size, 600px); overflow: hidden; background: var(--cp-film-road); }
     #city { width: var(--city-view-size, 600px); height: var(--city-view-size, 600px); }
     canvas { display: block; width: 200px; height: 200px; cursor: crosshair; touch-action: manipulation; }
     canvas:focus-visible { outline: 2px solid var(--cp-film-white); outline-offset: -3px; }
@@ -210,7 +216,7 @@
     .caption-city .wheel-readout, .caption-city .wheel-neighbor { font-family: var(--city-font, "Fira Code", Consolas, monospace); font-weight: var(--city-font-weight, 600); font-style: normal; font-size: 20px; line-height: 1.1; }
     .film-meta button { border: 0; font: inherit; min-width: 0; }
     .film-meta .wheel { line-height: 1.15; }
-    .film-meta .wheel-readout { padding: 2px 1px; }
+    .film-meta :is(.wheel-readout,.wheel-neighbor) { padding: 2px 1px; }
     .wheel-help { margin: 12px 0; font: 11px/1.6 Consolas, monospace; color: var(--cp-text); }
     #reset-view { grid-column: auto; }
     .caption-options { max-width: 320px; margin: 0 auto; }
@@ -247,6 +253,9 @@
     #clock[data-dial="bosphorus"] .clock-marks { font-size: 7px; }
     #clock[data-dial="industrial"] .clock-bezel { stroke: var(--cp-film-ink); stroke-dasharray: 4 2; }
     #clock[data-dial="industrial"] .clock-brand { font-family: Consolas, monospace; letter-spacing: .1px; }
+    #clock[data-dial="brewery"] { --cp-film-paper: var(--cp-film-night); --cp-film-ink: var(--cp-film-white); }
+    #clock[data-dial="brewery"] .clock-face { stroke: var(--cp-film-gold); }
+    #clock[data-dial="brewery"] .clock-brand { font-family: "IM Fell English", Georgia, serif; letter-spacing: .6px; }
     #clock[data-dial="deco"] .clock-bezel { stroke-width: 2; stroke-dasharray: 10 1; }
     #clock[data-dial="deco"] .clock-brand { font-family: "Segoe UI", sans-serif; letter-spacing: .7px; }
     #clock[data-dial="westminster"] .clock-bezel { stroke: var(--cp-film-ink); stroke-width: .5; }
@@ -283,8 +292,8 @@
     @media (max-width: 650px) {
       body.full-view .paper-tools { padding-top: 12px; }
       body.full-view .caption-options { grid-template-columns: minmax(80px, 1fr) minmax(180px, 2fr); gap: 4px; }
-      body.full-view .caption-city .wheel-readout { font-size: 14px; white-space: nowrap; }
-      body.full-view [data-wheel-for="view-size"] .wheel-readout { font-size: 9px; white-space: nowrap; }
+      body.full-view .caption-city :is(.wheel-readout,.wheel-neighbor) { font-size: 14px; white-space: nowrap; }
+      body.full-view [data-wheel-for="view-size"] :is(.wheel-readout,.wheel-neighbor) { font-size: 9px; white-space: nowrap; }
     }
     @media (max-height: 500px) {
       body.full-view .paper-tools { padding-top: 4px; padding-bottom: 8px; }
@@ -329,7 +338,6 @@
       body.full-view .city-journal { flex: none; width: 100%; height: auto; max-height: 30dvh; margin: 0; padding: 0 16px; border-width: 1px 0 0; }
       body.full-view .city-journal #journal > summary { min-height: 36px; font-size: 15px; }
     }
-    #clock-readout { display: block; margin-top: -2px; text-align: center; font: bold 10px/1.5 Consolas, monospace; font-variant-numeric: tabular-nums; color: var(--cp-film-ink); opacity: var(--cp-clock-opacity, .82); white-space: nowrap; }
     .paper-tools .settings { display: block; margin: 0; }
     [hidden] { display: none !important; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
@@ -486,26 +494,63 @@
       body.full-view .city-journal, html[data-ui="gamified"] body.full-view .city-journal { width: 350px; height: 100dvh; max-height: none; margin: 0; padding: 12px; border-width: 0 0 0 1px; }
     }
     .city-journal { container-type: inline-size; }
-    .city-heading { display: grid; grid-template-columns: minmax(0,1fr) min(200px,52cqi); gap: 12px; align-items: start; margin-bottom: 28px; }
+    .city-heading { display: grid; grid-template-columns: minmax(0,1fr) min(156px,max(109px,calc(39cqi + 6px))); gap: 12px; align-items: start; margin-bottom: 28px; }
     .city-heading > .eyebrow { grid-column: 1 / -1; margin-bottom: 4px; }
-    .city-identity { min-width: 0; }
-    .city-identity h1 { margin: 0 0 16px; font-size: clamp(12px,3.5cqi,14px); line-height: 1.4; letter-spacing: .02em; }
-    .city-heading .wall-clock { grid-column: 2; grid-row: 2; padding-bottom: 16px; }
-    .city-heading .clock-rate { grid-template-columns: minmax(0,1fr) 24px; grid-template-rows: 1fr 1fr; row-gap: 4px; }
-    .city-heading .clock-rate button { min-width: 24px; }
-    html .city-heading #clock { grid-column: 1; grid-row: 1 / 3; width: 100%; max-width: 176px; height: auto; }
-    .city-heading #clock-faster { grid-column: 2; grid-row: 1; align-self: end; }
-    .city-heading #clock-slower { grid-column: 2; grid-row: 2; align-self: start; }
-    .city-heading :is(#clock-readout,#clock-rate) { width: calc(100% - 24px); }
+    .city-identity { min-width: 0; display: flex; flex-direction: column; align-self: stretch; gap: 16px; padding-bottom: 16px; }
+    .city-identity h1 { margin: 0 0 16px; font-size: clamp(13px,4cqi,16px); line-height: 1.4; letter-spacing: .02em; }
+    .city-heading .wall-clock { grid-column: 2; grid-row: 2; align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 16px; }
+    .city-heading .clock-rate { grid-template-columns: minmax(0,1fr) 24px; grid-template-rows: repeat(4,minmax(24px,1fr)); row-gap: 2px; }
+    .city-heading .clock-rate > button:not(#clock) { min-width: 24px; min-height: 24px; height: 100%; padding: 0; display: grid; place-items: center; }
+    .clock-action-icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+    html .city-heading #clock { grid-column: 1; grid-row: 1 / 5; align-self: end; width: 100%; max-width: 132px; height: auto; }
+    .city-heading #clock-reset { grid-column: 2; grid-row: 1; }
+    .city-heading #clock-daylight { grid-column: 2; grid-row: 2; }
+    .city-heading #clock-faster { grid-column: 2; grid-row: 3; }
+    .city-heading #clock-slower { grid-column: 2; grid-row: 4; }
+    .city-heading #clock-rate { width: calc(100% - 24px); }
     .city-heading #clock-rate { top: auto; bottom: 0; }
-    .city-heading .version-bar, body.full-view .city-heading .version-bar { margin: 0; }
-    .city-heading .version-panel { width: min(370px,calc(100cqi - 24px)); }
     .city-heading #city-selector { display: block; width: calc(100% - 12px); margin: 12px 0 0 12px; transform: rotate(1deg); border: 2px solid var(--cp-film-ink); }
     .city-heading .caption-city :is(.wheel-readout,.wheel-neighbor) { font-size: clamp(14px,6cqi,20px); }
     html[data-ui="gamified"] .city-heading #city-selector { background: var(--cp-blue); color: var(--cp-text); border-color: var(--cp-text); box-shadow: 3px 3px 0 var(--cp-text); }
-    html[data-ui="gamified"] .city-identity h1 { margin-bottom: 16px; font-size: clamp(12px,3.5cqi,14px); line-height: 1.4; letter-spacing: .02em; }
+    html[data-ui="gamified"] .city-identity h1 { margin-bottom: 16px; font-size: clamp(13px,4cqi,16px); line-height: 1.4; letter-spacing: .02em; }
     html[data-ui="gamified"] .city-identity h1 > span { padding: 2px 6px; border-width: 1px; box-shadow: 2px 2px 0 var(--cp-text); }
     html[data-ui="gamified"] .city-journal { --cp-clock-opacity: .88; }
+    html[data-ui] .city-identity h1 { margin-bottom: 0; }
+    .city-greeting { margin: auto 0 0; display: grid; justify-items: center; container-type: inline-size; color: var(--cp-station-ink); }
+    .station-board { display: inline-flex; gap: 2px; max-width: 100%; padding: 6px 8px; background: var(--cp-station-case); border: 2px solid var(--cp-station-edge); font: 700 clamp(9px,8cqi,20px)/1.4 Consolas,"Courier New",monospace; }
+    .station-letter { display: inline-grid; position: relative; min-width: 1.05em; padding: 4px 2px; text-align: center; perspective: 120px; background: var(--cp-station-face); border: 1px solid var(--cp-station-edge); }
+    .station-letter::after { content: ""; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px solid var(--cp-station-case); pointer-events: none; }
+    .station-new { display: block; backface-visibility: hidden; }
+    .station-old { display: none; position: absolute; inset: 0; padding: 4px 2px; background: var(--cp-station-face); backface-visibility: hidden; }
+    .is-changing .station-old { display: block; animation: station-out 180ms ease-in var(--flip-delay) both; }
+    .is-changing .station-new { animation: station-in 260ms ease-out calc(var(--flip-delay) + 180ms) both; }
+    @keyframes station-out { from { transform: rotateX(0); opacity: 1; } to { transform: rotateX(-90deg); opacity: 0; } }
+    @keyframes station-in { from { transform: rotateX(90deg); } to { transform: rotateX(0); } }
+    figure .city-poem, body.full-view figure .city-poem { position: absolute; bottom: 0; left: calc(100% * 4.5 / 88); right: calc(100% * 4.5 / 88); height: calc(100cqi * 23.5 / 88); padding: 0; border: 0; display: grid; place-items: center; container-type: inline-size; color: var(--cp-film-ink); }
+    body.full-view figure .city-poem { height: min(26.704545cqi,20.888889dvh); }
+    .poem-verse { width: 100%; max-width: 100%; margin: 0; font: 500 clamp(12px,3.6cqi,30px)/1.3 "Caveat","Bradley Hand","Segoe Print","Comic Sans MS",cursive; }
+    .poem-line { display: block; white-space: nowrap; }
+    .poem-signature { display: block; margin-top: 4px; padding-right: 4px; text-align: right; font-size: clamp(8px,2cqi,16px); line-height: 1.2; white-space: nowrap; }
+    .poem-short { display: none; }
+    .is-writing .poem-line { animation: postcard-ink 1100ms cubic-bezier(.2,.55,.4,1) both; }
+    .is-writing .poem-line:nth-child(2) { animation-delay: 850ms; }
+    .is-writing .poem-signature { animation: postcard-ink 600ms ease-out 1400ms both; }
+    @keyframes postcard-ink { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+    @container (max-width: 260px) {
+      .poem-full { display: none; }
+      .poem-short { display: block; font-size: clamp(10px,6cqi,16px); }
+    }
+    @container (max-width: 170px) {
+      .station-board { gap: 1px; padding: 5px; }
+      .station-letter { min-width: 1em; padding: 3px 0; }
+      .station-old { padding: 3px 0; }
+    }
+    @container (max-width: 160px) {
+      .poem-short { font-size: 9px; line-height: 1.1; }
+      .poem-signature { margin-top: 1px; font-size: 8px; line-height: 1.1; }
+    }
+    html[data-motion="off"] .station-old { display: none; }
+    @media (prefers-reduced-motion: reduce) { .station-old { display: none !important; } }
     .city-options { margin: 0 0 28px; padding: 16px; border: 1px solid var(--cp-border-strong); background: var(--cp-film-paper); color: var(--cp-film-ink); --cp-section-heading: var(--cp-yellow); }
     .city-options > summary { min-height: 44px; font-weight: bold; }
     .city-options :is(.playback-tools,.camera-zoom) { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); grid-column: auto; grid-row: auto; justify-self: stretch; max-width: none; gap: 12px; margin-bottom: 24px; }
@@ -518,6 +563,31 @@
     #control-tooltip { position: fixed; z-index: 100; width: max-content; max-width: min(280px,calc(100vw - 24px)); padding: 8px 10px; border: 1px solid var(--cp-text); background: var(--cp-surface); color: var(--cp-text); font: 12px/1.5 "Segoe UI",sans-serif; pointer-events: none; opacity: 0; visibility: hidden; transform: translateY(4px); transition: opacity 180ms,transform 180ms,visibility 0s 180ms; }
     #control-tooltip.is-visible { opacity: 1; visibility: visible; transform: translateY(0); transition-delay: 0s; }
     html[data-ui="gamified"] #control-tooltip { border-width: 2px; background: var(--cp-yellow); box-shadow: 3px 3px 0 var(--cp-text); }
+    #first-play-guide { position: fixed; z-index: 120; width: min(330px,calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; padding: 16px; border: 1px solid var(--cp-text); background: var(--cp-surface); color: var(--cp-text); text-align: left; font: 13px/1.55 "Segoe UI",sans-serif; }
+    #first-play-guide[hidden], #guide-pointer[hidden], #guide-highlight[hidden] { display: none; }
+    .guide-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    #guide-progress { font: bold 11px Consolas,monospace; }
+    #first-play-guide h2 { margin: 8px 0; font: bold 21px/1.25 Georgia,serif; }
+    #first-play-guide p { margin: 8px 0; }
+    #guide-feedback { min-height: 20px; font-weight: 600; }
+    #guide-storage { color: var(--cp-text-muted); font-size: 12px; }
+    .guide-actions { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 8px; margin-top: 12px; }
+    #first-play-guide button { min-height: 44px; padding: 6px 8px; }
+    #guide-skip { border: 0; text-decoration: underline; }
+    #guide-next { background: var(--cp-text); color: var(--cp-surface); }
+    html[data-ui="gamified"] #first-play-guide { border-width: 2px; box-shadow: 5px 5px 0 var(--cp-text); }
+    html[data-ui="gamified"] #first-play-guide h2 { padding: 6px; background: var(--cp-yellow); font-family: "Segoe UI",sans-serif; }
+    #guide-highlight { position: fixed; z-index: 110; pointer-events: none; border: 2px solid var(--cp-accent); outline: 2px solid var(--cp-surface); outline-offset: 1px; }
+    #guide-pointer { position: fixed; z-index: 111; width: 0; height: 0; pointer-events: none; }
+    #guide-pointer.on-road { position: absolute; }
+    #guide-pointer::before { content: ""; position: absolute; left: -13px; top: -13px; width: 26px; height: 26px; border: 3px solid var(--cp-accent); border-radius: 50%; box-shadow: 0 0 0 2px var(--cp-surface); }
+    .guide-hand { position: absolute; left: -14px; top: -2px; width: 48px; height: 56px; fill: var(--cp-surface); stroke: var(--cp-text); stroke-width: 2; stroke-linejoin: round; }
+    #guide-pointer.is-tapping .guide-hand { animation: guide-tap 1600ms ease-in-out 4; transform-origin: 14px 2px; }
+    @keyframes guide-tap { 0%,100% { transform: translate(6px,8px) rotate(-8deg); } 40%,65% { transform: translate(0,0) rotate(0); } }
+    html[data-guide-sleeping="true"] .guide-hand { animation-play-state: paused; }
+    .newspaper-reader { padding: 12px; border: 1px solid var(--cp-border-strong); background: var(--cp-surface); color: var(--cp-text); font: 13px/1.6 Georgia,serif; }
+    .newspaper-reader h3 { margin: 20px 0 6px; font-size: 18px; }
+    .newspaper-reader p { margin: 8px 0; color: var(--cp-text); }
     html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation: none !important; transition: none !important; }
     html[data-motion="off"] .journal-counts div:hover, html[data-motion="off"] button:active, html[data-motion="off"] button:hover { transform: none !important; }
     @media (prefers-reduced-motion: reduce) {
@@ -545,6 +615,29 @@
   .version-list a:hover, .version-list a[aria-current="page"] { text-decoration: underline; }
   .version-list strong, .version-list span { display: block; }
   .version-list span { margin-top: 4px; font: 11px/1.5 "Segoe UI", sans-serif; }
+
+  .city-notes .version-bar, body.full-view .city-notes .version-bar { position: relative; inset: auto; width: 100%; margin: 0 0 16px; justify-content: flex-start; }
+  .city-notes .version-picker { width: 100%; }
+  .city-notes .version-panel, body.full-view .city-notes .version-panel { position: static; width: 100%; max-height: min(60dvh, 520px); box-sizing: border-box; box-shadow: none; }
+  html body:has(> .version-pager) { padding-top: 104px; }
+  .version-pager { position: fixed; inset: 0 0 auto; z-index: 100; height: 88px; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-sizing: border-box; background: var(--cp-surface); color: var(--cp-text); border-bottom: 1px solid var(--cp-border-strong); }
+  .version-step { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 0 0 88px; height: 72px; box-sizing: border-box; border: 1px solid var(--cp-border-strong); color: var(--cp-text); background: var(--cp-surface); text-decoration: none; text-align: center; font: 11px/1.5 Consolas, "Courier New", monospace; }
+  .version-step svg { display: block; width: 44px; height: 44px; }
+  a.version-step:hover { background: var(--cp-surface-soft); border-color: var(--cp-text); }
+  a.version-step:focus-visible { outline: 3px solid var(--cp-text); outline-offset: 2px; }
+  .version-step[aria-disabled="true"] { color: var(--cp-text-muted); border-style: dashed; }
+  .version-position { min-width: 0; text-align: center; font: 12px/1.5 Consolas, "Courier New", monospace; }
+  html body.full-view:has(> .version-pager) { padding-top: 88px; }
+  html body.full-view:has(> .version-pager) > main,
+  html body.full-view:has(> .version-pager) .city-layout { height: calc(100dvh - 88px); }
+  @media (min-width: 851px) {
+    html body.full-view:has(> .version-pager) .city-layout > main,
+    html body.full-view:has(> .version-pager) .city-journal { height: calc(100dvh - 88px); }
+  }
+  @media (max-height: 500px) and (min-width: 650px) {
+    html[data-ui] body.full-view:has(> .version-pager) .city-layout > main,
+    html[data-ui] body.full-view:has(> .version-pager) .city-journal { height: calc(100dvh - 88px); }
+  }
 </style>
 <!-- CITY VERSION STYLE END -->
 </head>
@@ -558,6 +651,7 @@
           Your browser needs Canvas support to show the city.
         </canvas>
       </div></div>
+      <figcaption id="city-poem" class="city-poem" lang="en"></figcaption>
     </figure>
   </main>
   <aside class="city-journal" aria-label="City chronicle and notebook">
@@ -567,37 +661,9 @@
       <h1><span>Somewhere,</span>
         <button id="city-selector" type="button" class="wheel caption-city" data-wheel-for="destination"><span id="city-caption" data-wheel-value>Original</span></button>
       </h1>
-    <div id="version-slot">
-<!-- CITY VERSION NAV START -->
-      <nav class="version-bar" aria-label="City flight version history">
-        <details class="version-picker">
-          <summary aria-label="Version history, v15, current">v15 · current</summary>
-          <div class="version-panel">
-            <p><strong>Current version · v15</strong><br>Nineteen cities, a hundred landmarks</p>
-            <p>city-flight.html always opens the latest version. Choose a milestone to explore how the city evolved.</p>
-            <ol class="version-list">
-              <li><a href="city-flight.html" aria-current="page"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations with 102 seeded architectural motifs, including Antalya&#39;s Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.</span></a></li>
-              <li><a href="versions/city-flight-v0.html"><strong>v0 — The first miniature</strong><span>200 px procedural city, pedestrians, traffic and faded Chrome-style film.</span></a></li>
-              <li><a href="versions/city-flight-v1.html"><strong>v1 — Click a lane</strong><span>Lane-click cars, legal directions, keyboard aiming and an original WAV chime.</span></a></li>
-              <li><a href="versions/city-flight-v2.html"><strong>v2 — Helicopter recovery</strong><span>Rooftop helicopters lift crashed vehicles into a collection bay.</span></a></li>
-              <li><a href="versions/city-flight-v3.html"><strong>v3 — Films, cities and motorcycles</strong><span>20 film approximations, seven named cities, blue motorcycles, filtering and continuous rotor audio.</span></a></li>
-              <li><a href="versions/city-flight-v4.html"><strong>v4 — A living soundtrack</strong><span>Generative music, safer ambient traffic, local crash queues, water falls and night lighting.</span></a></li>
-              <li><a href="versions/city-flight-v5.html"><strong>v5 — Physics and paper controls</strong><span>Caption wheels, connected river bridges, physical falls and recovery, smaller argh effects and a day/night rocker.</span></a></li>
-              <li><a href="versions/city-flight-v6.html"><strong>v6 — Five AI player-designer reviews</strong><span>Review-driven gameplay, accessibility, audio and input refinements; larger view and neighboring reel options. These were AI reviews, not human playtests.</span></a></li>
-              <li><a href="versions/city-flight-v7.html"><strong>v7 — The size dial</strong><span>Hidden-at-rest reel neighbors and exact 100–1000 px sizes, originally defaulting to 200 px.</span></a></li>
-              <li><a href="versions/city-flight-v8.html"><strong>v8 — Driving school and family homes</strong><span>First handbook-informed home routing and analog-clock daylight implementation, with a 600 px default. No real license test or AI training; turn refinements followed in v9.</span></a></li>
-              <li><a href="versions/city-flight-v9.html"><strong>v9 — Forgiving reels and refined driving</strong><span>Nearest-option release snapping, deferred resizing, one shared preview line, and refined legal junction turns.</span></a></li>
-              <li><a href="versions/city-flight-v10.html"><strong>v10 — Town clocks and traffic governor</strong><span>30 city minutes per real second, eight original city-branded dials, governor safety interlocks and the first browsable archive.</span></a></li>
-              <li><a href="versions/city-flight-v11.html"><strong>v11 — More city, not bigger pixels</strong><span>Constant-scale city sizes, full-window controls, adjustable downtown clocks with calmer hands, grab-to-turn reels and a live City Chronicle.</span></a></li>
-              <li><a href="versions/city-flight-v12.html"><strong>v12 — Compact clocks and tilted prints</strong><span>Full digital time, inline speed controls, 5x hand-speed limits, readable Chronicle ink, 30 FPS, city-specific paper tilts and separate Chronicle/media workers.</span></a></li>
-              <li><a href="versions/city-flight-v13.html"><strong>v13 — Clock tower and camera views</strong><span>Reference-style clock, 300 px / 30 FPS Drone default, restored Enlarge/Small control, Close up/Drone/Space zoom, four rendering and motion workers, and cached vehicle artwork.</span></a></li>
-              <li><a href="versions/city-flight-v14.html"><strong>v14 — Living streets, two frames</strong><span>Light Gamified default with a separate collapsed style panel, city-specific lettering and films, crowd-responsive frame rates, stacked camera/print wheels, grouped Chronicle events and a larger recovery gallery; varied blocks, colored motorcycles, mini-roundabouts and fair traffic.</span></a></li>
-            </ol>
-          </div>
-        </details>
-      </nav>
-<!-- CITY VERSION NAV END -->
-    </div>
+      <p id="city-greeting" class="city-greeting" lang="en" aria-live="polite" aria-atomic="true">
+        <span class="sr-only">Hello</span><span class="station-board" aria-hidden="true"></span>
+      </p>
       </div>
       <div class="wall-clock">
         <div class="clock-rate" aria-label="City clock speed">
@@ -616,13 +682,18 @@
               <circle cx="30" cy="30" r="2" fill="currentColor"/>
             </svg>
           </button>
+          <button id="clock-reset" type="button" aria-label="Reset clock to 09:00 and x1800" title="Reset the clock to 09:00 and its default x1800 speed. Keep the city and journeys.">
+            <svg class="clock-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6M12 7v5l3 2"/></svg>
+          </button>
+          <button id="clock-daylight" type="button" aria-label="Set daylight at noon" title="Jump to daylight at 12:00 without changing clock speed.">
+            <svg class="clock-action-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>
+          </button>
           <button id="clock-faster" type="button" aria-label="Double city clock speed">&gt;&gt;</button>
           <button id="clock-slower" type="button" aria-label="Halve city clock speed">&lt;&lt;</button>
         </div>
         <span id="clock-flavor" hidden>Civic classic</span>
         <output id="clock-rate-status" class="sr-only" aria-live="polite"></output>
-        <output id="clock-readout" aria-hidden="true">09:00:00</output>
-        <output id="clock-rate" aria-hidden="true">×1.8k</output>
+        <output id="clock-rate" aria-hidden="true">x1800</output>
       </div>
     </header>
     <details class="city-options" open>
@@ -663,7 +734,7 @@
           <option value="singapore">Singapore</option><option value="barcelona">Barcelona</option>
           <option value="amsterdam">Amsterdam</option><option value="lisbon">Lisbon</option>
           <option value="kyoto">Kyoto</option><option value="bruges">Bruges</option>
-          <option value="annecy">Annecy</option><option value="dubrovnik">Dubrovnik</option>
+          <option value="dublin">Dublin</option><option value="dubrovnik">Dubrovnik</option>
           <option value="antalya">Antalya</option>
         </select></label>
         <label hidden>Film simulation <select id="film" aria-describedby="film-description"></select></label>
@@ -694,8 +765,45 @@
     <details class="city-notes">
     <summary>City notebook &amp; extras</summary>
     <div class="city-extras">
+<!-- CITY VERSION NAV START -->
+      <nav class="version-bar" aria-label="City flight version history">
+        <details class="version-picker">
+          <summary aria-label="Version history, v15, current">Versions · v15 current</summary>
+          <div class="version-panel">
+            <p><strong>Current version · v15</strong><br>Nineteen cities, a hundred landmarks</p>
+            <p>city-flight.html always opens the latest version. Choose a milestone to explore how the city evolved.</p>
+            <ol class="version-list">
+              <li><a href="city-flight.html" aria-current="page"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations with 102 seeded architectural motifs, including Antalya&#39;s Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.</span></a></li>
+              <li><a href="versions/city-flight-v0.html"><strong>v0 — The first miniature</strong><span>200 px procedural city, pedestrians, traffic and faded Chrome-style film.</span></a></li>
+              <li><a href="versions/city-flight-v1.html"><strong>v1 — Click a lane</strong><span>Lane-click cars, legal directions, keyboard aiming and an original WAV chime.</span></a></li>
+              <li><a href="versions/city-flight-v2.html"><strong>v2 — Helicopter recovery</strong><span>Rooftop helicopters lift crashed vehicles into a collection bay.</span></a></li>
+              <li><a href="versions/city-flight-v3.html"><strong>v3 — Films, cities and motorcycles</strong><span>20 film approximations, seven named cities, blue motorcycles, filtering and continuous rotor audio.</span></a></li>
+              <li><a href="versions/city-flight-v4.html"><strong>v4 — A living soundtrack</strong><span>Generative music, safer ambient traffic, local crash queues, water falls and night lighting.</span></a></li>
+              <li><a href="versions/city-flight-v5.html"><strong>v5 — Physics and paper controls</strong><span>Caption wheels, connected river bridges, physical falls and recovery, smaller argh effects and a day/night rocker.</span></a></li>
+              <li><a href="versions/city-flight-v6.html"><strong>v6 — Five AI player-designer reviews</strong><span>Review-driven gameplay, accessibility, audio and input refinements; larger view and neighboring reel options. These were AI reviews, not human playtests.</span></a></li>
+              <li><a href="versions/city-flight-v7.html"><strong>v7 — The size dial</strong><span>Hidden-at-rest reel neighbors and exact 100–1000 px sizes, originally defaulting to 200 px.</span></a></li>
+              <li><a href="versions/city-flight-v8.html"><strong>v8 — Driving school and family homes</strong><span>First handbook-informed home routing and analog-clock daylight implementation, with a 600 px default. No real license test or AI training; turn refinements followed in v9.</span></a></li>
+              <li><a href="versions/city-flight-v9.html"><strong>v9 — Forgiving reels and refined driving</strong><span>Nearest-option release snapping, deferred resizing, one shared preview line, and refined legal junction turns.</span></a></li>
+              <li><a href="versions/city-flight-v10.html"><strong>v10 — Town clocks and traffic governor</strong><span>30 city minutes per real second, eight original city-branded dials, governor safety interlocks and the first browsable archive.</span></a></li>
+              <li><a href="versions/city-flight-v11.html"><strong>v11 — More city, not bigger pixels</strong><span>Constant-scale city sizes, full-window controls, adjustable downtown clocks with calmer hands, grab-to-turn reels and a live City Chronicle.</span></a></li>
+              <li><a href="versions/city-flight-v12.html"><strong>v12 — Compact clocks and tilted prints</strong><span>Full digital time, inline speed controls, 5x hand-speed limits, readable Chronicle ink, 30 FPS, city-specific paper tilts and separate Chronicle/media workers.</span></a></li>
+              <li><a href="versions/city-flight-v13.html"><strong>v13 — Clock tower and camera views</strong><span>Reference-style clock, 300 px / 30 FPS Drone default, restored Enlarge/Small control, Close up/Drone/Space zoom, four rendering and motion workers, and cached vehicle artwork.</span></a></li>
+              <li><a href="versions/city-flight-v14.html"><strong>v14 — Living streets, two frames</strong><span>Light Gamified default with a separate collapsed style panel, city-specific lettering and films, crowd-responsive frame rates, stacked camera/print wheels, grouped Chronicle events and a larger recovery gallery; varied blocks, colored motorcycles, mini-roundabouts and fair traffic.</span></a></li>
+            </ol>
+          </div>
+        </details>
+      </nav>
+<!-- CITY VERSION NAV END -->
     <p class="note"><span id="view-dimensions">600 × 600</span> · made as you fly<br>no footage. no map. just a passing moment.</p>
     <button id="reset-view" type="button">Revisit landmark</button>
+    <button id="replay-guide" type="button">Replay first-play guide</button>
+    <details class="newspaper-reader">
+      <summary>Read the local paper (entirely made up)</summary>
+      <p><strong id="newspaper-name"></strong><br><small id="newspaper-issue"></small></p>
+      <p>ENTIRELY MADE UP · LOCAL SATIRE · ZERO VERIFIED FACTS</p>
+      <p>The headlines and poet titles are invented jokes, not real reporting, public offices or real writers.</p>
+      <div id="newspaper-readable"></div>
+    </details>
     <p class="note" id="spawn-help">Click a lane for a randomly painted vehicle. Each shuffled pair adds one car and one motorcycle.<br>Traffic keeps its distance; crowded clicks can cause chaos.<br>Keyboard: L finds a lane · arrows aim · Enter adds.</p>
     <p class="note" id="commute-status"></p>
     <details class="governor" id="traffic-governor">
@@ -718,10 +826,10 @@
       <p id="city-landmarks"></p>
       <p><a id="city-source" target="_blank" rel="noreferrer">Official heritage / visitor reference</a></p>
       <p id="film-description"></p>
-      <p id="clock-help">The downtown clock starts at 30 city minutes per real second: a full day in 48 seconds. The buttons are stacked to its right: &gt;&gt; above doubles the time rate; &lt;&lt; below halves it, clamped at 1 city second per real second and 2 city hours per real second. The unavailable direction is disabled at either limit. These controls affect the clock and daylight, not car speed or signal clearance. Drag around the clock face to wind forward or backward (one revolution is 12 hours), or scroll by 15 minutes. Automatic clock movement pauses while dragging. Arrow keys adjust one minute; Shift + arrow adjusts 15 minutes; Page Up/Down adjusts one hour. Home selects sunrise at 06:00, End sunset at 21:00. The readout uses 24-hour time. Winding changes daylight and daily routines, not the physical history of cars. Original city-branded dials and architectural cases evoke local town clocks, architecture and music; they are not Rolex products or replicas. Paris is atelier classic, Munich traditional Rathaus, Istanbul Bosphorus ornament, Seattle industrial punk, New York Art Deco, London Westminster and Ibiza Balearic modern.</p>
-      <p>The analog clock grows to 176 px wide on desktop by stacking both speed buttons on its right, within the 440 px control pane. The clock scales down on narrow screens while keeping its speed buttons beside it. The compact, subdued HH:MM:SS digital clock stays visible and centered just beneath the analog dial. After a speed change, a purple multiplier fades in below the digital readout for a couple of seconds, then fades away without moving the layout. It shows the rate in thousands, rounded to at most two decimals: ×1.8k means 1,800 city seconds per real second. Rates below rounding precision read ×&lt;0.01k, never zero; the clock-speed controls expose the exact rate. The second hand is shown through 5× time and the minute hand through 300×; faster hands disappear. The hour hand stays visible. Slow down to restore the other hands. System reduced-motion preference starts playback paused.</p>
-      <p id="fps-help">Each destination starts with its own film and automatic frame-rate tier: Original / Classic Chrome / 30; Paris / ASTIA / 30; Munich / PROVIA / 30; Istanbul / Nostalgic Neg. / 60; Seattle / ETERNA / 30; New York / REALA ACE / 60; London / Classic Neg. / 60; Ibiza / Velvia / 24; Tokyo / REALA ACE / 60; Mexico City / Nostalgic Neg. / 30; Singapore / PROVIA / 60; Barcelona / Velvia / 30; Amsterdam / Classic Neg. / 30; Lisbon / Nostalgic Neg. / 30; Kyoto / ASTIA / 30; Bruges / Classic Chrome / 24; Annecy / PROVIA / 24; Dubrovnik / Velvia / 24; Antalya / ASTIA / 30 FPS. Automatic mode checks visible vehicles every two simulation seconds: at least 35 requests 30 FPS, at least 100 requests 60, never below the city's starting tier. It steps down only below 25 or 80 vehicles to avoid flickering between rates. Choose a numeric FPS to keep manual control, or select Auto again; choosing another city restores its defaults. The number is a requested rate, not a claim about measured performance.</p>
-      <p>Each new roll chooses a stable paper tilt between −2° and +2°: Original, Paris and Seattle lean left, Istanbul, New York and Ibiza lean right, and Munich and London can lean either way. The city keeps its object scale; only the paper rotates. Full-screen mode remains level. The blank paper footer is deeper than the top border, like an instant print.</p>
+      <p id="clock-help">The downtown clock starts at 30 city minutes per real second: a full day in 48 seconds. The buttons are stacked to its right: &gt;&gt; above doubles the time rate; &lt;&lt; below halves it, clamped at 1 city second per real second and 2 city hours per real second. The unavailable direction is disabled at either limit. These controls affect the clock and daylight, not car speed or signal clearance. Drag around the clock face to wind forward or backward (one revolution is 12 hours), or scroll by 15 minutes. Automatic clock movement pauses while dragging. Arrow keys adjust one minute; Shift + arrow adjusts 15 minutes; Page Up/Down adjusts one hour. Home selects sunrise at 06:00, End sunset at 21:00. The analog control exposes exact 24-hour time to assistive technology, without a separate digital display. Winding changes daylight and daily routines, not the physical history of cars. Original city-branded dials and architectural cases evoke local town clocks, architecture and music; they are not Rolex products or replicas. Paris is atelier classic, Munich traditional Rathaus, Istanbul Bosphorus ornament, Seattle industrial punk, New York Art Deco, London Westminster and Ibiza Balearic modern.</p>
+      <p>The analog clock grows to 176 px wide on desktop by stacking both speed buttons on its right, within the 440 px control pane. The clock scales down on narrow screens while keeping its speed buttons beside it. After a speed change, a purple multiplier fades in below the analog dial for a couple of seconds, then fades away without moving the layout. Rates use plain multipliers such as x1, x2, x16 and x1800, not thousands notation. Fractional rates use at most two decimal places; the clock-speed controls expose the exact rate. The second hand is shown through 5× time and the minute hand through 300×; faster hands disappear. The hour hand stays visible. Slow down to restore the other hands. System reduced-motion preference starts playback paused.</p>
+      <p id="fps-help">Each destination starts with its own film and automatic frame-rate tier: Original / Classic Chrome / 30; Paris / ASTIA / 30; Munich / PROVIA / 30; Istanbul / Nostalgic Neg. / 60; Seattle / ETERNA / 30; New York / REALA ACE / 60; London / Classic Neg. / 60; Ibiza / Velvia / 24; Tokyo / REALA ACE / 60; Mexico City / Nostalgic Neg. / 30; Singapore / PROVIA / 60; Barcelona / Velvia / 30; Amsterdam / Classic Neg. / 30; Lisbon / Nostalgic Neg. / 30; Kyoto / ASTIA / 30; Bruges / Classic Chrome / 24; Dublin / Classic Chrome / 30; Dubrovnik / Velvia / 24; Antalya / ASTIA / 30 FPS. Automatic mode checks visible vehicles every two simulation seconds: at least 35 requests 30 FPS, at least 100 requests 60, never below the city's starting tier. It steps down only below 25 or 80 vehicles to avoid flickering between rates. Choose a numeric FPS to keep manual control, or select Auto again; choosing another city restores its defaults. The number is a requested rate, not a claim about measured performance.</p>
+      <p>Each new roll chooses a stable paper tilt between −2° and +2°: Original, Paris and Seattle lean left, Istanbul, New York and Ibiza lean right, and Munich and London can lean either way. The city keeps its object scale; only the paper rotates. Full-screen mode remains level. The handwritten paper footer is deeper than the top border, like an instant print.</p>
       <p>Sunrise is fixed at 06:00 and sunset at 21:00 for this miniature, with twilight on either side. The sun travels east to west (world east is right before camera rotation), casting long opposite shadows near the horizon and shorter shadows at midday. This is an idealized summer day, not date-, latitude- or weather-specific astronomy. Household lights gradually go out toward bedtime; streetlights remain on for safety.</p>
       <p>Drivers and riders use a hand-coded driving policy informed by official guidance, not a trained model or a real driving qualification. They keep a two-second following gap, observe signals and pedestrian phases, reserve clear junction exits, signal turns, and plan legal routes to their own family homes. Blocked roads trigger another route at a junction, never a pavement shortcut or an oncoming-lane escape. These two-way streets have only one lane per direction, so passing and motorcycle filtering are conservatively disabled in every city. Bikes accelerate briskly but share the same modeled residential speed ceiling. Night arrivals park at home while fewer new journeys begin.</p>
       <p>Driving references:
@@ -730,12 +838,17 @@
         <a href="https://app.leg.wa.gov/rcw/default.aspx?cite=46.61.608" target="_blank" rel="noreferrer">Washington motorcycle lane rules</a>.
         Conservative shared rules are used where local law varies; this is not a complete legal model of any city.</p>
       <p>Only the selected choice is shown at rest. Drag freely and release to snap to the nearest option; scrolling commits after a brief pause. Previews do not resize or regenerate the city. Escape cancels an unfinished selection. Click city, film or FPS to shuffle, or use arrow keys to choose. The size dial grows by 100 px from 100 to 1000 px, followed by Full screen. Home selects 100 px; End selects Full screen. The default is a 600 px Polaroid at 30 FPS in Close up. Wide prints scroll inside their frame on smaller screens. Full screen uses the available browser window, not browser F11. Choose a numeric size or press Escape to leave Full screen. Notebook extras and governor diagnostics are below the Chronicle, collapsed by default.</p>
-      <p>The figure contains only the city image and its paper frame. The city wheel replaces the second title line in the right pane, with the clock beside the title and the version picker nearby. City options opens by default above the Chronicle and holds playback, sound, camera view, print format, size, film, frame rate and the Junkyard. Polaroid selects the large 600 px print; Instax returns to your last small 100, 200 or 300 px print. The format wheel shows the current selection and stays in sync with the size dial. Print size and camera zoom are independent: a larger print reveals more streets at the same scale; Close up doubles the Drone scale, while Space view shows 1.5 times the Drone extent in each direction. Drag, scroll, click or use arrow keys on either wheel. Zoom keeps the current roll, clock and existing journeys. Size and zoom changes show brief notices rather than persistent status text; safety and error messages remain visible. Frame rate and view size do not change simulation speed; actual frame rate depends on your browser, hardware and the amount of city visible. Version 14 preserves the previous control layout.</p>
+      <p>The figure holds the city image and an original handwritten-style poem in its existing paper footer, signed on the right with an absurd, invented honorary title. Each destination has imagery drawn from local places and everyday culture, with distinct daylight and evening endings. New rolls avoid repeating the previous couplet; revisiting keeps it. Small prints use a compact couplet and title. The city-specific local paper in City notebook &amp; extras is entirely fictional satire; it does not replace the page background. Neither headlines nor poet titles describe real reporting, offices or writers. The black-and-white local greeting sits beside the clock, aligned with its bottom, and flips like a station board on city changes. Each city uses one selected local greeting, including English for multilingual Singapore; poems are original English text, not quotations, translations or imitations of real writers. Reveals are brief, respect motion settings, and settle when the page is hidden. The paper reserves the full supported tilt range so random slants do not shift the layout.</p>
+      <p>The first-play guide points out a legal road, city and film wheels, print sizing and clock controls. Its hand never clicks or changes settings for you. Skip or Finish is remembered in this browser, when storage is available; replay it from City notebook &amp; extras. Keyboard and reduced-motion users can follow the same steps with a static pointer.</p>
+      <p>The city wheel replaces the second title line in the right pane, with the clock beside the title and the version picker inside City notebook &amp; extras. City options opens by default above the Chronicle and holds playback, sound, camera view, print format, size, film, frame rate and the Junkyard. Polaroid selects the large 600 px print; Instax returns to your last small 100, 200 or 300 px print. The format wheel shows the current selection and stays in sync with the size dial. Print size and camera zoom are independent: a larger print reveals more streets at the same scale; Close up doubles the Drone scale, while Space view shows 1.5 times the Drone extent in each direction. Drag, scroll, click or use arrow keys on either wheel. Zoom keeps the current roll, clock and existing journeys. Size and zoom changes show brief notices rather than persistent status text; safety and error messages remain visible. Frame rate and view size do not change simulation speed; actual frame rate depends on your browser, hardware and the amount of city visible. Version 14 preserves the previous control layout.</p>
       <p>The paper proportions use a documented square-window approximation: a 79 mm image on an 88 × 107 mm print, with 4.5 mm top/side borders and a 23.5 mm footer. The footer is 47/9 (about 5.22) times the header, and about 29.75% of the image width. Borders scale with the visible picture width; full-window mode caps their height while preserving the header/footer ratio. The simulation stays square and retains its selected pixel size. These are approximate display proportions, not a precise cutting template: <a href="https://support.polaroid.com/hc/en-us/articles/115012363647-What-are-Polaroid-photo-dimensions">Polaroid's official dimensions</a> specify an 88.47 × 107.52 mm print and 76.801 × 78.94 mm image, without separate top/bottom measurements. The square-window border breakdown comes from <a href="https://collage.recipes/guides/polaroid-photo-sizes/">Collage Recipes' measured print guide</a>.</p>
       <p>The Junkyard is hidden on a fresh roll, even when collisions are enabled. A rescue reveals it and expands City options; the bay fades in and gently shakes while awaiting the helicopter's delivery. Delivery reopens the section if it was collapsed during approach. The shake ends when the cargo is delivered, and recovered vehicles stay visible until the next roll. A rescue with no surviving cargo leaves an empty bay hidden. UI motion off and system reduced-motion disable the reveal/shake animation without hiding rescue information.</p>
+      <p>Multiple crashes can be recovered at once. Each gets the nearest available helicopter; busy crews keep their current job. If all crews are busy, calls queue in arrival order and their wrecks continue blocking the affected roads. A crew can take the next call immediately after delivery, from its current location. An empty fleet receives one backup crew. The Junkyard keeps receiving while any recovery remains, counts every delivery once and displays the latest eight vehicles. Disabling new collisions does not cancel queued rescues; changing the city or roll does.</p>
       <p>Custom action tooltips replace native title bubbles. Hover or focus a control for 500 ms to reveal its explanation. Moving between controls while a tooltip is visible, or within half a second of its dismissal on leaving, reveals the next tooltip after 100 ms. A tooltip automatically dismisses after five seconds without pointer movement. Leaving or blurring the control waits half a second before a short fade; Escape dismisses immediately. Tooltips follow the active theme, stay within the viewport, preserve keyboard descriptions and respect reduced-motion settings.</p>
       <p>The page opens in Gamified pastel with Light Paper. Open the separate Same city. A different frame. section below City notebook &amp; extras to change interface, appearance or UI motion; both sections start collapsed. Compare Original film and Gamified pastel without resetting the city. Gamified adds dotted paper, pastel tickets, bold headings and tactile controls; Dark Ink and device appearance remain available. UI motion controls decorative feedback, independently of city playback. System reduced-motion always disables decorative movement. Consecutive Chronicle events of the same kind share one entry with an accumulated count and the first timestamp. A different event starts a new entry. Totals count affected people or vehicles, not repeated messages; the latest 120 grouped entries are retained.</p>
       <p>City lettering follows each clock's character: Original uses Fira Code; Paris, Bodoni Moda; Munich, UnifrakturCook; Istanbul, Cinzel; Seattle, Barlow Condensed; New York, UnifrakturMaguntia; London, Libre Caslon Display; and Ibiza, Pacifico. New York's blackletter evokes a newspaper masthead, not the actual New York Times typeface. These are expressive choices, not official city identities. The selected name and neighboring reel previews each use their city's font. Fonts load from Google Fonts with local fallbacks so the city remains usable offline.</p>
+      <p>Dublin replaces Annecy in the current edition: Liffey quays, Georgian brick courtyards, green squares and left-hand traffic. Its IM Fell English lettering and dark, cream-and-gold brewery-inspired clock are original styling, not the Guinness wordmark or an official branded clock. The Guinness Storehouse motif includes its industrial shell and rooftop glass Gravity Bar; the remaining landmarks are Ha'penny Bridge, Custom House, the Spire and Trinity Campanile. References: <a href="https://www.guinness-storehouse.com/en/whats-hoppening/the-gravity-bar">Guinness Storehouse architecture</a> and <a href="https://www.visitdublin.com/things-to-do/attractions">Visit Dublin attractions</a>.</p>
+      <p>Every fresh roll, including the first page load, uses its random seed to choose an opening landmark from the selected city's complete set. The notebook names that starting landmark; Revisit landmark returns to the same seeded choice. Random choices can repeat. Wheel scrolling previews continuously and commits after 350 ms without input; interrupting a snap resumes from the visible position rather than jumping back to a whole option.</p>
       <button id="new" type="button">New roll</button>
       <p>Traffic is automatically tuned: a 25% motorcycle draw, personal cruising paces and a soft original generative score. New insertions forecast four seconds ahead; crowded clicks can still overwhelm braking. Crashes block nearby lanes, not the whole city, and only then dispatch a rescue helicopter. Homes and nearby journeys are procedural and recycled outside the camera's neighborhood; the homecoming count records arrivals actually simulated this roll.</p>
       <p>New vehicles start at their forecast cruising speed. If no accessible home is available yet, they continue along legal streets while looking for one instead of waiting mid-road. Red signals, pedestrians, blocked exits and traffic ahead still require yielding; paused playback stays paused. Wheel selectors have rose and teal hand-drawn lines above and below the selected text, distinct from ordinary action buttons.</p>
@@ -786,6 +899,21 @@
   <canvas id="airspace" aria-hidden="true"></canvas>
   <div id="ui-toast" role="status" aria-live="polite"></div>
   <div id="control-tooltip" role="tooltip" aria-hidden="true"></div>
+  <section id="first-play-guide" aria-labelledby="guide-title" hidden>
+    <div class="guide-top"><span id="guide-progress"></span><button id="guide-skip" type="button">Skip guide</button></div>
+    <div aria-live="polite" aria-atomic="true"><h2 id="guide-title"></h2><p id="guide-description"></p></div>
+    <p id="guide-feedback" role="status"></p>
+    <p id="guide-storage" hidden></p>
+    <div class="guide-actions">
+      <button id="guide-back" type="button">Back</button>
+      <button id="guide-focus" type="button">Try control</button>
+      <button id="guide-next" type="button">Next</button>
+    </div>
+  </section>
+  <div id="guide-highlight" aria-hidden="true" hidden></div>
+  <div id="guide-pointer" aria-hidden="true" hidden>
+    <svg class="guide-hand" viewBox="0 0 48 56"><path d="M10 27V6a4 4 0 0 1 8 0v16-5a4 4 0 0 1 8 0v6-3a4 4 0 0 1 8 0v6-2a4 4 0 0 1 8 0v12c0 8-5 12-7 17H16c-2-7-9-10-12-18-2-5 2-9 6-4l6 7"/></svg>
+  </div>
   <script>
     (() => {
       "use strict";
@@ -875,9 +1003,9 @@
         bruges: { name:"Bruges", size:"small", width:26, bend:46, parks:.24, traffic:.43, height:[4,10], blocks:"dense", roofStyle:"gable",
           landmarks:["belfry","canalhouses"], palette:{"roof-red":"munich-roof",roof:"london-roof",wall:"london-wall"},
           clock:"munich", tilt:[-.7,1.1], note:"Small-city impression: quiet Flemish brick lanes, stepped gables, narrow Reien-like canals and a belfry above a market square." },
-        annecy: { name:"Annecy", size:"small", width:88, bend:22, coast:true, parks:.31, traffic:.39, height:[3,9], roofStyle:"tile",
-          landmarks:["islandpalace","alpinecastle"], palette:{water:"ibiza-water",wall:"paris-wall","roof-red":"munich-roof"},
-          clock:"paris", tilt:[-1.9,-.5], note:"Small lakefront impression: a clear-water shore, pastel Alpine houses, a canal-island palace and a castle. Open water represents the nearby lake shore, not an ocean." },
+        dublin: { name:"Dublin", size:"medium", width:38, bend:25, parks:.27, traffic:.65, height:[4,12], blocks:"courtyard", left:true,
+          landmarks:[], palette:{water:"seattle-water",wall:"london-wall","roof-red":"munich-roof",roof:"london-roof",grass:"munich-grass"},
+          clock:"dublin", clockSignature:"ST JAMES'S GATE", tilt:[-1.7,-.4], note:"Liffey quays, Georgian brick courtyards, green squares and left-hand traffic. Guinness Storehouse has an industrial brick shell and a rooftop glass Gravity Bar; the Spire, Custom House, Ha'penny Bridge and Trinity Campanile complete this Dublin impression." },
         dubrovnik: { name:"Dubrovnik", size:"small", width:85, bend:38, coast:true, parks:.08, traffic:.35, height:[3,7], blocks:"dense", roofStyle:"tile",
           landmarks:["citywalls","oldport"], palette:{wall:"ibiza-roof","roof-red":"istanbul-roof",roof:"sand",water:"ibiza-water"},
           clock:"london", tilt:[.8,2], note:"Small Adriatic-city impression: limestone bastions, terracotta roof clusters and an old harbor. Cars stay on the surrounding stylized streets, not inside the walled landmark." },
@@ -885,6 +1013,155 @@
           landmarks:[], palette:{wall:"paris-wall","roof-red":"istanbul-roof",water:"ibiza-water"},
           clock:"istanbul", tilt:[.3,1.6], note:"Mediterranean Antalya: Kaleici-inspired terracotta roofs, a blue harbor, Yivli Minare's fluted brick shaft, Saat Kulesi, Hadrian's triple gate and Hidirlik Tower." }
       };
+      const cityPostcards = {
+        original:{hello:"Hello",lang:"en",day:"while paper neighbors wave across the square.",night:"and windows write a town that never was.",small:"Paper streets,",lines:["Small roofs collect the passing light,","A little road unfolds below,","The clock sends ripples through the town,"]},
+        paris:{hello:"Bonjour",lang:"fr",day:"where Seine-side bookstalls turn another page.",night:"and zinc roofs silver in the Seine's dark glass.",small:"Seine silver,",lines:["Along the Seine, the rooftops glow,","An iron tower gathers clouds,","The river folds a silver note,"]},
+        munich:{hello:"Hallo",lang:"de",day:"while Isar paths unspool beneath the trees.",night:"and Frauenkirche bells cross sleeping squares.",small:"Isar gardens,",lines:["Beside the Isar, gardens breathe,","Twin towers watch the red roofs rest,","The garden keeps a room of green,"]},
+        istanbul:{hello:"Merhaba",lang:"tr",day:"while ferry tea warms hands between two shores.",night:"and ferry lights sew crossings through the dark.",small:"Ferry tea,",lines:["Two shores exchange a thread of blue,","The domes hold still above the strait,","A bridge draws both horizons close,"]},
+        seattle:{hello:"Hello",lang:"en",day:"while market voices drift toward Elliott Bay.",night:"and ferry windows thread the rain with gold.",small:"Bay whispers,",lines:["The bay slips silver past the piers,","A needle pins the clouds in place,","Green pockets soften streets below,"]},
+        newyork:{hello:"Hello",lang:"en",day:"while stoop-side talk gives every block a voice.",night:"and subway thunder hums beneath the grid.",small:"Avenue lights,",lines:["The avenues unspool like thread,","Tall roofs leave ladders in the sky,","A park keeps green between the blocks,"]},
+        london:{hello:"Hello",lang:"en",day:"while buses cross the Thames like lines of red.",night:"and last trains carry stories past the river.",small:"Thames ripples,",lines:["The Thames remembers every bend,","A clock keeps watch above the roofs,","A garden waits behind the square,"]},
+        ibiza:{hello:"Hola",lang:"ca",day:"while pine-salt breezes climb to Dalt Vila.",night:"and Dalt Vila keeps watch above the harbor.",small:"Salt and pine,",lines:["White walls hold whispers from the bay,","The harbor ties its boats in blue,","Old ramparts shelter bits of sky,"]},
+        tokyo:{hello:"こんにちは",lang:"ja",day:"while Sumida bridges count the passing trains.",night:"and station melodies give dusk a way home.",small:"Sumida trains,",lines:["A temple roof folds back the sky,","The river threads the crowded blocks,","A slender tower measures clouds,"]},
+        mexicocity:{hello:"Hola",lang:"es",day:"while jacarandas shade the Alameda paths.",night:"and Bellas Artes holds the evening's glow.",small:"Plaza voices,",lines:["The courtyards gather copper light,","A dome keeps color in the sky,","The plaza opens like a hand,"]},
+        singapore:{hello:"Hello",lang:"en",day:"while hawker tables gather many tongues.",night:"and shophouse lights answer the harbor stars.",small:"Harbor leaves,",lines:["The harbor carries leaves of light,","High gardens lean above the bay,","The towers leave the trees some sky,"]},
+        barcelona:{hello:"Hola",lang:"ca",day:"where broken tiles make room for sea and sun.",night:"and Eixample corners hold the evening talk.",small:"Mosaic light,",lines:["A mosaic gathers bits of blue,","The corners turn toward the sea,","Small spires stitch a patterned sky,"]},
+        amsterdam:{hello:"Hoi",lang:"nl",day:"while bicycle bells ripple down the quays.",night:"and canal windows double every candle.",small:"Canal bells,",lines:["The gables lean toward the canal,","A bridge brings two small streets close,","The water keeps a second town,"]},
+        lisbon:{hello:"Olá",lang:"pt",day:"while yellow trams write curves through Alfama.",night:"and fado drifts from doorways toward the tide.",small:"Tagus shimmer,",lines:["Red roofs send color to the tide,","The Tagus opens out like silk,","Blue tiles remember scraps of sea,"]},
+        kyoto:{hello:"こんにちは",lang:"ja",day:"while Kamo stepping-stones slow passing feet.",night:"and machiya lattices hold lantern light.",small:"Kamo stones,",lines:["A quiet gate makes room for sky,","The river carries temple bells,","Low roofs rest softly by the green,"]},
+        bruges:{hello:"Hallo",lang:"nl",day:"while carillon notes wander over brick.",night:"and Reie water carries shuttered windows.",small:"Belfry echoes,",lines:["The belfry listens to the square,","Small gables gather by the stream,","A bridge holds quiet in its arch,"]},
+        dublin:{hello:"Dia dhuit",lang:"ga",day:"while Ha'penny footsteps rhyme across the quay.",night:"and pub-door fiddles follow us toward home.",small:"Liffey light,",lines:["The Liffey folds a ribbon of light,","Brick walls keep the brewery warm,","A silver spire stitches the clouds,"]},
+        dubrovnik:{hello:"Bok",lang:"hr",day:"while Stradun stone returns the Adriatic sun.",night:"and harbor ropes tap time below the walls.",small:"Stradun stone,",lines:["The old walls cup a patch of sea,","Warm tiles lie close above the port,","Pale stone keeps salt within its seams,"]},
+        antalya:{hello:"Merhaba",lang:"tr",day:"while Kaleici lanes lead down to fishing boats.",night:"and Yivli's flutes fade softly into blue.",small:"Kaleici lanes,",lines:["The harbor gathers roofs of red,","A fluted tower holds the sky,","Three arches frame a passing cloud,"]}
+      };
+      const citySatire = {
+        original:{title:"Acting Minister for Roads That Weren't There Yesterday",short:"Map goblin",stories:[
+          ["Town discovers it was generated twelve seconds ago","Residents insist the old square has always been there, especially since the previous frame."],
+          ["Local cartographer asks city to stop moving","The council offered a fresh sheet of paper and absolutely no guarantees."]]},
+        paris:{title:"Deputy Undersecretary for Dramatic Sighs",short:"Sigh minister",stories:[
+          ["Eiffel Tower requests one photo without being pinched","The landmark says it is perfectly capable of holding itself up."],
+          ["Seine bookseller sells river a waterproof diary","The first entry reads: same bridges, different ducks."]]},
+        munich:{title:"Chief Inspector of Emotionally Compliant Rhymes",short:"Rhyme auditor",stories:[
+          ["Traffic light apologises for being green slightly early","A committee has been formed to restore public confidence in waiting."],
+          ["English Garden politely refuses a performance review","The trees say shade production is already exceeding expectations."]]},
+        istanbul:{title:"Intercontinental Vice-Chair of One More Tea",short:"Tea admiral",stories:[
+          ["Two continents argue over whose turn it is to take the bins out","A ferry has been appointed neutral mediator. It has requested tea."],
+          ["Bosphorus gull invoices passengers for sightseeing advice","Its entire tour consists of pointing at another gull's sandwich."]]},
+        seattle:{title:"Senior Vice President of Light Drizzle",short:"Rain boss",stories:[
+          ["Gap in clouds confirmed not to be a software update","Residents are advised not to click it, although several already have."],
+          ["Space Needle denies checking the weather for everyone","It says being tall is not the same as having a meteorology degree."]]},
+        newyork:{title:"Executive Director of Walking Here",short:"Stoop bard",stories:[
+          ["Pigeon takes express route, still complains about the commute","It describes the skyline as nice, but not worth changing branches twice."],
+          ["Central Park bench announces it is not a studio apartment","The bench declined to comment on the excellent natural light."]]},
+        london:{title:"Assistant Secretary for Apologising to Lamp Posts",short:"Sorry laureate",stories:[
+          ["Thames declines invitation to go in a straight line","The river says it has a system and would rather not discuss it."],
+          ["Big Ben asks everyone to stop asking the time","A nearby wristwatch has offered to cover the lunch shift."]]},
+        ibiza:{title:"Honorary Minister of One Last Sunset",short:"Sunset DJ",stories:[
+          ["Sunset announces encore, immediately breaks astronomy","Dalt Vila has agreed to stay up for just one more orange cloud."],
+          ["Harbor boat says it came for the quiet side of the island","It has muted the group chat and is now calling this personal growth."]]},
+        tokyo:{title:"Platform Supervisor of Feelings Arriving Shortly",short:"Feeling guard",stories:[
+          ["Station melody promoted to head of getting stuck in your head","The previous manager was a slightly different station melody."],
+          ["Skytree requests lower clouds for easier small talk","A passing cloud has replied that it is just browsing."]]},
+        mexicocity:{title:"Supreme Commissioner of Extra Metaphor, Please",short:"Verse vendor",stories:[
+          ["Bellas Artes dome refuses to tone it down for group photo","The surrounding rooftops admit the copper really is doing a lot of work."],
+          ["Jacaranda petitions to be recognised as confetti infrastructure","The Alameda paths have already signed in purple."]]},
+        singapore:{title:"Chair of the Committee for Queueing Politely",short:"Queue poet",stories:[
+          ["Supertree asks whether this meeting could have been a leaf","The canopy has circulated a much shorter agenda."],
+          ["Hawker table reserved by tissue packet wins planning award","Judges praised its compact footprint and astonishing authority."]]},
+        barcelona:{title:"Director of Corners That Refuse to Be Square",short:"Corner rebel",stories:[
+          ["Eixample corner insists it is not cutting corners","It is, the corner explains, making room for a better conversation."],
+          ["Mosaic tile refuses to match, calls it the whole point","The other tiles have voted unanimously to remain different."]]},
+        amsterdam:{title:"Deputy Mayor of Bicycles With Strong Opinions",short:"Pedal pundit",stories:[
+          ["Canal discovers it has been reflecting on things all day","A nearby gable says that sounds exhausting but looks excellent."],
+          ["Bicycle bell releases extended acoustic album","Critics describe all seventeen tracks as urgent and very short."]]},
+        lisbon:{title:"Chief Officer of Uphill Emotional Support",short:"Hill therapist",stories:[
+          ["Tram requests emotional support pastry for next hill","Its application lists uphill under both occupation and hobbies."],
+          ["Azulejo refuses to be described as just a bathroom tile","It has a sea view, a history, and considerably better manners."]]},
+        kyoto:{title:"Keeper of the Officially Unscheduled Pause",short:"Pause keeper",stories:[
+          ["Kamo stepping-stone proposes a slower commute","Its entire transport strategy is one more small step."],
+          ["Temple bell declines notification sound contract","It prefers to announce itself once and let everyone have a thought."]]},
+        bruges:{title:"Grand Auditor of Bell-Related Feelings",short:"Bell auditor",stories:[
+          ["Belfry announces it has been counting hours for no salary","The square offered applause, which is unfortunately not legal tender."],
+          ["Canal gable accused of posing for every photograph","Its lawyer says leaning photogenically is not a crime."]]},
+        dublin:{title:"Acting Minister for Just One More Verse",short:"Quay jester",stories:[
+          ["Spire rejects proposal to become enormous cocktail stick","It says standing around looking sharp is already a full-time job."],
+          ["Ha'penny Bridge asks for a raise, receives another poem","The bridge has accepted payment in extremely dramatic footsteps."]]},
+        dubrovnik:{title:"Chief Negotiator With Overconfident Seagulls",short:"Gull counsel",stories:[
+          ["City walls deny being an unnecessarily long garden fence","The harbor has asked everyone to respect their experience."],
+          ["Stradun stone caught reflecting on its own brilliance","It insists the Adriatic started it."]]},
+        antalya:{title:"Director of Extremely Important Harbor Loitering",short:"Harbor loafer",stories:[
+          ["Hadrian's Gate introduces three lanes of indecision","Visitors may now wonder which way to go with improved throughput."],
+          ["Kaleici boat declares another very important sitting day","The harbor has approved the motion without actually moving."]]}
+      };
+      function syncCityNewspaper() {
+        const city=currentCity().name,satire=citySatire[cityId];
+        const stories=[...satire.stories,
+          [`${city} driver discovers indicator is not decorative`,"The vehicle described the breakthrough as a turning point."],
+          ["Helicopter requests fewer creative parking decisions","The rescue crew reminds motorists that the river is not a shortcut with better scenery."],
+          ["Roundabout receives five-star review from car still on it","The reviewer praises the consistent service and unusually familiar exits."],
+          ["Weather desk predicts a chance of someone changing the film","All clouds are advised to prepare for a sudden increase in nostalgia."]];
+        document.getElementById("newspaper-name").textContent=`The ${city} Almost-Daily`;
+        document.getElementById("newspaper-issue").textContent=`ROLL EDITION ${1000+seed%9000} · FILED BY A PIGEON · EDITED BY NOBODY`;
+        const reader=document.getElementById("newspaper-readable");
+        const articles=stories.map(([headline,copy])=>{
+          const article=document.createElement("article"),title=document.createElement("h3"),body=document.createElement("p");
+          title.textContent=headline;body.textContent=copy;article.append(title,body);
+          return article;
+        });
+        reader.replaceChildren(...articles);
+        reader.dataset.city=cityId;
+      }
+      const lastPoemChoice = new Map();
+      function settlePostcard() {
+        document.querySelector(".station-board").classList.remove("is-changing");
+        document.getElementById("city-poem").classList.remove("is-writing");
+      }
+      function syncCityPostcard(newRoll=false) {
+        const entry=cityPostcards[cityId],greeting=document.getElementById("city-greeting");
+        const changed=greeting.dataset.city!==cityId,animate=uiMotion&&!reducedMotion.matches&&!document.hidden;
+        if(changed){
+          const label=greeting.querySelector(".sr-only"),board=greeting.querySelector(".station-board");
+          const previous=Array.from(label.textContent),hadCity=Boolean(greeting.dataset.city);
+          greeting.lang=entry.lang;greeting.dataset.city=cityId;label.textContent=entry.hello;
+          const letters=Array.from(entry.hello).map((letter,i)=>{
+            const cell=document.createElement("span"),face=document.createElement("span"),old=document.createElement("span");
+            cell.className="station-letter";cell.style.setProperty("--flip-delay",`${i*45}ms`);
+            face.className="station-new";face.textContent=letter;
+            old.className="station-old";old.textContent=previous[i]||" ";
+            face.addEventListener("animationend",event=>{
+              if(event.animationName==="station-in"&&board.lastElementChild===cell)board.classList.remove("is-changing");
+            },{once:true});
+            cell.append(face,old);return cell;
+          });
+          board.replaceChildren(...letters);
+          board.classList.toggle("is-changing",animate&&hadCity);
+        }
+        if(!changed&&!newRoll)return;
+        syncCityNewspaper();
+        let choice=Math.floor(hash(0,0,7501)*entry.lines.length);
+        if(choice===lastPoemChoice.get(cityId))choice=(choice+1)%entry.lines.length;
+        lastPoemChoice.set(cityId,choice);
+        const night=daylight().street>.5;
+        const poem=document.getElementById("city-poem");
+        const poet=citySatire[cityId];
+        poem.dataset.city=cityId;poem.dataset.mood=night?"night":"day";poem.dataset.poet=poet.title;
+        const lines=[entry.lines[choice],night?entry.night:entry.day];
+        const shortEndings=night?["keep us near.","save a light.","dream with me."]:["stay a while.","take me home.","hold the sky."];
+        poem.replaceChildren(...[["poem-full",lines],["poem-short",[entry.small,shortEndings[choice]]]].map(([variant,text])=>{
+          const verse=document.createElement("p");verse.className="poem-verse "+variant;
+          verse.addEventListener("animationend",event=>{
+            if(event.animationName==="postcard-ink"&&event.target===verse.lastElementChild&&verse.parentElement===poem)poem.classList.remove("is-writing");
+          });
+          for(const line of text){
+            const span=document.createElement("span");span.className="poem-line";span.textContent=line;verse.append(span);
+          }
+          const signature=document.createElement("span");signature.className="poem-signature";
+          signature.textContent=variant==="poem-full"?`— ${poet.title}`:`— ${poet.short}`;
+          verse.append(signature);
+          return verse;
+        }));
+        poem.classList.toggle("is-writing",animate);
+      }
       const landmarkGuides = {
         original: {places:[["Civic clock tower","clocktower"],["Public library","glass"],["Town hall","palace"],["Memorial garden","civicgarden"],["Neighborhood market","octagon"]]},
         paris: {source:"https://whc.unesco.org/en/list/600/",
@@ -917,8 +1194,8 @@
           places:[["Kinkaku-ji","pavilion"],["Fushimi Inari","torii"],["Kiyomizu-dera","stiltstemple"],["Nijo Castle","courtyards"],["Tatsumi Bridge","stonebridge"]]},
         bruges: {source:"https://whc.unesco.org/en/list/996/",
           places:[["Belfry of Bruges","belfry"],["Church of Our Lady","church"],["Beguinage","courtyards"],["Markt guildhalls","canalhouses"],["Bonifacius Bridge","stonebridge"]]},
-        annecy: {source:"https://www.lac-annecy.com/destination/villes-et-villages/annecy/",
-          places:[["Palais de l'Ile","islandpalace"],["Chateau d'Annecy","alpinecastle"],["Saint-Maurice","church"],["Pont des Amours","ironbridge"],["Saint-Pierre Cathedral","domedhall"]]},
+        dublin: {source:"https://www.visitdublin.com/things-to-do/attractions",
+          places:[["Guinness Storehouse","storehouse"],["Ha'penny Bridge","ironbridge"],["Custom House","domedhall"],["The Spire","monument"],["Trinity Campanile","campanile"]]},
         dubrovnik: {source:"https://whc.unesco.org/en/list/95/",
           places:[["City Walls","citywalls"],["Rector's Palace","arcades"],["Sponza Palace","palace"],["Lovrijenac","triangularfort"],["Franciscan Monastery","courtyards"],["Old Port","oldport"]]},
         antalya: {source:"https://antalya.goturkiye.com/see",
@@ -928,7 +1205,7 @@
         cities[id].landmarks=guide.places.map(([name,motif])=>({name,motif}));
       function syncCityGuide() {
         document.getElementById("city-description").textContent=currentCity().note;
-        document.getElementById("city-landmarks").textContent="Landmarks to discover: "+currentCity().landmarks.map(place=>place.name).join(" · ")+".";
+        document.getElementById("city-landmarks").textContent="Starting landmark: "+landmarkAt(0,0).name+". Landmarks to discover: "+currentCity().landmarks.map(place=>place.name).join(" · ")+".";
         const link=document.getElementById("city-source"),source=landmarkGuides[cityId].source;
         link.hidden=!source;
         if(source)link.href=source;else link.removeAttribute("href");
@@ -940,7 +1217,7 @@
         newyork:{film:"reala",fps:60},london:{film:"classic-neg",fps:60},ibiza:{film:"velvia",fps:24},
         tokyo:{film:"reala",fps:60},mexicocity:{film:"nostalgic",fps:30},singapore:{film:"provia",fps:60},
         barcelona:{film:"velvia",fps:30},amsterdam:{film:"classic-neg",fps:30},lisbon:{film:"nostalgic",fps:30},
-        kyoto:{film:"astia",fps:30},bruges:{film:"chrome",fps:24},annecy:{film:"provia",fps:24},dubrovnik:{film:"velvia",fps:24},antalya:{film:"astia",fps:30}
+        kyoto:{film:"astia",fps:30},bruges:{film:"chrome",fps:24},dublin:{film:"chrome",fps:30},dubrovnik:{film:"velvia",fps:24},antalya:{film:"astia",fps:30}
       };
       const cityFonts = {
         original:{family:'"Fira Code", Consolas, monospace',weight:600},
@@ -959,14 +1236,15 @@
         lisbon:{family:'"Bodoni Moda", Georgia, serif',weight:600},
         kyoto:{family:'"Cinzel", Georgia, serif',weight:600},
         bruges:{family:'"UnifrakturCook", Georgia, serif',weight:700},
-        annecy:{family:'"Libre Caslon Display", Georgia, serif',weight:400},
+        dublin:{family:'"IM Fell English", Baskerville, Georgia, serif',weight:400},
         dubrovnik:{family:'"Cinzel", Georgia, serif',weight:600},
         antalya:{family:'"Cinzel", Georgia, serif',weight:600}
       };
       let filmId = "chrome";
       let nightEnabled = false;
-      let clockSeconds = 9 * 3600;
-      let cityClockRate = 1800;
+      const DEFAULT_CLOCK_SECONDS=9*3600,DEFAULT_CLOCK_RATE=1800;
+      let clockSeconds = DEFAULT_CLOCK_SECONDS;
+      let cityClockRate = DEFAULT_CLOCK_RATE;
       const MIN_CLOCK_RATE = 1, MAX_CLOCK_RATE = 7200;
       let lightMinute = -1;
       let lastLightRefresh = -Infinity;
@@ -1037,8 +1315,7 @@
       let worldToScreen;
       let soundEnabled = true;
       let collisionsEnabled = true;
-      let incident = null;
-      let collisionAfter = 0;
+      const incidents = [];
       let nextCarId = 0;
       let recoveredCount = 0;
       let rotorSound = null;
@@ -1078,10 +1355,12 @@
           const {source, button, readout, previous, next, name} = binding;
           const options = wheelOptions(source), value = source.type === "checkbox" ? source.checked : source.value;
           const index = binding.previewIndex ?? Math.max(0, options.findIndex(option => option.value === value));
-          readout.textContent = options[index].label;
+          if(readout.textContent!==options[index].label)readout.textContent = options[index].label;
           const bounded = source.id === "view-size";
-          previous.textContent = bounded && index === 0 ? "" : options[mod(index - 1, options.length)].label;
-          next.textContent = bounded && index === options.length - 1 ? "" : options[mod(index + 1, options.length)].label;
+          const before=bounded && index === 0 ? "" : options[mod(index - 1, options.length)].label;
+          const after=bounded && index === options.length - 1 ? "" : options[mod(index + 1, options.length)].label;
+          if(previous.textContent!==before)previous.textContent=before;
+          if(next.textContent!==after)next.textContent=after;
           if (source.id === "destination") {
             for (const [row,offset] of [[previous,-1],[readout,0],[next,1]]) {
               const font=cityFonts[options[mod(index+offset,options.length)].value];
@@ -1106,8 +1385,9 @@
         return reel;
       }
       function previewWheel(button, fraction) {
-        const reel = clearWheelMotion(button);
-        if (reducedMotion.matches || !uiMotion) return;
+        const reel = button.querySelector(".wheel-reel");
+        if (reducedMotion.matches || !uiMotion) { clearWheelMotion(button);return; }
+        for(const node of [reel,...reel.children])for(const animation of node.getAnimations())animation.cancel();
         const row = parseFloat(getComputedStyle(button).getPropertyValue("--reel-row"));
         reel.style.transform = `translateY(${fraction * row}px)`;
         [...reel.children].forEach((node, index) => {
@@ -1207,12 +1487,18 @@
             settleTimer=setTimeout(()=>button.classList.remove("is-wheeling"),reducedMotion.matches||!uiMotion?0:180);
           };
           binding.finish = finish;
-          const begin = () => {
+          const begin = (continuous=false) => {
             for (const other of wheelBindings) if (other !== binding) {
               other.finish?.(); clearWheelMotion(other.button); other.button.classList.remove("is-wheeling");
             }
             clearTimeout(wheelTimer); clearTimeout(settleTimer);
-            if (position === null) position = index();
+            if (position === null) {
+              position = index();
+              if(continuous&&!reducedMotion.matches&&uiMotion){
+                const row=parseFloat(getComputedStyle(button).getPropertyValue("--reel-row"));
+                position-=new DOMMatrix(getComputedStyle(reel).transform).m42/row;
+              }
+            }
           };
           const resetScroll = () => { begin(); finish(); clearWheelMotion(button); };
           button.addEventListener("click", event => {
@@ -1223,7 +1509,7 @@
           });
           button.addEventListener("pointerdown", event => {
             if (event.button !== 0) return;
-            begin();
+            begin(true);
             suppressClick = false;
             drag = {id: event.pointerId, y: event.clientY, start: position, moved: false};
             button.setPointerCapture(event.pointerId);
@@ -1249,9 +1535,9 @@
             if (event.ctrlKey || !event.deltaY || button.disabled) return;
             event.preventDefault();
             if (drag) return;
-            begin();
+            begin(true);
             preview(position + event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 78 : 1) / 36);
-            wheelTimer = setTimeout(() => finish(), 220);
+            wheelTimer = setTimeout(() => finish(), 350);
           }, {passive: false});
           button.addEventListener("blur", () => { if (!drag) finish(); });
           button.addEventListener("keydown", event => {
@@ -1557,11 +1843,18 @@
           seattle: ["industrial", "Industrial punk", "SOUND / TIME", ["12","03","06","09"]],
           newyork: ["deco", "Art Deco", "METROPOLITAN", ["12","3","6","9"]],
           london: ["westminster", "Westminster", "WESTMINSTER", ["XII","III","VI","IX"]],
-          ibiza: ["balearic", "Balearic modern", "BALEARIC", ["12","•","6","•"]]
+          ibiza: ["balearic", "Balearic modern", "BALEARIC", ["12","•","6","•"]],
+          dublin: ["brewery", "St James's Gate brewery-inspired", "ST JAMES'S GATE", ["XII","III","VI","IX"]]
         };
         const profile=currentCity().clock||cityId;
         const [dial, flavor, signature, numerals] = profiles[profile];
         const clock = document.getElementById("clock");
+        document.getElementById("clock-reset").addEventListener("click",()=>{
+          cityClockRate=DEFAULT_CLOCK_RATE;
+          syncClockRate(true);
+          setCityTime(DEFAULT_CLOCK_SECONDS);
+        });
+        document.getElementById("clock-daylight").addEventListener("click",()=>setCityTime(12*3600));
         const tiltRanges = {original:[-2,-.5],paris:[-2,-1],munich:[-1,1],istanbul:[.5,2],
           seattle:[-2,-.5],newyork:[.5,2],london:[-2,2],ibiza:[1,2]};
         const [low,high]=currentCity().tilt||tiltRanges[cityId];
@@ -1577,11 +1870,12 @@
           seattle:"M0 60V0H60V60M5-4H55M8-4V-9M52-4V-7M0 64H60M8 68H52",
           newyork:"M0 60V0H12V-5H23V-10H37V-5H48V0H60V60M-2 64H62M6 68H54",
           london:"M0 60V-4L4-10L8-4V0H25L30-10L35 0H52V-4L56-10L60-4V60M-2 64H62M4 68H56",
-          ibiza:"M0 60V8Q0-9 30-9H60V60M-2 64H62M8 68H52"
+          ibiza:"M0 60V8Q0-9 30-9H60V60M-2 64H62M8 68H52",
+          dublin:"M0 60V0H6V-7H15V0H22V-3Q30-12 38-3V0H45V-7H54V0H60V60M0 64H60M7 68H53"
         };
         document.getElementById("clock-tower").setAttribute("d", towers[profile]);
         document.getElementById("clock-brand").textContent = currentCity().name.toUpperCase();
-        document.getElementById("clock-signature").textContent = currentCity().size?currentCity().size.toUpperCase()+" / CITY":signature;
+        document.getElementById("clock-signature").textContent = currentCity().clockSignature||(currentCity().size?currentCity().size.toUpperCase()+" / CITY":signature);
         document.getElementById("clock-flavor").textContent = flavor;
         const marks = document.getElementById("clock-numerals");
         marks.replaceChildren();
@@ -1611,7 +1905,6 @@
         const text = clockText(), clock = document.getElementById("clock");
         clock.setAttribute("aria-valuenow", String(second));
         clock.setAttribute("aria-valuetext", text);
-        document.getElementById("clock-readout").textContent = text;
       }
       function advanceClock(seconds, forceLight = false) {
         clockSeconds = mod(clockSeconds + seconds, 86400);
@@ -1619,8 +1912,8 @@
         if (Math.floor(clockSeconds / 60) !== lightMinute && (forceLight || time-lastLightRefresh>=.25)) applyFilm();
       }
       function syncClockRate(reveal=false) {
-        const badge=document.getElementById("clock-rate"),scaled=cityClockRate/1000;
-        badge.textContent=`×${scaled<.005?"<0.01":Number(scaled.toFixed(2))}k`;
+        const badge=document.getElementById("clock-rate");
+        badge.textContent=`x${Number(cityClockRate.toFixed(2))}`;
         const exact=`${cityClockRate} city seconds per real second`;
         document.querySelector(".clock-rate").setAttribute("aria-label",`City clock speed: ${exact}`);
         for(const id of ["clock-slower","clock-faster"])document.getElementById(id).title=exact;
@@ -1929,7 +2222,7 @@
         const enabled = !paused && !document.hidden && soundEnabled && audioUnlocked && !audioFailed;
         if (soundMaster) soundMaster.gain.setTargetAtTime(enabled ? soundVolume : 0, soundContext.currentTime, .03);
         syncMusic(enabled);
-        const flying = enabled && incident?.heli;
+        const flying = enabled && incidents.find(rescue=>rescue.heli);
         if (!flying) { stopRotor(); return; }
         if (!rotorSound) {
           // Live oscillators never rewind: blade pulses have no clip boundary, silence, or decoder gap.
@@ -1956,7 +2249,7 @@
           rotorSound = { oscillators: [carrier, harmonic, blades], nodes: [carrier, harmonic, blades, modulation, pulse, lowpass, rotorLevel] };
           for (const oscillator of rotorSound.oscillators) oscillator.start();
         }
-        const heli = incident.heli;
+        const heli = flying.heli;
         const speed = heli.speed || 65;
         rotorSound.oscillators[2].frequency.setTargetAtTime(12 + speed / 14, soundContext.currentTime, .4);
         rotorSound.oscillators[0].frequency.setTargetAtTime(65 + speed / 5, soundContext.currentTime, .4);
@@ -2074,13 +2367,14 @@
         const name = kind === "bike" ? "Sportster S" : "Car";
         status.textContent = !safe ? name + " added to a crowded gap. No clear four-second path; chaos is possible!"
           : !vehicle.home ? name + " added at cruising speed, looking for an accessible home."
-          : incident && !incident.roadCleared ? name + " added. Keep clear of the local rescue queue."
+          : incidents.some(rescue=>!rescue.roadCleared) ? name + " added. Keep clear of the local rescue queue."
           : name + " added at a forecast-safe speed. Signals, pedestrians and occupied exits can delay departure.";
         if (paused) status.textContent += " The city is paused. Press Play to set it moving.";
         unlockAudio();
         playSound("spawn");
         engineSound(spawnedCars.at(-1));
         draw();
+        canvas.dispatchEvent(new CustomEvent("vehicle-added",{detail:{kind}}));
       }
       function rect(g, fill, x, y, w, h) {
         g.fillStyle = colors[fill];
@@ -2508,6 +2802,29 @@
           }
           rect(g,"white",44,62,89,8);
           for(let x=49;x<131;x+=13)rect(g,"wall-dark",x,68,6,3);
+        } else if (kind === "storehouse") {
+          sunShadow(g,[[49,58],[129,58],[129,121],[49,121]],25);
+          rect(g,"roof-red",49,58,80,63);rect(g,"wall-dark",52,61,74,10);
+          for(let y=77;y<117;y+=12)for(let x=56;x<125;x+=13){
+            rect(g,"wall-dark",x,y,8,8);stroke(g,"gold",.7,[[x+4,y],[x+4,y+8]]);
+          }
+          rect(g,"black",63,101,53,12);
+          g.save();g.fillStyle=colors.warm;g.font="bold 6px Georgia";g.textAlign="center";g.fillText("GUINNESS",89,109);g.restore();
+          disc(g,"wall-dark",95,60,23);disc(g,"roof-blue",92,56,23);
+          disc(g,"window",92,56,19);
+          for(let a=0;a<Math.PI*2;a+=Math.PI/6)stroke(g,"white",.8,[[92+Math.cos(a)*16,56+Math.sin(a)*16],[92+Math.cos(a)*23,56+Math.sin(a)*23]]);
+        } else if (kind === "monument") {
+          disc(g,"wall",91,104,19);disc(g,"white",91,104,12);
+          sunShadow(g,[[87,106],[91,40],[95,106]],44);
+          polygon(g,"chrome",[[86,107],[91,37],[96,107]]);
+          stroke(g,"white",1,[[91,38],[91,105]]);
+          for(const x of [54,128])tree(g,x,118,6);
+        } else if (kind === "campanile") {
+          rect(g,"wall-dark",74,91,37,33);rect(g,"wall",70,88,37,32);
+          rect(g,"wall",75,59,27,37);rect(g,"wall-dark",83,68,11,29);disc(g,"wall-dark",88.5,68,5.5);
+          for(const x of [75,98])rect(g,"white",x,62,4,37);
+          rect(g,"white",72,58,33,6);disc(g,"roof-blue",88,54,14);rect(g,"gold",86,37,4,9);
+          for(const y of [119,124,129])rect(g,"wall",64,y,49,3);
         } else if (kind === "clocktower" || kind === "flutedminaret" || kind === "roundtower" || kind === "ironlift") {
           const flute=kind==="flutedminaret", round=kind==="roundtower";
           rect(g,"wall",75,100,33,22);
@@ -2570,7 +2887,7 @@
             }
           }else{
             for(const y of [79,105]){
-              g.strokeStyle=colors[kind==="ironbridge"?"wall-dark":"wall"];g.lineWidth=3;
+              g.strokeStyle=colors[feature?.name==="Ha'penny Bridge"?"white":kind==="ironbridge"?"wall-dark":"wall"];g.lineWidth=3;
               g.beginPath();g.moveTo(42,y);g.quadraticCurveTo(91,y-12,140,y);g.stroke();
             }
             for(const x of [48,135])tree(g,x,55,7);
@@ -3102,9 +3419,8 @@
           &&other.lane===rules.lane&&distance>0&&distance<BLOCK;
       }
       function edgeBlocked(node,direction,vehicle=null) {
-        if(!incident||incident.roadCleared)return false;
         const rules=exitRules(node,direction),start=(rules.axis?node.y:node.x)*BLOCK+15;
-        return incident.cars.some(other=>onRoadEdge(other,rules,start,vehicle));
+        return incidents.some(rescue=>!rescue.roadCleared&&rescue.cars.some(other=>onRoadEdge(other,rules,start,vehicle)));
       }
       function edgeCost(node, direction, vehicle, roadTraffic = null) {
         const rules=exitRules(node,direction), start=(rules.axis?node.y:node.x)*BLOCK+15;
@@ -3206,8 +3522,8 @@
         return governorRoads.get(key);
       }
       function wreckAtJunction(node) {
-        return incident && !incident.roadCleared && incident.cars.some(car=>
-          Math.abs(car.x-node.x*BLOCK-15)<35 && Math.abs(car.y-node.y*BLOCK-15)<35);
+        return incidents.some(rescue=>!rescue.roadCleared&&rescue.cars.some(car=>
+          Math.abs(car.x-node.x*BLOCK-15)<35 && Math.abs(car.y-node.y*BLOCK-15)<35));
       }
       function governorHolds(node) {
         const key=nodeKey(node);
@@ -3249,11 +3565,11 @@
         document.getElementById("governor-closed").textContent=closed;
         document.getElementById("governor-queues").textContent=queued;
         document.getElementById("governor-holds").textContent=holds;
-        document.getElementById("governor-summary").textContent=governorFaults ? "safety hold" : incident ? "incident control" : "on duty";
+        document.getElementById("governor-summary").textContent=governorFaults ? "safety hold" : incidents.length ? "incident control" : "on duty";
         const output=document.getElementById("governor-status");
         output.dataset.alert=String(governorFaults>0);
         output.textContent=governorFaults ? `${governorFaults} vehicles held: unsupported road position or illegal lane direction.`
-          : `${currentCity().left?"Left":"Right"}-hand streets. Oldest eligible queues first; junction and roundabout entries yield to occupants. ${incident&&!incident.roadCleared?"Incident roads are closed pending recovery.":"No road-position or lane-direction faults found in the active fleet."}`;
+          : `${currentCity().left?"Left":"Right"}-hand streets. Oldest eligible queues first; junction and roundabout entries yield to occupants. ${incidents.some(rescue=>!rescue.roadCleared)?"Incident roads are closed pending recovery.":"No road-position or lane-direction faults found in the active fleet."}`;
       }
       function updateCrossings() {
         const view=camera(), cycle=Math.floor(time/24), bounds=viewExtent(150);
@@ -3405,8 +3721,8 @@
       }
       function planSpawn(point, choices, kind) {
         const view = camera(), traffic = trafficVehicles(view.x, view.y, viewExtent(200).radius);
-        if (incident && !incident.roadCleared) {
-          traffic.push(...incident.cars.map(vehicle => ({...vehicle, velocity: 0, speed: 0})));
+        for (const rescue of incidents) if (!rescue.roadCleared) {
+          traffic.push(...rescue.cars.map(vehicle => ({...vehicle, velocity: 0, speed: 0})));
         }
         let best = null, bestClearance = -1;
         const personality = newSeed() / 4294967296;
@@ -3462,7 +3778,7 @@
         }
         const vehicles = [...ambientTraffic.values(), ...spawnedCars]
           .sort((a,b)=>(a.waitSince??time)-(b.waitSince??time));
-        const wrecks = incident && !incident.roadCleared ? incident.cars : [];
+        const wrecks = incidents.flatMap(rescue=>rescue.roadCleared?[]:rescue.cars);
         const obstacleGrid=new Map();
         for (const other of [...vehicles,...wrecks,...[...households.values()].filter(h=>h.arrived).map(h=>h.car)]) {
           const x=Math.floor(other.x/64),y=Math.floor(other.y/64);
@@ -3682,15 +3998,40 @@
         let distance = Infinity;
         for (const heli of helicopters.values()) {
           const candidate = Math.hypot(heli.x - x, heli.y - y);
-          if (heli.state === "parked" && candidate < distance) {
+          if ((heli.state === "parked" || heli.state === "available") && candidate < distance) {
             nearest = heli;
             distance = candidate;
           }
         }
         return nearest;
       }
+      function dispatchRescues() {
+        if(!incidents.some(rescue=>rescue.stage==="waiting"))return;
+        for(const heli of helicopters.values())if(heli.state==="available")releaseHelicopter(heli);
+        for(const rescue of [...incidents]){
+          if(rescue.stage!=="waiting")continue;
+          let heli=closestHelicopter(rescue.x,rescue.y);
+          if(!heli&&!helicopters.size){
+            heli={id:"dispatch",block:"",x:rescue.x-200,y:rescue.y-160,angle:0,speed:72,state:"parked"};
+            helicopters.set(heli.id,heli);
+          }
+          if(!heli)continue;
+          const previous=incidents.find(job=>job.heli===heli);
+          if(previous)incidents.splice(incidents.indexOf(previous),1);
+          heli.state="rescuing";heli.screen=null;
+          rescue.heli=heli;rescue.stage="approach";
+        }
+      }
+      function releaseHelicopter(heli) {
+        // Delivery uses page coordinates; new missions must start at that same physical location.
+        const origin=pagePoint(0,0),x=pagePoint(1,0),y=pagePoint(0,1);
+        const inverse=new DOMMatrix([x.x-origin.x,x.y-origin.y,y.x-origin.x,y.y-origin.y,origin.x,origin.y]).inverse();
+        const point=inverse.transformPoint(heli.screen);
+        heli.x=point.x;heli.y=point.y;heli.vx=heli.vy=0;
+        heli.state="available";
+      }
       function syncJunkyard(reveal = false) {
-        const receiving = !!incident && incident.cars.length > 0 && incident.stage !== "exit";
+        const receiving = incidents.some(rescue=>rescue.cars.length>0&&rescue.stage!=="exit");
         recovery.hidden = !receiving && !recoveredCars.length;
         recovery.classList.toggle("is-receiving", receiving);
         recovery.setAttribute("aria-label", receiving ? "Junkyard, helicopter recovery in progress" : "Junkyard");
@@ -3719,14 +4060,9 @@
         });
         const x = (cars[0].x + cars[1].x) / 2;
         const y = (cars[0].y + cars[1].y) / 2;
-        let heli = closestHelicopter(x, y);
-        if (!heli) {
-          heli = { id: "dispatch", block: "", x: x - 200, y: y - 160, angle: 0, speed: 72, state: "parked" };
-          helicopters.set(heli.id, heli);
-        }
-        incident = { x, y, cars, heli, stage: heli ? "approach" : "waiting", elapsed: 0, roadCleared: false };
+        const rescue={x,y,cars,heli:null,stage:"waiting",elapsed:0,roadCleared:false};
+        incidents.push(rescue);
         recordCityEvent("collided",`I saw ${cars.length} vehicles collide. Their road fell quiet while help was summoned.`,cars.length);
-        if (heli) heli.state = "rescuing";
         for (const vehicle of cars) {
           for (const [key,owner] of junctionReservations) if (owner===vehicle.id) junctionReservations.delete(key);
           if (vehicle.home) households.delete(vehicle.home.id);
@@ -3736,19 +4072,22 @@
           const index = spawnedCars.findIndex(item => item.id === vehicle.id);
           if (index !== -1) spawnedCars.splice(index, 1);
         }
+        dispatchRescues();
         syncJunkyard(true);
-        status.textContent = heli ? "Collision. Nearby traffic is braking; the nearest helicopter is on its way."
-          : "Collision. The affected lane is blocked, waiting for an available rooftop helicopter.";
+        status.textContent = rescue.heli ? "Collision. The nearest available helicopter is on its way; other crews keep their assignments."
+          : "Collision queued. All helicopters are busy; the next available crew will respond.";
         playSound("collision");
       }
       function detectCollision(vehicles) {
+        const claimed=new Set();
         for (const first of vehicles) {
-          if (!first.id.startsWith("spawn:")) continue;
+          if (!first.id.startsWith("spawn:")||claimed.has(first)) continue;
           for (const second of vehicles) {
-            if (first===second) continue;
+            if (first===second||claimed.has(second)) continue;
             if (overlaps(first, second)) {
               beginCollision([first, second]);
-              return;
+              claimed.add(first);claimed.add(second);
+              break;
             }
           }
         }
@@ -3788,12 +4127,17 @@
         };
       }
       function advanceRescue(dt) {
-        const rescue = incident;
+        if(dt<=0)return;
+        dispatchRescues();
+        for(const rescue of [...incidents])advanceIncident(rescue,dt);
+        dispatchRescues();
+      }
+      function advanceIncident(rescue,dt) {
         if (dt>0 && rescue.heli && rescue.stage!=="waiting" && !rescue.loggedFlight) {
           rescue.loggedFlight=true;
           recordCityEvent("flights","A helicopter rose over my city. Its flight began with a call for help.");
         }
-        if (rescue.stage === "approach") {
+        if (rescue.stage === "approach" || rescue.stage === "waiting") {
           for (let i = rescue.cars.length - 1; i >= 0; i--) {
             const vehicle = rescue.cars[i];
             const vx = vehicle.crashVx || 0, vy = vehicle.crashVy || 0, speed = Math.hypot(vx, vy);
@@ -3809,21 +4153,21 @@
             rescue.x = rescue.cars.reduce((sum, vehicle) => sum + vehicle.x, 0) / rescue.cars.length;
             rescue.y = rescue.cars.reduce((sum, vehicle) => sum + vehicle.y, 0) / rescue.cars.length;
           } else {
+            if(!rescue.heli){
+              incidents.splice(incidents.indexOf(rescue),1);
+              syncJunkyard();
+              status.textContent="The queued wrecks fell into the water; that rescue call was cancelled.";
+              return;
+            }
             rescue.heli.screen = pagePoint(rescue.heli.x, rescue.heli.y);
             rescue.heli.screen.angle += rescue.heli.angle;
             rescue.stage = "exit"; rescue.roadCleared = true;
+            releaseHelicopter(rescue.heli);
             syncJunkyard();
             status.textContent = "The wrecks fell into the water. The helicopter is returning without cargo.";
           }
         }
-        if (rescue.stage === "waiting") {
-          rescue.heli = closestHelicopter(rescue.x, rescue.y);
-          if (rescue.heli) {
-            rescue.heli.state = "rescuing";
-            rescue.stage = "approach";
-          }
-          return;
-        }
+        if (rescue.stage === "waiting") return;
         const heli = rescue.heli;
         if (rescue.stage === "approach") {
           if (moveToward(heli, { x: rescue.x, y: rescue.y - 16 }, dt * (heli.speed || 65), dt)) {
@@ -3859,6 +4203,7 @@
             recoveredCount += rescue.cars.length;
             recordCityEvent("recovered",`The helicopter delivered ${rescue.cars.length} wreck${rescue.cars.length===1?"":"s"} to the junkyard. The streets have room to breathe again.`,rescue.cars.length);
             rescue.stage = "exit";
+            releaseHelicopter(heli);
             syncJunkyard();
           }
         } else if (rescue.stage === "exit") {
@@ -3866,10 +4211,9 @@
           const target = { x: heli.screen.x < innerWidth / 2 ? -margin : innerWidth + margin, y: -margin };
           if (moveToward(heli.screen, target, dt * (heli.speed || 65) * 3.3, dt)) {
             helicopters.delete(heli.id);
-            incident = null;
+            incidents.splice(incidents.indexOf(rescue),1);
             syncJunkyard();
-            collisionAfter = time + 3;
-            status.textContent = recoveredCount + " vehicles recovered. Helicopter departed; traffic is moving.";
+            status.textContent = `${recoveredCount} vehicles recovered. ${incidents.length?`${incidents.length} other rescue jobs remain.`:"All reported collisions cleared."}`;
           }
         }
       }
@@ -3889,16 +4233,15 @@
           const steps = Math.max(1, Math.ceil(dt / .02));
           for (let i = 0; i < steps; i++) {
             updateTraffic(dt / steps);
-            if (!incident && collisionsEnabled && time >= collisionAfter) {
+            if (collisionsEnabled) {
               detectCollision([...ambientTraffic.values(),...spawnedCars]);
-              if (incident) break;
             }
           }
         }
         auditTrafficGovernor();
         for (let i = splashes.length - 1; i >= 0; i--) if (time - splashes[i].born >= 1.8) splashes.splice(i, 1);
         // Sidewalk movement and water entry are owned by the Walkers worker.
-        if (incident) advanceRescue(dt);
+        if (incidents.length) advanceRescue(dt);
         syncRotorSound();
         if (time >= nextEngineSound) {
           nextEngineSound = time + 1.4 + hash(Math.floor(time), 0, 2600) * 1.1;
@@ -3916,8 +4259,10 @@
             ctx.drawImage(parked,-16,-16,32,32);ctx.restore();
           }
         }
-        if (!incident || incident.roadCleared) return;
-        const { heli, cars, stage, elapsed, x, y } = incident;
+        for(const rescue of incidents)if(!rescue.roadCleared)drawIncident(rescue);
+      }
+      function drawIncident(rescue) {
+        const { heli, cars, stage, elapsed, x, y } = rescue;
         const lift = stage === "pickup" ? Math.min(1, elapsed / 1.2) : 0;
         ctx.globalAlpha = 1 - lift;
         for (let n = 0; n < 7; n++) {
@@ -3953,7 +4298,7 @@
           airspacePainted = false;
         }
         const galleryVisible = document.querySelector(".city-options").open && !recovery.hidden;
-        const hasContent = galleryVisible && recoveredCars.length > 0 || !!incident?.roadCleared;
+        const hasContent = galleryVisible && recoveredCars.length > 0 || incidents.some(rescue=>rescue.roadCleared);
         if (!hasContent && !airspacePainted) return;
         air.setTransform(dpr, 0, 0, dpr, 0, 0);
         air.clearRect(0, 0, innerWidth, innerHeight);
@@ -3970,8 +4315,10 @@
           drawVehicle({...vehicle,x:0,y:0,angle:index%2?.1:-.1},air);air.restore();
         });
         air.restore();
-        if (!incident || !incident.roadCleared) return;
-        const { heli, stage, cars, elapsed, cargoAngle } = incident;
+        for(const rescue of incidents)if(rescue.roadCleared)drawAirborneRescue(rescue,baySlot);
+      }
+      function drawAirborneRescue(rescue,baySlot) {
+        const { heli, stage, cars, elapsed, cargoAngle } = rescue;
         const point = heli.screen;
         const flightScale = point.scale;
         if (stage !== "exit") {
@@ -4311,7 +4658,7 @@
         document.getElementById("collisions").setAttribute("aria-pressed", String(collisionsEnabled));
         syncJunkyard();
         status.textContent = collisionsEnabled ? "Collisions on. Rooftop helicopters will clear any crashes."
-          : incident ? "New collisions off. The current rescue will finish safely." : "Player crashes off. Ambient traffic still keeps its distance.";
+          : incidents.length ? "New collisions off. All current rescues will finish safely." : "Player crashes off. Ambient traffic still keeps its distance.";
         draw();
       });
       document.getElementById("pause").addEventListener("click", () => {
@@ -4333,14 +4680,13 @@
         signalBikeClocks = [0, 0];
         cameraTime = 0;
         nextEngineSound = 0;
-        collisionAfter = 0;
         nextCarId = 0;
         recoveredCount = 0;
         homecomings = 0;
         resetCityJournal();
         households.clear(); junctionReservations.clear(); crossings.clear(); crossingCycles.clear(); roadEdges.clear();
         governorRoads.clear(); nextGovernorAudit=0; governorFaults=0; lastLightRefresh=-Infinity;
-        incident = null;
+        incidents.length = 0;
         frame = 0;
         clearTerrain();
         walkersImage?.close();walkersImage=null;pendingWalkers=null;walkersStamp="";
@@ -4358,9 +4704,10 @@
         stopSounds();
         document.getElementById("city-caption").textContent = cityId === "original" ? "wish you were here." : currentCity().name + ", from above.";
         syncCityGuide();
+        syncCityPostcard(reseed);
         styleTownClock();
         queueFilmTexture();
-        status.textContent = reseed ? "A new roll in " + currentCity().name + "." : "Back over the first landmark.";
+        status.textContent = reseed ? "A new roll in " + currentCity().name + ", above " + landmarkAt(0,0).name + "." : "Back over this roll's starting landmark.";
         draw();
         auditTrafficGovernor();
         syncWheels();
@@ -4500,7 +4847,10 @@
         button.setAttribute("aria-pressed",String(enabled));
         button.textContent=enabled?"UI motion on":reducedMotion.matches?"UI motion off · system":"UI motion off";
         button.disabled=reducedMotion.matches;
-        if(!enabled)wheelBindings.forEach(({button})=>clearWheelMotion(button));
+        if(!enabled){
+          wheelBindings.forEach(({button})=>clearWheelMotion(button));
+          settlePostcard();
+        }
       }
       uiStyle.addEventListener("change",updateExperience);
       uiTheme.addEventListener("change",updateExperience);
@@ -4519,7 +4869,7 @@
         syncUiTheme();applyFilm();draw();
       });
       document.addEventListener("visibilitychange", syncPlayback);
-      document.addEventListener("visibilitychange", () => { if (document.hidden) stopSounds(); });
+      document.addEventListener("visibilitychange", () => { if (document.hidden) { stopSounds();settlePostcard(); } });
       window.addEventListener("resize", draw);
       document.addEventListener("scroll",()=>{if(paused)drawAirspace();},true);
       document.querySelector(".city-options").addEventListener("toggle", drawAirspace);
@@ -4530,7 +4880,7 @@
         const descriptions={
           pause:()=>paused?"Resume the city movie.":"Pause the city movie without resetting it.",
           sound:()=>soundEnabled?"Mute the soundtrack and city sound effects.":"Enable the soundtrack and city sound effects.",
-          collisions:()=>collisionsEnabled?"Turn off new player crashes. Any active rescue will finish.":"Allow player-created crashes and helicopter recovery.",
+          collisions:()=>collisionsEnabled?"Turn off new player crashes. All active and queued rescues will finish.":"Allow player-created crashes and helicopter recovery.",
           "reset-view":()=>"Return to this city's landmark and start a fresh Chronicle, keeping the same city seed.",
           new:()=>"Generate a new city roll and reset its journeys and Chronicle.",
           "ui-style":()=>"Switch between Original film and Gamified pastel without resetting the city.",
@@ -4560,18 +4910,22 @@
           clearTimeout(popTimer);popTimer=setTimeout(hide,5000);
         }
         function begin(element) {
+          if(document.documentElement.dataset.guide==="on")return;
           clearTimeout(hideTimer);
           if(target===element&&tooltip.classList.contains("is-visible"))return;
           const delay=tooltip.classList.contains("is-visible")||performance.now()<reshowUntil?100:500;
           hide();target=element;
           showTimer=setTimeout(()=>{
-            if(!target?.isConnected||!target.getClientRects().length){hide();return}
+            if(document.documentElement.dataset.guide==="on"||!target?.isConnected||!target.getClientRects().length){hide();return}
             tooltip.textContent=description(target);
             if(!tooltip.textContent){hide();return}
             const box=target.getBoundingClientRect(),width=tooltip.offsetWidth,height=tooltip.offsetHeight;
             const left=Math.max(12,Math.min(innerWidth-width-12,box.left+box.width/2-width/2));
-            const below=box.bottom+8;
-            const top=Math.max(12,Math.min(innerHeight-height-12,below+height<=innerHeight-12?below:box.top-height-8));
+            const below=box.bottom+8,above=box.top-height-8;
+            const preferred=target.id==="city-selector"
+              ?(above>=12?above:Math.max(below,document.querySelector(".station-board").getBoundingClientRect().bottom+12))
+              :(below+height<=innerHeight-12?below:above);
+            const top=Math.max(12,Math.min(innerHeight-height-12,preferred));
             tooltip.style.left=left+"px";tooltip.style.top=top+"px";
             const ids=(target.getAttribute("aria-describedby")||"").split(/\s+/).filter(Boolean);
             target.setAttribute("aria-describedby",[...new Set([...ids,tooltip.id])].join(" "));
@@ -4604,6 +4958,7 @@
         document.addEventListener("focusin",event=>{const element=control(event.target);if(element)begin(element)});
         document.addEventListener("focusout",event=>leave(control(event.target)));
         document.addEventListener("pointerdown",hide,true);
+        document.addEventListener("change",hide,true);
         document.addEventListener("keydown",event=>{if(event.key==="Escape")hide()},true);
         document.addEventListener("scroll",hide,true);
         document.addEventListener("toggle",hide,true);
@@ -4624,13 +4979,176 @@
             }
           }
         }).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["title"]});
+        return hide;
       }
-      installControlTooltips();
+      const dismissControlTooltip=installControlTooltips();
+      function installFirstPlayGuide() {
+        const key="fuji-city:first-play:v1",panel=document.getElementById("first-play-guide");
+        const pointer=document.getElementById("guide-pointer"),highlight=document.getElementById("guide-highlight");
+        const feedback=document.getElementById("guide-feedback"),next=document.getElementById("guide-next");
+        const steps=[
+          {target:"#city",title:"Put someone on the road",text:"Tap a road near the hand to add a car or motorcycle. The hand is only a hint: it never clicks for you. Keyboard: focus the city, press L, then Enter. Press Play if the city is paused."},
+          {target:"#city-selector",change:"destination",title:"Take a different trip",text:"Click, drag or scroll the city wheel to travel. With it focused, use the arrow keys. Each destination brings its own streets, landmarks and greeting."},
+          {target:'[data-wheel-for="film"]',change:"film",title:"Choose the film",text:"Turn this wheel to change the film treatment. Nearby controls let you pause, toggle sound or change the camera view without starting a new roll."},
+          {target:'[data-wheel-for="view-size"]',change:"view-size",title:"Make room for the city",text:"Turn the size wheel for a tiny print or a full-window view. Escape returns from full-window mode. Auto FPS adapts to the traffic nearby."},
+          {target:"#clock",title:"Wind the day forward",text:"Drag the clock or use its arrow keys. Beside it, reset restores 09:00 and x1800; the sun jumps to noon. The lower buttons change clock speed, not driving speed. Replay this guide in City notebook & extras."}
+        ];
+        let index=0,active=false,timer=0,startTimer=0,pending=false,roadPoint=null,storageAvailable=true,returnFocus=null;
+        function storageError(error) {
+          if(!(error instanceof DOMException))throw error;
+          console.warn("First-play guide preference could not be saved or read:",error);
+          storageAvailable=false;
+          const notice=document.getElementById("guide-storage");
+          notice.textContent="Browser storage is unavailable. This guide may reappear on your next visit.";notice.hidden=false;
+        }
+        let remembered=false;
+        try { remembered=["done","skipped"].includes(localStorage.getItem(key)); } catch(error) { storageError(error); }
+        function target() { return document.querySelector(steps[index].target); }
+        function visibleRoad(blocked=null) {
+          const viewport=canvas.closest(".view-window"),left=viewport.scrollLeft,top=viewport.scrollTop;
+          const right=Math.min(viewWidth,left+viewport.clientWidth),bottom=Math.min(viewHeight,top+viewport.clientHeight);
+          pointer.hidden=false;pointer.style.left="0px";pointer.style.top="0px";
+          const origin=pointer.getBoundingClientRect(),matrix=new DOMMatrix(getComputedStyle(document.querySelector("figure")).transform);
+          let best=null,distance=Infinity;
+          for(let x=left+24;x<right-24;x+=12)for(let y=top+24;y<bottom-24;y+=12){
+            const cx=origin.x+matrix.a*x+matrix.c*y,cy=origin.y+matrix.b*x+matrix.d*y;
+            if(cx<24||cx>innerWidth-54||cy<24||cy>innerHeight-64)continue;
+            if(blocked&&cx+54>blocked.left&&cx-24<blocked.right&&cy+64>blocked.top&&cy-24<blocked.bottom)continue;
+            const point=aimWorld(x,y);
+            if(!lanesAt(point.x,point.y).length)continue;
+            const score=Math.hypot(x-(left+right)/2,y-(top+bottom)/2);
+            if(score<distance){best=point;distance=score;}
+          }
+          return best;
+        }
+        function placeRoad() {
+          const point=roadScreen();
+          pointer.hidden=!point;
+          if(!point)return null;
+          pointer.style.left=point.x+"px";pointer.style.top=point.y+"px";
+          const tip=pointer.getBoundingClientRect();
+          return {left:tip.x-20,right:tip.x+50,top:tip.y-20,bottom:tip.y+60};
+        }
+        function roadScreen() {
+          if(!roadPoint)return null;
+          const point=worldToScreen.transformPoint(roadPoint);
+          return {x:point.x*viewWidth/canvas.width,y:point.y*viewHeight/canvas.height};
+        }
+        function place() {
+          if(!active||document.hidden)return;
+          const element=target(),rect=element.getBoundingClientRect();
+          let avoid;
+          if(index===0){
+            const viewport=canvas.closest(".view-window");
+            let point=roadScreen();
+            if(!point||point.x<viewport.scrollLeft+24||point.x>viewport.scrollLeft+viewport.clientWidth-24
+              ||point.y<viewport.scrollTop+24||point.y>viewport.scrollTop+viewport.clientHeight-24){
+              roadPoint=visibleRoad();point=roadScreen();
+            }
+            highlight.hidden=true;
+            avoid=placeRoad();
+            if(avoid&&(avoid.left<0||avoid.right>innerWidth||avoid.top<0||avoid.bottom>innerHeight)){
+              roadPoint=visibleRoad();avoid=placeRoad();
+            }
+            if(!avoid){
+              avoid=rect;
+              feedback.textContent="No road in this crop. Scroll the photo or press L on the city to find a lane.";
+            }
+          }else{
+            const visible=rect.bottom>0&&rect.top<innerHeight&&rect.right>0&&rect.left<innerWidth&&element.getClientRects().length;
+            pointer.hidden=highlight.hidden=!visible;
+            pointer.style.left=rect.left+rect.width/2+"px";pointer.style.top=rect.top+rect.height/2+"px";
+            Object.assign(highlight.style,{left:rect.left-4+"px",top:rect.top-4+"px",width:rect.width+8+"px",height:rect.height+8+"px"});
+            avoid={left:rect.left-8,right:rect.right+8,top:rect.top-8,bottom:rect.bottom+60};
+          }
+          const width=panel.offsetWidth,height=panel.offsetHeight;
+          const candidates=[[innerWidth-width-12,innerHeight-height-12],[12,innerHeight-height-12],[innerWidth-width-12,12],[12,12]];
+          const placement=candidates.find(([x,y])=>x+width+8<=avoid.left||x-8>=avoid.right||y+height+8<=avoid.top||y-8>=avoid.bottom);
+          const [x,y]=placement||candidates[0];
+          panel.style.left=Math.max(12,x)+"px";panel.style.top=Math.max(12,y)+"px";
+          if(!placement&&index===0){
+            roadPoint=visibleRoad({left:x-8,right:x+width+8,top:y-8,bottom:y+height+8});
+            if(!placeRoad())feedback.textContent="No uncovered road here. Use Try control, then Enter, or choose Next.";
+          }
+        }
+        function runTimer() {
+          clearInterval(timer);timer=0;
+          document.documentElement.dataset.guideSleeping=String(document.hidden);
+          if(active&&!document.hidden){place();timer=setInterval(place,120);}
+          else pointer.hidden=highlight.hidden=true;
+        }
+        function showStep() {
+          const element=target();
+          for(let ancestor=element.parentElement;ancestor;ancestor=ancestor.parentElement)if(ancestor instanceof HTMLDetailsElement)ancestor.open=true;
+          roadPoint=null;
+          document.getElementById("guide-progress").textContent=`First play · ${index+1} / ${steps.length}`;
+          document.getElementById("guide-title").textContent=steps[index].title;
+          document.getElementById("guide-description").textContent=steps[index].text;
+          feedback.textContent="";
+          document.getElementById("guide-back").disabled=index===0;
+          next.textContent=index===steps.length-1?"Finish":"Next";
+          panel.dataset.step=String(index);
+          pointer.classList.toggle("on-road",index===0);
+          (index===0?canvas.parentElement:document.body).append(pointer);
+          pointer.classList.remove("is-tapping");
+          element.scrollIntoView({block:"center",inline:"nearest",behavior:"instant"});
+          place();
+          requestAnimationFrame(()=>{if(active)pointer.classList.add("is-tapping");});
+        }
+        function start(replay=false) {
+          if(active)return;
+          clearTimeout(startTimer);pending=false;
+          returnFocus=replay?document.getElementById("replay-guide"):null;
+          active=true;index=0;panel.hidden=false;
+          document.documentElement.dataset.guide="on";
+          dismissControlTooltip();
+          showStep();runTimer();
+          if(replay)next.focus({preventScroll:true});
+        }
+        function finish(result) {
+          const restoreFocus=panel.contains(document.activeElement);
+          active=false;pending=false;clearTimeout(startTimer);clearInterval(timer);timer=0;
+          panel.hidden=pointer.hidden=highlight.hidden=true;
+          delete document.documentElement.dataset.guide;
+          delete document.documentElement.dataset.guideSleeping;
+          if(storageAvailable)try { localStorage.setItem(key,result); } catch(error) { storageError(error); }
+          if(!storageAvailable)toastUi("Guide closed. Browser storage is unavailable, so it may appear next visit.");
+          if(restoreFocus) (returnFocus||target()).focus({preventScroll:true});
+        }
+        next.addEventListener("click",()=>{if(index===steps.length-1)finish("done");else{index++;showStep();}});
+        document.getElementById("guide-back").addEventListener("click",()=>{if(index>0){index--;showStep();}});
+        document.getElementById("guide-skip").addEventListener("click",()=>finish("skipped"));
+        document.getElementById("replay-guide").addEventListener("click",()=>start(true));
+        document.getElementById("guide-focus").addEventListener("click",()=>{
+          target().scrollIntoView({block:"center",inline:"nearest",behavior:"instant"});
+          place();
+          if(index===0){const point=roadScreen();if(point)Object.assign(aim,point);}
+          target().focus({preventScroll:true});
+          if(index===0)aimAtLane();
+        });
+        canvas.addEventListener("vehicle-added",()=>{
+          if(active&&index===0)feedback.textContent=paused?"Vehicle added! Press Play to see it move, or choose Next.":"Vehicle added! Try another, or choose Next.";
+        });
+        document.addEventListener("change",event=>{
+          if(!active)return;
+          if(event.target.id===steps[index].change)feedback.textContent="Changed! Keep exploring, or choose Next.";
+          roadPoint=null;requestAnimationFrame(place);
+        });
+        document.addEventListener("keydown",event=>{
+          if(active&&event.key==="Escape"){event.preventDefault();finish("skipped");}
+        },true);
+        document.addEventListener("scroll",place,{passive:true,capture:true});
+        window.addEventListener("resize",place);
+        document.addEventListener("visibilitychange",()=>{if(pending&&!document.hidden)start();runTimer();});
+        new ResizeObserver(place).observe(panel);
+        if(!remembered)startTimer=setTimeout(()=>{pending=true;if(!document.hidden)start();},600);
+      }
       function updatePaperMargins() {
         const figure=document.querySelector("figure"),w=figure.offsetWidth,h=figure.offsetHeight;
-        const matrix=new DOMMatrix(getComputedStyle(figure).transform);
-        const x=fullView?0:Math.ceil(Math.max(0,(Math.abs(matrix.a)*w+Math.abs(matrix.c)*h-w)/2))+4;
-        const y=fullView?0:Math.ceil(Math.max(0,(Math.abs(matrix.b)*w+Math.abs(matrix.d)*h-h)/2))+4;
+        // Reserve the entire supported +/-2 degree range, independent of the current roll.
+        const angle=2*Math.PI/180,c=Math.cos(angle),s=Math.sin(angle);
+        const x=fullView?0:Math.ceil(Math.max(0,(c*w+s*h-w)/2))+4;
+        const y=fullView?0:Math.ceil(Math.max(0,(s*w+c*h-h)/2))+4;
         for (const [axis,value] of [["x",x],["y",y]]) {
           const key="--paper-bleed-"+axis,next=value+"px";
           if (document.documentElement.style.getPropertyValue(key)!==next)
@@ -4673,18 +5191,22 @@
       syncClock();
       syncClockRate();
       styleTownClock();
+      syncCityPostcard();
       applyFilm();
       resetCityJournal();
       if (paused) status.textContent = "Motion is off. Press Play to take flight.";
       draw();
       auditTrafficGovernor();
       syncPlayback();
+      installFirstPlayGuide();
     })();
   </script>
 <!-- CITY VERSION SCRIPT START -->
 <script>
   (() => {
     const picker = document.querySelector(".version-picker");
+    const extras = document.querySelector(".city-extras");
+    if (extras) extras.prepend(picker.closest(".version-bar"));
     document.addEventListener("keydown", event => {
       if (event.key === "Escape" && picker.open) {
         event.preventDefault(); event.stopImmediatePropagation();
@@ -4699,7 +5221,7 @@
     });
     const theme = new URLSearchParams(location.search).get("scoutTheme");
     if (theme === "dark" || theme === "light") {
-      for (const link of picker.querySelectorAll("a")) link.search = "?scoutTheme=" + theme;
+      for (const link of document.querySelectorAll(".version-list a, .version-pager a")) link.search = "?scoutTheme=" + theme;
     }
   })();
 </script>

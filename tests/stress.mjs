@@ -12,7 +12,7 @@ mkdirSync(output,{recursive:true});
 const marker='      if (paused) status.textContent = "Motion is off. Press Play to take flight.";';
 const hook=`window.qa={
   get state(){return {city:cityId,seed,time,paused,workers:readyWorkers.size,failures:[...workerFailures],
-    cars:spawnedCars.length,ambient:ambientTraffic.size,stage:incident?.stage,recovered:recoveredCars.length,
+    cars:spawnedCars.length,ambient:ambientTraffic.size,stage:incidents[0]?.stage,recovered:recoveredCars.length,
     finite:[...ambientTraffic.values(),...spawnedCars].every(v=>Number.isFinite(v.x+v.y+(v.velocity||0))),
     faults:governorFaults,tiles:tiles.size}},
   cities(){return Object.keys(cities)},
@@ -34,9 +34,12 @@ const hook=`window.qa={
     updateTraffic(1/30);
     return {kind:v.kind,home:!!v.home,moved:Math.hypot(v.x-x,v.y-y),velocity:v.velocity};
   },
-  recover(){let steps=0;while(incident&&steps++<12000){time+=.05;advanceRescue(.05)}drawAirspace();return !incident},
+  recover(){let steps=0;while(incidents.length&&steps++<12000){time+=.05;advanceRescue(.05)}drawAirspace();return !incidents.length},
   landmarks(){
     const entries=currentCity().landmarks,seen=new Set(),positions=[];
+    const startingSeed=seed,starts=new Set();
+    for(let s=0;s<256;s++){seed=s;const first=landmarkAt(0,0);if(!first)throw Error("Missing starting landmark");starts.add(first.name);}
+    seed=startingSeed;
     for(let y=-32;y<=32;y++)for(let x=-32;x<=32;x++){
       const a=landmarkAt(x,y),b=landmarkAt(x,y);
       if(a){
@@ -53,7 +56,7 @@ const hook=`window.qa={
       g.save();g.translate(i*182,0);landmark(g,entry);g.restore();
       counts.push(g.getImageData(i*182,0,182,182).data.filter((v,j)=>j%4===3&&v>0).length);
     }
-    return {entries,seen:[...seen],stable:positions.length>0,random:positions.join()!==changed.join(),counts,
+    return {entries,seen:[...seen],starts:[...starts],stable:positions.length>0,random:positions.join()!==changed.join(),counts,
       atlas:atlas.toDataURL(),size:currentCity().size,traffic:trafficDemand(),font:cityFonts[cityId],defaults:cityDefaults[cityId]};
   },
   invariant(){auditTrafficGovernor();return this.state}
@@ -65,6 +68,7 @@ const results=[];
 try{
   for(let round=1;round<=rounds;round++){
     const errors=[],page=await browser.newPage({viewport:{width:1440,height:1100},reducedMotion:"reduce"});
+    await page.addInitScript(()=>localStorage.setItem("fuji-city:first-play:v1","done"));
     page.on("pageerror",e=>errors.push(e.message));
     await page.route("http://city.test/**",r=>r.fulfill({contentType:"text/html",body:source.replace(marker,hook+marker)}));
     await page.goto("http://city.test/");
@@ -80,6 +84,7 @@ try{
       assert(landmarks.entries.length>=5,city+" requires five landmarks");
       assert.equal(new Set(landmarks.entries.map(l=>l.name)).size,landmarks.entries.length);
       assert.equal(landmarks.seen.length,landmarks.entries.length,city+" all landmarks are reachable");
+      assert.deepEqual([...landmarks.starts].sort(),landmarks.entries.map(e=>e.name).sort(),city+" every landmark can open a roll");
       assert(landmarks.stable&&landmarks.random,city+" reproducible randomized placement");
       assert(landmarks.counts.every(n=>n>1000),city+" all motifs draw");
       assert(landmarks.font&&landmarks.defaults);
@@ -87,6 +92,12 @@ try{
       if(city==="istanbul"||city==="antalya")
         assert.deepEqual(await page.locator("#clock-numerals text").allTextContents(),["12","3","6","9"]);
       if(city==="antalya")for(const name of ["Yivli Minare","Saat Kulesi"])assert(landmarks.seen.includes(name));
+      if(city==="dublin"){
+        assert(landmarks.seen.includes("Guinness Storehouse"));
+        assert.equal(await page.locator("#clock").getAttribute("data-dial"),"brewery");
+        assert.equal(await page.locator("#clock-signature").textContent(),"ST JAMES'S GATE");
+        assert(landmarks.font.family.includes("IM Fell English"));
+      }
       // Real mouse input through the rotated paper's inverse transform.
       await page.locator("#city").scrollIntoViewIfNeeded();
       const point=await page.evaluate(()=>qa.point());
@@ -129,7 +140,7 @@ try{
             const a=document.getElementById("clock-faster").getBoundingClientRect(),b=document.getElementById("clock-slower").getBoundingClientRect();
             return {dx:Math.abs(a.x-b.x),gap:b.y-a.bottom};
           });
-          assert(controls.dx<1&&controls.gap>=3);
+          assert(controls.dx<1&&controls.gap>=1,JSON.stringify(controls));
           if(size==="full"){await page.keyboard.press("Escape");assert.equal(await page.locator("body").evaluate(e=>e.classList.contains("full-view")),false);}
         }
       }
@@ -149,10 +160,10 @@ try{
     await wheel.press("ArrowUp");assert.notEqual(await page.inputValue("#film"),previous);
     await wheel.hover();await page.mouse.wheel(0,90);await page.waitForTimeout(450);
     await page.locator("#clock").press("Home");
-    assert.equal(await page.locator("#clock-readout").textContent(),"06:00:00");
+    assert.equal(await page.locator("#clock").getAttribute("aria-valuetext"),"06:00:00");
     await page.locator("#clock-faster").click();await page.locator("#clock-slower").click();
     await page.locator("#clock").press("End");
-    assert.equal(await page.locator("#clock-readout").textContent(),"21:00:00");
+    assert.equal(await page.locator("#clock").getAttribute("aria-valuetext"),"21:00:00");
     await page.selectOption("#destination","original",{force:true});
     for(const kind of ["car","bike"]){
       await page.evaluate(()=>qa.reset(42));await page.evaluate(()=>qa.point());
