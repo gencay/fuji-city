@@ -197,8 +197,8 @@
       "version": 15,
       "file": "../city-flight.html",
       "title": "Nineteen cities, a hundred landmarks",
-      "description": "19 destinations with 102 seeded architectural motifs, including Antalya's Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 132 px dial with reset, daylight and stacked speed controls; colorful wheel strokes. A replayable first-play hand guide, inline station greetings, right-aligned comic poet titles and a city-specific satirical paper in the notebook. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and concurrent nearest-available helicopter rescues with queued calls. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.",
-      "sourceSha256": "c474fe089a6d078fe4325e8d66766c4d875665f72743cdfd8536fa66b49d2569"
+      "description": "19 destinations with 102 seeded architectural motifs and randomized startup. A 132 px dial with daylight and stacked speed controls; City options starts collapsed. A single successful-spawn hand hint, inline station greetings, comic poet titles and a fictional local paper. Procedural boats follow waterways with wakes, alongside rare coastal whales and belugas surfacing to breathe. New vehicles keep moving while searching for a home and yield to real obstacles. Approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and concurrent helicopter rescues with queued calls and random departures. A sleepy long-necked guard directs deliveries onto an intake conveyor. A hydraulic crusher and output belt fill a large scrap container; five real running seconds after all cars are packed, a steam train appears at the pickup point, hoists the sealed container and drives forward offscreen along the shortest safe spur, with fading rails, smoke and whistles. Defaults to 600 px Polaroid / Close up with city-specific film and Auto FPS. v14 preserves the prior layout.",
+      "sourceSha256": "cb16f43e2b726dc025ce95e5d340824d5f57150c9de977761ce2f60487006668"
     }
   ]
 }

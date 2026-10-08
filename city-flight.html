@@ -358,7 +358,7 @@
     .recovery {
       width: 100%;
       max-width: 240px;
-      height: 116px;
+      height: 148px;
       margin: 20px auto 0;
       border: 1px dashed var(--cp-border-strong);
       color: var(--cp-text-muted);
@@ -424,6 +424,11 @@
     body.full-view .city-journal #journal-entries { max-height: 45dvh; }
     #ui-toast { position: fixed; left: 50%; bottom: 20px; z-index: 40; width: max-content; max-width: calc(100vw - 32px); padding: 12px 18px; border: 2px solid var(--cp-text); background: var(--cp-surface); color: var(--cp-text); font: 12px/1.5 Consolas, monospace; pointer-events: none; opacity: 0; transform: translate(-50%, 8px); transition: opacity 180ms, transform 180ms; }
     #ui-toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+    #analytics-choice { position: fixed; right: 16px; bottom: 16px; z-index: 45; width: min(360px,calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; padding: 16px; border: 2px solid var(--cp-text); background: var(--cp-surface); color: var(--cp-text); font: 13px/1.55 "Segoe UI",sans-serif; }
+    #analytics-choice p { margin: 0 0 12px; }
+    .analytics-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .analytics-actions button { flex: 1; min-height: 44px; }
+    #analytics-choice a { color: var(--cp-link); text-decoration: underline; }
     html[data-ui="gamified"] body { background-image: radial-gradient(var(--cp-rule) .7px, var(--cp-clear) .7px); background-size: 13px 13px; padding: 40px 24px; }
     html[data-ui="gamified"] .city-layout { gap: 40px; grid-template-columns: minmax(0, auto) 440px; }
     html[data-ui="gamified"] main { min-width: 0; }
@@ -499,14 +504,13 @@
     .city-identity { min-width: 0; display: flex; flex-direction: column; align-self: stretch; gap: 16px; padding-bottom: 16px; }
     .city-identity h1 { margin: 0 0 16px; font-size: clamp(13px,4cqi,16px); line-height: 1.4; letter-spacing: .02em; }
     .city-heading .wall-clock { grid-column: 2; grid-row: 2; align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 16px; }
-    .city-heading .clock-rate { grid-template-columns: minmax(0,1fr) 24px; grid-template-rows: repeat(4,minmax(24px,1fr)); row-gap: 2px; }
+    .city-heading .clock-rate { grid-template-columns: minmax(0,1fr) 24px; grid-template-rows: repeat(3,minmax(24px,1fr)); row-gap: 2px; }
     .city-heading .clock-rate > button:not(#clock) { min-width: 24px; min-height: 24px; height: 100%; padding: 0; display: grid; place-items: center; }
     .clock-action-icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
-    html .city-heading #clock { grid-column: 1; grid-row: 1 / 5; align-self: end; width: 100%; max-width: 132px; height: auto; }
-    .city-heading #clock-reset { grid-column: 2; grid-row: 1; }
-    .city-heading #clock-daylight { grid-column: 2; grid-row: 2; }
-    .city-heading #clock-faster { grid-column: 2; grid-row: 3; }
-    .city-heading #clock-slower { grid-column: 2; grid-row: 4; }
+    html .city-heading #clock { grid-column: 1; grid-row: 1 / 4; align-self: end; width: 100%; max-width: 132px; height: auto; }
+    .city-heading #clock-daylight { grid-column: 2; grid-row: 1; }
+    .city-heading #clock-faster { grid-column: 2; grid-row: 2; }
+    .city-heading #clock-slower { grid-column: 2; grid-row: 3; }
     .city-heading #clock-rate { width: calc(100% - 24px); }
     .city-heading #clock-rate { top: auto; bottom: 0; }
     .city-heading #city-selector { display: block; width: calc(100% - 12px); margin: 12px 0 0 12px; transform: rotate(1deg); border: 2px solid var(--cp-film-ink); }
@@ -563,28 +567,11 @@
     #control-tooltip { position: fixed; z-index: 100; width: max-content; max-width: min(280px,calc(100vw - 24px)); padding: 8px 10px; border: 1px solid var(--cp-text); background: var(--cp-surface); color: var(--cp-text); font: 12px/1.5 "Segoe UI",sans-serif; pointer-events: none; opacity: 0; visibility: hidden; transform: translateY(4px); transition: opacity 180ms,transform 180ms,visibility 0s 180ms; }
     #control-tooltip.is-visible { opacity: 1; visibility: visible; transform: translateY(0); transition-delay: 0s; }
     html[data-ui="gamified"] #control-tooltip { border-width: 2px; background: var(--cp-yellow); box-shadow: 3px 3px 0 var(--cp-text); }
-    #first-play-guide { position: fixed; z-index: 120; width: min(330px,calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; padding: 16px; border: 1px solid var(--cp-text); background: var(--cp-surface); color: var(--cp-text); text-align: left; font: 13px/1.55 "Segoe UI",sans-serif; }
-    #first-play-guide[hidden], #guide-pointer[hidden], #guide-highlight[hidden] { display: none; }
-    .guide-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-    #guide-progress { font: bold 11px Consolas,monospace; }
-    #first-play-guide h2 { margin: 8px 0; font: bold 21px/1.25 Georgia,serif; }
-    #first-play-guide p { margin: 8px 0; }
-    #guide-feedback { min-height: 20px; font-weight: 600; }
-    #guide-storage { color: var(--cp-text-muted); font-size: 12px; }
-    .guide-actions { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 8px; margin-top: 12px; }
-    #first-play-guide button { min-height: 44px; padding: 6px 8px; }
-    #guide-skip { border: 0; text-decoration: underline; }
-    #guide-next { background: var(--cp-text); color: var(--cp-surface); }
-    html[data-ui="gamified"] #first-play-guide { border-width: 2px; box-shadow: 5px 5px 0 var(--cp-text); }
-    html[data-ui="gamified"] #first-play-guide h2 { padding: 6px; background: var(--cp-yellow); font-family: "Segoe UI",sans-serif; }
-    #guide-highlight { position: fixed; z-index: 110; pointer-events: none; border: 2px solid var(--cp-accent); outline: 2px solid var(--cp-surface); outline-offset: 1px; }
-    #guide-pointer { position: fixed; z-index: 111; width: 0; height: 0; pointer-events: none; }
-    #guide-pointer.on-road { position: absolute; }
+    #guide-pointer { position: absolute; z-index: 5; width: 0; height: 0; pointer-events: none; }
     #guide-pointer::before { content: ""; position: absolute; left: -13px; top: -13px; width: 26px; height: 26px; border: 3px solid var(--cp-accent); border-radius: 50%; box-shadow: 0 0 0 2px var(--cp-surface); }
     .guide-hand { position: absolute; left: -14px; top: -2px; width: 48px; height: 56px; fill: var(--cp-surface); stroke: var(--cp-text); stroke-width: 2; stroke-linejoin: round; }
-    #guide-pointer.is-tapping .guide-hand { animation: guide-tap 1600ms ease-in-out 4; transform-origin: 14px 2px; }
+    #guide-pointer.is-tapping .guide-hand { animation: guide-tap 1600ms ease-in-out infinite; transform-origin: 14px 2px; }
     @keyframes guide-tap { 0%,100% { transform: translate(6px,8px) rotate(-8deg); } 40%,65% { transform: translate(0,0) rotate(0); } }
-    html[data-guide-sleeping="true"] .guide-hand { animation-play-state: paused; }
     .newspaper-reader { padding: 12px; border: 1px solid var(--cp-border-strong); background: var(--cp-surface); color: var(--cp-text); font: 13px/1.6 Georgia,serif; }
     .newspaper-reader h3 { margin: 20px 0 6px; font-size: 18px; }
     .newspaper-reader p { margin: 8px 0; color: var(--cp-text); }
@@ -682,9 +669,6 @@
               <circle cx="30" cy="30" r="2" fill="currentColor"/>
             </svg>
           </button>
-          <button id="clock-reset" type="button" aria-label="Reset clock to 09:00 and x1800" title="Reset the clock to 09:00 and its default x1800 speed. Keep the city and journeys.">
-            <svg class="clock-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6M12 7v5l3 2"/></svg>
-          </button>
           <button id="clock-daylight" type="button" aria-label="Set daylight at noon" title="Jump to daylight at 12:00 without changing clock speed.">
             <svg class="clock-action-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>
           </button>
@@ -696,7 +680,7 @@
         <output id="clock-rate" aria-hidden="true">x1800</output>
       </div>
     </header>
-    <details class="city-options" open>
+    <details class="city-options">
       <summary>City options</summary>
       <div class="primary-options" aria-label="Playback and camera options">
         <button id="pause" type="button" aria-pressed="false">Pause</button>
@@ -745,7 +729,7 @@
           <option value="48">48 FPS</option><option value="60">60 FPS</option>
         </select></label>
       </div>
-      <div id="recovery" class="recovery" aria-label="Junkyard" hidden>Junkyard</div>
+      <div id="recovery" class="recovery" aria-label="Junkyard with conveyors, crusher and scrap container" hidden>Junkyard · conveyor &amp; crusher</div>
     </details>
     <details id="journal" open>
       <summary>City Chronicle</summary>
@@ -773,7 +757,7 @@
             <p><strong>Current version · v15</strong><br>Nineteen cities, a hundred landmarks</p>
             <p>city-flight.html always opens the latest version. Choose a milestone to explore how the city evolved.</p>
             <ol class="version-list">
-              <li><a href="city-flight.html" aria-current="page"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations with 102 seeded architectural motifs, including Antalya&#39;s Yivli Minare and Saat Kulesi. Modern Istanbul clock numerals; 176 px dial with stacked speed controls; colorful wheel strokes. New vehicles keep moving while searching for a home, while yielding to real obstacles. Researched approximate Polaroid borders, 440 px control pane, mixed car/motorcycle spawns and animated rescue Junkyard. Original defaults to 600 px Polaroid / Close up / Auto 30 FPS. v14 preserves the prior layout.</span></a></li>
+              <li><a href="city-flight.html" aria-current="page"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations and 102 seeded motifs with randomized startup. A 132 px clock with daylight and speed controls, collapsed City options and a single road-click hint. Inline station greetings, comic postcards and a fictional local paper. Procedural boats with wakes and rare coastal whales and belugas surfacing to breathe. Concurrent helicopter rescues with random departures. A sleepy long-necked guard directs deliveries onto an intake belt; a crusher and output belt fill a scrap container. Five real running seconds after everything is packed, a steam train appears at the pickup point, hoists the container and drives forward offscreen along the shortest safe spur, with fading rails, smoke and whistles. A 600 px Polaroid / Close up with city-specific film and Auto FPS. Optional production analytics with a reversible preview default. v14 preserves the prior layout.</span></a></li>
               <li><a href="versions/city-flight-v0.html"><strong>v0 — The first miniature</strong><span>200 px procedural city, pedestrians, traffic and faded Chrome-style film.</span></a></li>
               <li><a href="versions/city-flight-v1.html"><strong>v1 — Click a lane</strong><span>Lane-click cars, legal directions, keyboard aiming and an original WAV chime.</span></a></li>
               <li><a href="versions/city-flight-v2.html"><strong>v2 — Helicopter recovery</strong><span>Rooftop helicopters lift crashed vehicles into a collection bay.</span></a></li>
@@ -796,7 +780,9 @@
 <!-- CITY VERSION NAV END -->
     <p class="note"><span id="view-dimensions">600 × 600</span> · made as you fly<br>no footage. no map. just a passing moment.</p>
     <button id="reset-view" type="button">Revisit landmark</button>
-    <button id="replay-guide" type="button">Replay first-play guide</button>
+    <button id="replay-guide" type="button">Show road-click hint</button>
+    <button id="analytics-settings" type="button" aria-controls="analytics-choice" disabled>Analytics privacy</button>
+    <p id="analytics-status" class="note" role="status">Analytics is off in local previews.</p>
     <details class="newspaper-reader">
       <summary>Read the local paper (entirely made up)</summary>
       <p><strong id="newspaper-name"></strong><br><small id="newspaper-issue"></small></p>
@@ -837,13 +823,16 @@
         <a href="https://www.gov.uk/guidance/the-highway-code/general-rules-techniques-and-advice-for-all-drivers-and-riders-103-to-158" target="_blank" rel="noreferrer">Highway Code: spacing and residential driving</a>;
         <a href="https://app.leg.wa.gov/rcw/default.aspx?cite=46.61.608" target="_blank" rel="noreferrer">Washington motorcycle lane rules</a>.
         Conservative shared rules are used where local law varies; this is not a complete legal model of any city.</p>
-      <p>Only the selected choice is shown at rest. Drag freely and release to snap to the nearest option; scrolling commits after a brief pause. Previews do not resize or regenerate the city. Escape cancels an unfinished selection. Click city, film or FPS to shuffle, or use arrow keys to choose. The size dial grows by 100 px from 100 to 1000 px, followed by Full screen. Home selects 100 px; End selects Full screen. The default is a 600 px Polaroid at 30 FPS in Close up. Wide prints scroll inside their frame on smaller screens. Full screen uses the available browser window, not browser F11. Choose a numeric size or press Escape to leave Full screen. Notebook extras and governor diagnostics are below the Chronicle, collapsed by default.</p>
+      <p>Only the selected choice is shown at rest. Drag freely and release to snap to the nearest option; scrolling commits after a brief pause. Previews do not resize or regenerate the city. Escape cancels an unfinished selection. Click city, film or FPS to shuffle, or use arrow keys to choose. The size dial grows by 100 px from 100 to 1000 px, followed by Full screen. Home selects 100 px; End selects Full screen. Each page load picks a random destination from all 19 cities, including Original, with its own film and automatic frame-rate tier. Repeats are possible; New roll and Revisit keep the selected city. The default print is a 600 px Polaroid in Close up. Wide prints scroll inside their frame on smaller screens. Full screen uses the available browser window, not browser F11. Choose a numeric size or press Escape to leave Full screen. Notebook extras and governor diagnostics are below the Chronicle, collapsed by default.</p>
       <p>The figure holds the city image and an original handwritten-style poem in its existing paper footer, signed on the right with an absurd, invented honorary title. Each destination has imagery drawn from local places and everyday culture, with distinct daylight and evening endings. New rolls avoid repeating the previous couplet; revisiting keeps it. Small prints use a compact couplet and title. The city-specific local paper in City notebook &amp; extras is entirely fictional satire; it does not replace the page background. Neither headlines nor poet titles describe real reporting, offices or writers. The black-and-white local greeting sits beside the clock, aligned with its bottom, and flips like a station board on city changes. Each city uses one selected local greeting, including English for multilingual Singapore; poems are original English text, not quotations, translations or imitations of real writers. Reveals are brief, respect motion settings, and settle when the page is hidden. The paper reserves the full supported tilt range so random slants do not shift the layout.</p>
-      <p>The first-play guide points out a legal road, city and film wheels, print sizing and clock controls. Its hand never clicks or changes settings for you. Skip or Finish is remembered in this browser, when storage is available; replay it from City notebook &amp; extras. Keyboard and reduced-motion users can follow the same steps with a static pointer.</p>
-      <p>The city wheel replaces the second title line in the right pane, with the clock beside the title and the version picker inside City notebook &amp; extras. City options opens by default above the Chronicle and holds playback, sound, camera view, print format, size, film, frame rate and the Junkyard. Polaroid selects the large 600 px print; Instax returns to your last small 100, 200 or 300 px print. The format wheel shows the current selection and stays in sync with the size dial. Print size and camera zoom are independent: a larger print reveals more streets at the same scale; Close up doubles the Drone scale, while Space view shows 1.5 times the Drone extent in each direction. Drag, scroll, click or use arrow keys on either wheel. Zoom keeps the current roll, clock and existing journeys. Size and zoom changes show brief notices rather than persistent status text; safety and error messages remain visible. Frame rate and view size do not change simulation speed; actual frame rate depends on your browser, hardware and the amount of city visible. Version 14 preserves the previous control layout.</p>
+      <p>First play is just a hand tapping a legal, visible road, not a guide panel. It never clicks, scrolls, changes settings or overrides pause for you. Successfully adding a vehicle completes the hint and is remembered in this browser when storage is available. Focus the city, press L and then Enter for the keyboard equivalent. UI/system reduced motion keeps the hand static. Show road-click hint in City notebook &amp; extras replays it.</p>
+      <p>The city wheel replaces the second title line in the right pane, with the clock beside the title and the version picker inside City notebook &amp; extras. City options starts collapsed above the Chronicle and holds playback, sound, camera view, print format, size, film, frame rate and the Junkyard. The clock's three buttons select daylight at noon, faster and slower; daylight preserves speed and playback, and there is no clock-reset button. Polaroid selects the large 600 px print; Instax returns to your last small 100, 200 or 300 px print. The format wheel shows the current selection and stays in sync with the size dial. Print size and camera zoom are independent: a larger print reveals more streets at the same scale; Close up doubles the Drone scale, while Space view shows 1.5 times the Drone extent in each direction. Drag, scroll, click or use arrow keys on either wheel. Zoom keeps the current roll, clock and existing journeys. Size and zoom changes show brief notices rather than persistent status text; safety and error messages remain visible. Frame rate and view size do not change simulation speed; actual frame rate depends on your browser, hardware and the amount of city visible. Version 14 preserves the previous control layout.</p>
       <p>The paper proportions use a documented square-window approximation: a 79 mm image on an 88 × 107 mm print, with 4.5 mm top/side borders and a 23.5 mm footer. The footer is 47/9 (about 5.22) times the header, and about 29.75% of the image width. Borders scale with the visible picture width; full-window mode caps their height while preserving the header/footer ratio. The simulation stays square and retains its selected pixel size. These are approximate display proportions, not a precise cutting template: <a href="https://support.polaroid.com/hc/en-us/articles/115012363647-What-are-Polaroid-photo-dimensions">Polaroid's official dimensions</a> specify an 88.47 × 107.52 mm print and 76.801 × 78.94 mm image, without separate top/bottom measurements. The square-window border breakdown comes from <a href="https://collage.recipes/guides/polaroid-photo-sizes/">Collage Recipes' measured print guide</a>.</p>
-      <p>The Junkyard is hidden on a fresh roll, even when collisions are enabled. A rescue reveals it and expands City options; the bay fades in and gently shakes while awaiting the helicopter's delivery. Delivery reopens the section if it was collapsed during approach. The shake ends when the cargo is delivered, and recovered vehicles stay visible until the next roll. A rescue with no surviving cargo leaves an empty bay hidden. UI motion off and system reduced-motion disable the reveal/shake animation without hiding rescue information.</p>
+      <p>The Junkyard is hidden on a fresh roll. A rescue reveals it and expands City options; the bay fades in and gently shakes until delivery. Every wreck stays queued: the intake conveyor feeds the hydraulic crusher, and an output conveyor carries each compacted pack to a large scrap container. After all cars are packed and no delivery is pending, five real running seconds pass before collection. New rescues reset that wait; city-clock speed and manual winding do not affect it. Playback pauses and hidden tabs freeze the machinery and timer.</p>
       <p>Multiple crashes can be recovered at once. Each gets the nearest available helicopter; busy crews keep their current job. If all crews are busy, calls queue in arrival order and their wrecks continue blocking the affected roads. A crew can take the next call immediately after delivery, from its current location. An empty fleet receives one backup crew. The Junkyard keeps receiving while any recovery remains, counts every delivery once and displays the latest eight vehicles. Disabling new collisions does not cancel queued rescues; changing the city or roll does.</p>
+      <p>Helicopters without another call depart toward a stable random screen edge. A straw-hatted, long-necked guard wakes in his chair and sneezes once per roll with an AH-CHOO! text effect. He guides arrivals onto the intake belt and dodges dropping cars, but never carries them. The steam locomotive appears beside the yard with its flatcar at the pickup point, hoists the packed container in 0.8 seconds, then drives forward offscreen along the shortest map-avoiding spur in at most 1.8 seconds. It never reverses, and the last carriage clears the screen before cleanup. Tracks reveal and fade behind its movement; black smoke and original whistle/chuff sounds remain. New deliveries belong to a separate container and resume processing after loading. Recovery totals never decrease. Sound obeys mute and playback, reduced motion suppresses decorative animation, and a new city or roll clears all yard state.</p>
+      <p>Each steam pickup chooses a random entry, exit, direction and rounded route around the visible map. The locomotive, tender and wagons turn individually. Tracks appear just ahead of the engine and fade over two train lengths behind the last carriage. Route-length-based travel and a two-second loading stop use running time, not the town clock rate. The route adjusts to scrolling and resizing without choosing a new random seed; the map is also clipped out of all train, smoke and rail drawing. Where the viewport has no safe margin, the route stays offscreen rather than crossing the city. The entire rail tail leaves before the collection ends.</p>
+      <p>Launches, ferries and coastal cargo boats follow the waterways with gentle course changes and trailing wakes; bridge decks conceal passing boats, and moored dock boats stay put. Coastal scenes occasionally reveal a whale or beluga: an underwater shadow rises, a brief breath blooms above its blowhole, then the tail lifts and the ripples fade. These are rare, stylized cameos, not a local wildlife map. Sightings last about 14 seconds, with opportunities spaced two to five running minutes apart after an initial 75–135 seconds. Water life freezes with pause, hidden tabs or reduced motion and resets with the roll.</p>
       <p>Custom action tooltips replace native title bubbles. Hover or focus a control for 500 ms to reveal its explanation. Moving between controls while a tooltip is visible, or within half a second of its dismissal on leaving, reveals the next tooltip after 100 ms. A tooltip automatically dismisses after five seconds without pointer movement. Leaving or blurring the control waits half a second before a short fade; Escape dismisses immediately. Tooltips follow the active theme, stay within the viewport, preserve keyboard descriptions and respect reduced-motion settings.</p>
       <p>The page opens in Gamified pastel with Light Paper. Open the separate Same city. A different frame. section below City notebook &amp; extras to change interface, appearance or UI motion; both sections start collapsed. Compare Original film and Gamified pastel without resetting the city. Gamified adds dotted paper, pastel tickets, bold headings and tactile controls; Dark Ink and device appearance remain available. UI motion controls decorative feedback, independently of city playback. System reduced-motion always disables decorative movement. Consecutive Chronicle events of the same kind share one entry with an accumulated count and the first timestamp. A different event starts a new entry. Totals count affected people or vehicles, not repeated messages; the latest 120 grouped entries are retained.</p>
       <p>City lettering follows each clock's character: Original uses Fira Code; Paris, Bodoni Moda; Munich, UnifrakturCook; Istanbul, Cinzel; Seattle, Barlow Condensed; New York, UnifrakturMaguntia; London, Libre Caslon Display; and Ibiza, Pacifico. New York's blackletter evokes a newspaper masthead, not the actual New York Times typeface. These are expressive choices, not official city identities. The selected name and neighboring reel previews each use their city's font. Fonts load from Google Fonts with local fallbacks so the city remains usable offline.</p>
@@ -898,19 +887,18 @@
   </div>
   <canvas id="airspace" aria-hidden="true"></canvas>
   <div id="ui-toast" role="status" aria-live="polite"></div>
-  <div id="control-tooltip" role="tooltip" aria-hidden="true"></div>
-  <section id="first-play-guide" aria-labelledby="guide-title" hidden>
-    <div class="guide-top"><span id="guide-progress"></span><button id="guide-skip" type="button">Skip guide</button></div>
-    <div aria-live="polite" aria-atomic="true"><h2 id="guide-title"></h2><p id="guide-description"></p></div>
-    <p id="guide-feedback" role="status"></p>
-    <p id="guide-storage" hidden></p>
-    <div class="guide-actions">
-      <button id="guide-back" type="button">Back</button>
-      <button id="guide-focus" type="button">Try control</button>
-      <button id="guide-next" type="button">Next</button>
+  <section id="analytics-choice" aria-label="Optional analytics" hidden>
+    <p><strong>Help understand how Fuji City is played?</strong></p>
+    <p>Google Analytics uses cookies to measure visits, referral sites, approximate countries/devices, city choices, vehicle spawns and time with the city running. No names or email addresses are requested. Advertising features are disabled. The game works without analytics.</p>
+    <p>Change this any time in City notebook &amp; extras → Analytics privacy.
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">Google privacy policy</a></p>
+    <div class="analytics-actions">
+      <button id="analytics-decline" type="button">No thanks / turn off</button>
+      <button id="analytics-accept" type="button">Allow analytics</button>
     </div>
   </section>
-  <div id="guide-highlight" aria-hidden="true" hidden></div>
+  <div id="control-tooltip" role="tooltip" aria-hidden="true"></div>
+  <p id="spawn-lesson" class="sr-only" role="status"></p>
   <div id="guide-pointer" aria-hidden="true" hidden>
     <svg class="guide-hand" viewBox="0 0 48 56"><path d="M10 27V6a4 4 0 0 1 8 0v16-5a4 4 0 0 1 8 0v6-3a4 4 0 0 1 8 0v6-2a4 4 0 0 1 8 0v12c0 8-5 12-7 17H16c-2-7-9-10-12-18-2-5 2-9 6-4l6 7"/></svg>
   </div>
@@ -1210,7 +1198,8 @@
         link.hidden=!source;
         if(source)link.href=source;else link.removeAttribute("href");
       }
-      let cityId = "original";
+      let cityId = pick(Object.keys(cities));
+      document.getElementById("destination").value = cityId;
       const cityDefaults = {
         original:{film:"chrome",fps:30},paris:{film:"astia",fps:30},munich:{film:"provia",fps:30},
         istanbul:{film:"nostalgic",fps:60},seattle:{film:"eterna",fps:30},
@@ -1240,7 +1229,7 @@
         dubrovnik:{family:'"Cinzel", Georgia, serif',weight:600},
         antalya:{family:'"Cinzel", Georgia, serif',weight:600}
       };
-      let filmId = "chrome";
+      let filmId = cityDefaults[cityId].film;
       let nightEnabled = false;
       const DEFAULT_CLOCK_SECONDS=9*3600,DEFAULT_CLOCK_RATE=1800;
       let clockSeconds = DEFAULT_CLOCK_SECONDS;
@@ -1291,8 +1280,9 @@
       const ROAD = 30;
       let ZOOM = 1.44;
       const cameraScales = {close:1.44,drone:.72,space:.48};
-      let FRAME_TIME = 1000 / 30;
-      let automaticFps = 30, nextFpsAudit = 0;
+      let automaticFps = cityDefaults[cityId].fps, nextFpsAudit = 0;
+      let FRAME_TIME = 1000 / automaticFps;
+      document.querySelector('#fps [value="auto"]').textContent = `Auto ${automaticFps}`;
       const wheelBindings = [];
       const carPaints = ["car", "white", "red", "roof-blue", "black", "gold"];
       const tiles = new Map();
@@ -1308,6 +1298,25 @@
       const helicopters = new Map();
       const removedCars = new Map();
       const recoveredCars = [];
+      const PACKED_PICKUP_WAIT = 5;
+      let junkyardTime = 0, junkyardReadyTime = 0, junkyardTrain = null, junkyardCrusher = null;
+      let junkyardWorker = freshJunkyardWorker();
+      const analytics = { allowed:false, ready:false, seconds:0, city:null };
+      function analyticsEvent(name, parameters={}) {
+        if(!analytics.allowed||!analytics.ready)return;
+        window.gtag("event",name,{send_to:"G-XPQERNETR9",city_id:cityId,ui_style:document.documentElement.dataset.ui,...parameters});
+      }
+      function flushAnalyticsPlayTime() {
+        const seconds=Math.floor(analytics.seconds);
+        if(seconds>0)analyticsEvent("play_time",{city_id:analytics.city,play_seconds:seconds});
+        analytics.seconds=0;
+      }
+      function trackAnalyticsPlayTime(dt) {
+        if(!analytics.allowed||!analytics.ready||document.hidden||paused)return;
+        if(analytics.city!==cityId){flushAnalyticsPlayTime();analytics.city=cityId}
+        analytics.seconds+=dt;
+        if(analytics.seconds>=30)flushAnalyticsPlayTime();
+      }
       const activeSounds = new Set();
       const aim = { x: SIZE / 2, y: SIZE / 2 };
       let keyboardAim = false;
@@ -1333,6 +1342,7 @@
       let clockRateTimer = null;
       let seed = newSeed();
       let time = 0;
+      let marineTime=0,nextSurfacing=75+hash(0,0,3200)*60,surfacingIndex=0,surfacing=null;
       let trafficTime = 0;
       let cameraTime = 0;
       let paused = reducedMotion.matches;
@@ -1617,7 +1627,7 @@
       function filmWorkerMain(makeSoundWav,hash) {
         self.onmessage=({data})=>{
           if(data.type==="audio"){
-            const sounds=Object.fromEntries(["spawn","collision","pickup","splash"].map(kind=>[kind,makeSoundWav(kind)]));
+            const sounds=Object.fromEntries(["spawn","collision","pickup","splash","whistle","chuff","sneeze"].map(kind=>[kind,makeSoundWav(kind)]));
             self.postMessage({type:"audio",sounds},Object.values(sounds));
           }else if(data.type==="texture"){
             const layers=[];
@@ -1849,12 +1859,6 @@
         const profile=currentCity().clock||cityId;
         const [dial, flavor, signature, numerals] = profiles[profile];
         const clock = document.getElementById("clock");
-        document.getElementById("clock-reset").addEventListener("click",()=>{
-          cityClockRate=DEFAULT_CLOCK_RATE;
-          syncClockRate(true);
-          setCityTime(DEFAULT_CLOCK_SECONDS);
-        });
-        document.getElementById("clock-daylight").addEventListener("click",()=>setCityTime(12*3600));
         const tiltRanges = {original:[-2,-.5],paris:[-2,-1],munich:[-1,1],istanbul:[.5,2],
           seattle:[-2,-.5],newyork:[.5,2],london:[-2,2],ibiza:[1,2]};
         const [low,high]=currentCity().tilt||tiltRanges[cityId];
@@ -2030,7 +2034,6 @@
           }
           colors[key] = grade(pigment, film);
         }
-        document.getElementById("film-caption").textContent = film.name;
         document.getElementById("film-description").textContent = film.note + " Scene + UI approximation.";
         for(const sprite of sceneSprites.values())sprite.width=0;
         sceneSprites.clear();
@@ -2106,7 +2109,7 @@
       }
       function makeSoundWav(kind = "spawn") {
         const rate = 22050;
-        const duration = { spawn: .48, collision: .3, pickup: .5, splash: .65 }[kind];
+        const duration = { spawn: .48, collision: .3, pickup: .5, splash: .65, whistle: 1.6, chuff: .3, sneeze: .7 }[kind];
         const count = Math.round(rate * duration);
         const bytes = new ArrayBuffer(44 + count * 2);
         const wav = new DataView(bytes);
@@ -2144,6 +2147,22 @@
             const phase = 2 * Math.PI * (310 * t - 180 * t * t) + wobble;
             sample = .25 * envelope * (Math.sin(phase) + .2 * Math.sin(phase * 2.01))
               + .08 * Math.exp(-t * 20) * Math.sin(t * 5171) * Math.sin(t * 3119);
+          } else if (kind === "whistle") {
+            const envelope = Math.min(1,t/.16) * Math.min(1,(duration-t)/.35);
+            const breath = Math.sin(t*7411)*Math.sin(t*3517);
+            const drift = 1.8*Math.sin(t*4.5);
+            sample = envelope * (.11*Math.sin(2*Math.PI*392*t+drift)
+              + .07*Math.sin(2*Math.PI*494*t+drift) + .045*Math.sin(2*Math.PI*588*t)
+              + .018*breath);
+          } else if (kind === "chuff") {
+            const envelope = (1-Math.exp(-t*100))*Math.exp(-t*19);
+            const steam = Math.sin(t*8111)*Math.sin(t*4637)+.4*Math.sin(t*1979);
+            sample = envelope*(.18*steam+.12*Math.sin(2*Math.PI*76*t));
+          } else if (kind === "sneeze") {
+            const inhale=Math.sin(Math.PI*Math.min(1,t/.23));
+            const burst=Math.max(0,t-.24),envelope=(1-Math.exp(-burst*170))*Math.exp(-burst*12);
+            sample=.045*inhale*Math.sin(t*3791)*Math.sin(t*1423)
+              +envelope*(.25*Math.sin(t*7123)*Math.sin(t*3911)+.13*Math.sin(2*Math.PI*(220*burst-90*burst*burst)));
           }
           const fade = Math.min(1, (count - 1 - i) / (rate * .025));
           const chip = Math.round(sample * 96) / 96;
@@ -2208,7 +2227,7 @@
           activeSounds.delete(oldest);
         }
         const audio = new Audio(soundUrls[kind]);
-        audio.volume = { spawn: .65, collision: .35, pickup: .4, splash: .5 }[kind] * soundVolume;
+        audio.volume = { spawn: .65, collision: .35, pickup: .4, splash: .5, whistle: .45, chuff: .3, sneeze: .4 }[kind] * soundVolume;
         activeSounds.add(audio);
         audio.addEventListener("ended", () => activeSounds.delete(audio), { once: true });
         audio.play().catch(error => {
@@ -2504,16 +2523,6 @@
             polygon(g, "white", [[bank + i * 8, 80], [bank + i * 8 + 3, 84],
               [bank + i * 8 + 2, 94], [bank + i * 8 - 2, 94], [bank + i * 8 - 3, 84]]);
           }
-        }
-        const river = waterBounds(oy + 107);
-        const boatX = (coast ? river.left + 48 : (river.left + river.right) / 2) - ox;
-        if (boatX > 0 && boatX < BLOCK && !isBridge(ox + boatX, oy + 107)
-          && !isBridge(ox + boatX - 5, oy + 107) && !isBridge(ox + boatX + 5, oy + 107)) {
-          polygon(g, "white", [[boatX, 91], [boatX + 4, 99], [boatX + 4, 116],
-            [boatX - 4, 116], [boatX - 4, 99]]);
-          rect(g, "roof-blue", boatX - 2, 102, 4, 9);
-          stroke(g, "foam", .7, [[boatX - 5, 118], [boatX - 8, 130]]);
-          stroke(g, "foam", .7, [[boatX + 5, 118], [boatX + 8, 130]]);
         }
       }
       function landmark(g, kind) {
@@ -3914,6 +3923,146 @@
           }
         }
       }
+      function marinePoint(y,offset,dir) {
+        const x=waterBounds(y).left+offset;
+        const dx=waterBounds(y+.5).left-waterBounds(y-.5).left;
+        return {x,y,angle:Math.atan2(dir,dx*dir)};
+      }
+      function marineBoats(view=camera(),bounds=viewExtent(100),elapsed=marineTime) {
+        const place=currentCity(),boats=[];
+        if(!place.width)return boats;
+        const lanes=place.coast?3:place.width>=65?2:1;
+        for(let lane=0;lane<lanes;lane++){
+          const dir=lane%2?1:-1,speed=6+lane*2,travel=elapsed*speed*dir;
+          const first=Math.floor((view.y-bounds.y-travel-100)/260);
+          const last=Math.ceil((view.y+bounds.y-travel)/260);
+          for(let band=first;band<=last&&boats.length<64;band++){
+            const y=band*260+hash(band,lane,3201)*100+travel;
+            const drift=Math.sin(y/140+hash(band,lane,3202)*6)*Math.min(3,place.width*.025);
+            const offset=(place.coast?64+lane*74:place.width*(lane+1)/(lanes+1))+drift;
+            const point=marinePoint(y,offset,dir);
+            point.angle=Math.atan2(dir,((waterBounds(y+.5).left-waterBounds(y-.5).left)
+              +Math.cos(y/140+hash(band,lane,3202)*6)*Math.min(3,place.width*.025)/140)*dir);
+            if(Math.abs(point.x-view.x)>bounds.x+60||Math.abs(y-view.y)>bounds.y+60)continue;
+            boats.push({...point,id:lane+":"+band,kind:place.coast&&lane===2?"cargo":hash(band,lane,3203)>.6?"ferry":"launch",
+              scale:place.coast?1:Math.min(1,place.width/55),phase:hash(band,lane,3204)*Math.PI*2});
+          }
+        }
+        return boats;
+      }
+      function advanceWaterLife(dt) {
+        if(dt<=0||paused||document.hidden||!uiMotion||reducedMotion.matches)return;
+        marineTime+=dt;
+        if(surfacing&&marineTime-surfacing.born>=14)surfacing=null;
+        if(marineTime<nextSurfacing)return;
+        const occasion=surfacingIndex++;
+        nextSurfacing=marineTime+120+hash(occasion,0,3205)*180;
+        if(!currentCity().coast)return;
+        const view=camera(),bounds=viewExtent(),c=Math.cos(view.angle),s=Math.sin(view.angle),boats=marineBoats(view,bounds);
+        for(let attempt=0;attempt<24;attempt++){
+          const y=view.y+(hash(occasion,attempt,3206)-.5)*bounds.y*1.3;
+          const x=view.x+(hash(occasion,attempt,3207)-.5)*bounds.x*1.7;
+          const dx=x-view.x,dy=y-view.y;
+          if(x-waterBounds(y).left<65
+            ||Math.abs(dx*c-dy*s)*ZOOM>viewWidth/2-32
+            ||Math.abs(dx*s+dy*c)*ZOOM>viewHeight/2-32)continue;
+          if(boats.some(boat=>Math.hypot(boat.x-x,boat.y-y)<55))continue;
+          surfacing={y,offset:x-waterBounds(y).left,dir:hash(occasion,0,3208)>.5?1:-1,
+            born:marineTime,kind:hash(occasion,0,3209)>.5?"beluga":"whale"};
+          recordCityEvent("wildlife",`A ${surfacing.kind} surfaced offshore, took a quiet breath, and began to slip below the water.`);
+          break;
+        }
+      }
+      function surfacingPose(animal=surfacing,elapsed=marineTime) {
+        if(!animal)return null;
+        const age=elapsed-animal.born;
+        return {...marinePoint(animal.y+age*animal.dir*1.15,animal.offset,animal.dir),age,
+          body:smooth(.8,2.8,age)*(1-smooth(8,11,age)),
+          breath:smooth(3,3.35,age)*(1-smooth(3.5,4.7,age)),
+          fluke:smooth(8,9.3,age)*(1-smooth(10,11.7,age)),
+          shadow:smooth(0,1,age)*(1-smooth(10,13.5,age))};
+      }
+      function drawBoat(boat) {
+        ctx.save();ctx.translate(boat.x,boat.y);ctx.rotate(boat.angle);ctx.scale(boat.scale,boat.scale);
+        const length=boat.kind==="cargo"?19:boat.kind==="ferry"?15:11;
+        for(let side=-1;side<=1;side+=2){
+          ctx.globalAlpha=.27;
+          ctx.strokeStyle=colors.foam;ctx.lineWidth=.65;
+          ctx.beginPath();ctx.moveTo(length-2,side*2);
+          ctx.bezierCurveTo(0,side*6,-length-10,side*6,-length-24,side*(9+Math.sin(marineTime*1.8+boat.phase)*1.5));ctx.stroke();
+          ctx.globalAlpha=.18+.12*Math.sin(marineTime*2+boat.phase);
+          stroke(ctx,"foam",1,[[-length,side*2],[-length-15,side*4]]);
+        }
+        ctx.globalAlpha=.22;ctx.fillStyle=colors.black;
+        ctx.beginPath();ctx.ellipse(1,2,length+1,5,0,0,Math.PI*2);ctx.fill();
+        ctx.globalAlpha=1;
+        polygon(ctx,boat.kind==="cargo"?"roof-red":"white",
+          [[length,0],[length-6,-4],[-length,-4],[-length,4],[length-6,4]]);
+        if(boat.kind==="cargo"){
+          for(let i=0;i<3;i++)rect(ctx,i%2?"gold":"roof-blue",-7+i*7,-3,5.5,6);
+          rect(ctx,"white",-16,-3,6,6);
+        }else{
+          rect(ctx,"roof-blue",-length+3,-2.6,boat.kind==="ferry"?15:8,5.2);
+          rect(ctx,"white",-length+5,-.6,boat.kind==="ferry"?10:4,1.2);
+        }
+        stroke(ctx,"gold",.6,[[length-3,0],[length-7,0]]);
+        ctx.restore();
+      }
+      function drawSurfacing(animal) {
+        const pose=surfacingPose(animal),{age,body,breath,fluke,shadow}=pose;
+        const beluga=animal.kind==="beluga",size=beluga ? .72 : 1;
+        ctx.save();ctx.translate(pose.x,pose.y);ctx.rotate(pose.angle);ctx.scale(size,size);
+        ctx.globalAlpha=.2*shadow;ctx.fillStyle=colors.black;
+        ctx.beginPath();ctx.ellipse(-2,2,22,7,0,0,Math.PI*2);ctx.fill();
+        for(const delay of [0,1.3]){
+          const ripple=mod(Math.max(0,age-delay),4)/4;
+          ctx.globalAlpha=.22*shadow*(1-ripple);
+          ctx.strokeStyle=colors.foam;ctx.lineWidth=.65;
+          ctx.beginPath();ctx.ellipse(0,0,18+ripple*14,6+ripple*7,0,0,Math.PI*2);ctx.stroke();
+        }
+        ctx.globalAlpha=body;
+        ctx.fillStyle=colors[beluga?"white":"black"];
+        ctx.beginPath();ctx.moveTo(17,0);
+        ctx.bezierCurveTo(17,-5,7,-7,-3,-4);
+        ctx.bezierCurveTo(-9,-3,-13,-1,-18,Math.sin(age*1.8)*1.5);
+        ctx.bezierCurveTo(-12,2,-8,4,-3,5);
+        ctx.bezierCurveTo(9,7,17,5,17,0);ctx.fill();
+        for(const side of [-1,1]){
+          ctx.beginPath();ctx.moveTo(3,side*3);
+          ctx.quadraticCurveTo(-1,side*11,-7,side*10);
+          ctx.quadraticCurveTo(-3,side*5,-3,side*3);ctx.fill();
+        }
+        if(beluga){
+          disc(ctx,"white",12,0,5);
+          disc(ctx,"black",14,-2,.55);
+        }else{
+          polygon(ctx,"wall-dark",[[-2,-1],[-7,-1],[-6,-4]]);
+          stroke(ctx,"chrome",.7,[[10,-2],[5,-3],[0,-2]]);
+        }
+        ctx.save();ctx.translate(-17,Math.sin(age*1.8)*1.5-fluke*3);
+        ctx.scale(1+fluke*.2,1+fluke*.45);ctx.globalAlpha=Math.max(body*.8,fluke);
+        ctx.fillStyle=colors[beluga?"white":"black"];
+        ctx.beginPath();ctx.moveTo(2,0);
+        ctx.bezierCurveTo(-3,-2,-7,-8,-9,-7);
+        ctx.quadraticCurveTo(-9,-1,-3,0);
+        ctx.quadraticCurveTo(-9,1,-9,7);
+        ctx.bezierCurveTo(-7,8,-3,2,2,0);ctx.fill();ctx.restore();
+        if(breath>0){
+          const puff=(age-3)/1.7;
+          for(let i=0;i<7;i++){
+            ctx.globalAlpha=breath*(.65-i*.055);
+            disc(ctx,"foam",11+Math.sin(i*2.4)*puff*5,-2-puff*(8+i*1.3),.6+puff*(1+i*.12));
+          }
+        }
+        ctx.restore();
+      }
+      function drawWaterLife() {
+        if(!currentCity().width)return;
+        ctx.save();clipOpenWater(ctx);
+        if(surfacing)drawSurfacing(surfacing);
+        for(const boat of marineBoats())drawBoat(boat);
+        ctx.restore();
+      }
       function splashState(splash, age) {
         const impact = Math.sqrt(2 * splash.height / splash.gravity);
         const travel = Math.min(age, impact);
@@ -4030,12 +4179,153 @@
         heli.x=point.x;heli.y=point.y;heli.vx=heli.vy=0;
         heli.state="available";
       }
+      function beginHelicopterExit(rescue) {
+        rescue.stage="exit";
+        rescue.exit={edge:pick(["left","right","top","bottom"]),offset:.1+newSeed()/4294967296*.8};
+        releaseHelicopter(rescue.heli);
+      }
+      function helicopterExitTarget(rescue) {
+        const margin=Math.max(40,40*rescue.heli.screen.scale),{edge,offset}=rescue.exit;
+        return {x:edge==="left"?-margin:edge==="right"?innerWidth+margin:innerWidth*offset,
+          y:edge==="top"?-margin:edge==="bottom"?innerHeight+margin:innerHeight*offset};
+      }
+      function makeJunkyardCar(vehicle) {
+        return {paint:vehicle.paint,long:vehicle.long,kind:vehicle.kind,scrapSeed:newSeed(),crushed:false,packed:false};
+      }
+      function junkyardPlacement(vehicle) {
+        const s=vehicle.scrapSeed;
+        return {x:(25+hash(s,0,3100)*32)/240,y:79/148,angle:(hash(s,0,3102)-.5)*.2};
+      }
+      function junkyardDropPoint(vehicle,bay) {
+        const point=junkyardPlacement(vehicle);
+        return {x:bay.left+bay.width*point.x,y:bay.top+bay.height*point.y,angle:point.angle};
+      }
+      function freshJunkyardWorker() {
+        return {enabled:false,awake:false,phase:"sleep",elapsed:0,time:0,x:29,y:134,sneezeAt:-Infinity,sneezes:0};
+      }
+      function crusherPhase(job,phase) {
+        job.phase=phase;job.elapsed=0;
+        job.duration={intake:1.6,press:1.4,output:1.5,drop:.4}[phase];
+      }
+      function advanceFarmhand(dt) {
+        const worker=junkyardWorker;
+        if(!worker.enabled)return;
+        worker.time+=dt;worker.elapsed+=dt;
+        if(!worker.awake){
+          if(worker.phase==="sleep"&&worker.elapsed>=1.1){worker.phase="wake";worker.elapsed=0}
+          else if(worker.phase==="wake"&&worker.elapsed>=.9){
+            worker.phase="sneeze";worker.elapsed=0;worker.sneezeAt=worker.time;worker.sneezes++;
+            playSound("sneeze");
+            recordCityEvent("farmhand-woke","The long-necked guard woke in his chair. AH-CHOO! Then he waved the helicopter toward the intake belt.");
+          }else if(worker.phase==="sneeze"&&worker.elapsed>=.8){
+            worker.awake=true;worker.phase="idle";worker.elapsed=0;
+          }
+          return;
+        }
+        const arriving=incidents.find(rescue=>rescue.cars.length&&["carry","drop"].includes(rescue.stage));
+        if(arriving){
+          worker.phase=arriving.stage==="drop"?"dodge":"guide";
+          worker.dropProgress=arriving.stage==="drop"?Math.min(1,arriving.elapsed/.9):0;
+          return;
+        }
+        worker.phase=junkyardTrain?"watch":"idle";
+      }
+      function advanceCrusher(dt) {
+        if(junkyardTrain&&junkyardTrain.stage!=="depart")return;
+        if(!junkyardCrusher){
+          const vehicle=recoveredCars.find(vehicle=>!vehicle.packed);
+          if(!vehicle)return;
+          junkyardCrusher={vehicle};crusherPhase(junkyardCrusher,"intake");
+        }
+        const job=junkyardCrusher;
+        job.elapsed=Math.min(job.duration,job.elapsed+dt);
+        const progress=job.elapsed/job.duration;
+        if(job.phase==="press"&&job.elapsed>=.8&&!job.vehicle.crushed){
+          job.vehicle.crushed=true;
+          recordCityEvent("compacted","The conveyor fed a recovered vehicle into the hydraulic crusher, which pressed it into a scrap pack.");
+        }
+        if(progress>=1-1e-9){
+          const phases=["intake","press","output","drop"];
+          const next=phases[phases.indexOf(job.phase)+1];
+          if(next)crusherPhase(job,next);
+          else{job.vehicle.packed=true;junkyardCrusher=null}
+        }
+      }
+      function farmhandPose() {
+        const worker=junkyardWorker,motion=uiMotion&&!reducedMotion.matches;
+        const hop=motion&&worker.phase==="dodge"?Math.sin(Math.PI*worker.dropProgress):0;
+        return {x:worker.x-hop*5,y:worker.y-hop*6,stride:0,
+          lean:worker.phase==="sleep"?-8:worker.phase==="sneeze"?12:worker.phase==="guide"?-10
+            :worker.phase==="dodge"?-18:2};
+      }
+      function junkyardCarPose(vehicle) {
+        const point=junkyardPlacement(vehicle),waiting={x:point.x*240,y:point.y*148,angle:point.angle};
+        const job=junkyardCrusher;
+        if(vehicle.packed)return {x:205,y:107,angle:0};
+        if(job?.vehicle!==vehicle)return waiting;
+        const progress=job.elapsed/job.duration;
+        if(job.phase==="intake")return {x:waiting.x+(113-waiting.x)*progress,y:79,angle:waiting.angle*(1-progress)};
+        if(job.phase==="output")return {x:113+92*progress,y:79,angle:0};
+        if(job.phase==="drop")return {x:205,y:79+28*progress*progress,angle:0};
+        return {x:113,y:79,angle:0};
+      }
+      function junkyardPackedReady() {
+        return recoveredCars.length>0&&!junkyardCrusher&&recoveredCars.every(vehicle=>vehicle.packed)
+          &&!incidents.some(rescue=>rescue.cars.length&&rescue.stage!=="exit");
+      }
       function syncJunkyard(reveal = false) {
         const receiving = incidents.some(rescue=>rescue.cars.length>0&&rescue.stage!=="exit");
-        recovery.hidden = !receiving && !recoveredCars.length;
+        recovery.hidden = !receiving && !recoveredCars.length && !junkyardTrain;
+        if(!recovery.hidden)junkyardWorker.enabled=true;
         recovery.classList.toggle("is-receiving", receiving);
-        recovery.setAttribute("aria-label", receiving ? "Junkyard, helicopter recovery in progress" : "Junkyard");
+        if(receiving||!recoveredCars.every(vehicle=>vehicle.packed))junkyardReadyTime=0;
+        recovery.setAttribute("aria-label", junkyardTrain ? "Conveyor junkyard, packed container collection in progress"
+          : receiving ? "Conveyor junkyard, helicopter delivery to the intake belt" : "Junkyard with intake belt, crusher, output belt and scrap container");
         if (reveal && receiving) document.querySelector(".city-options").open = true;
+      }
+      function advanceJunkyard(dt, citySeconds) {
+        if(dt<=0||paused||document.hidden)return;
+        junkyardTime += citySeconds;
+        for(let remaining=dt;remaining>1e-8;remaining-=.05){
+          const slice=Math.min(.05,remaining),wasReady=junkyardPackedReady();
+          advanceFarmhand(slice);advanceCrusher(slice);
+          junkyardReadyTime=!junkyardTrain&&wasReady&&junkyardPackedReady()?junkyardReadyTime+slice:0;
+          advanceJunkyardTrain(slice);
+        }
+      }
+      function advanceJunkyardTrain(dt) {
+        if(!junkyardTrain){
+          if(junkyardReadyTime<PACKED_PICKUP_WAIT-1e-9)return;
+          // Seal this container; new helicopter deliveries belong to the next collection.
+          junkyardTrain={stage:"load",elapsed:0,travel:0,nextChuff:0,cargo:[],batch:recoveredCars.splice(0)};
+          junkyardReadyTime=0;
+          document.querySelector(".city-options").open=true;
+          syncJunkyard();
+          const route=ensureJunkyardRailway(junkyardTrain);
+          junkyardTrain.departureSeconds=Math.min(1.8,Math.max(.6,(route.length-route.dock)/500));
+          status.textContent="All cars are packed. The steam train is lifting the container onto its flatcar.";
+          recordCityEvent("train-arrival","All recovered cars were packed and the container waited five real playback seconds. A steam train appeared beside the yard to load it.");
+          playSound("whistle");
+          return;
+        }
+        const train=junkyardTrain;
+        train.elapsed+=dt;train.travel+=dt;
+        if(train.stage!=="load"&&train.travel>=train.nextChuff){
+          playSound("chuff");
+          train.nextChuff=train.travel+.38;
+        }
+        if(train.stage==="load"&&train.elapsed>=.8){
+          train.cargo=train.batch;train.batch=[];
+          train.stage="depart";train.elapsed=0;
+          playSound("whistle");
+          syncJunkyard();
+        }else if(train.stage==="depart"&&train.elapsed>=train.departureSeconds){
+          const count=train.cargo.length;
+          junkyardTrain=null;
+          syncJunkyard();
+          status.textContent=`Steam train collected a container of ${count} scrap pack${count===1?"":"s"}. ${recoveredCars.length?"New arrivals remain on the intake belt.":"The junkyard is clear."}`;
+          recordCityEvent("train-collected",`The steam train took a container holding ${count} packed vehicle${count===1?"":"s"} and drove forward offscreen.`,count);
+        }
       }
       function beginCollision(cars) {
         const [first, second] = cars;
@@ -4161,8 +4451,8 @@
             }
             rescue.heli.screen = pagePoint(rescue.heli.x, rescue.heli.y);
             rescue.heli.screen.angle += rescue.heli.angle;
-            rescue.stage = "exit"; rescue.roadCleared = true;
-            releaseHelicopter(rescue.heli);
+            rescue.roadCleared = true;
+            beginHelicopterExit(rescue);
             syncJunkyard();
             status.textContent = "The wrecks fell into the water. The helicopter is returning without cargo.";
           }
@@ -4191,6 +4481,7 @@
           const bay = junkyardBounds();
           if (moveToward(heli.screen, { x: bay.left + bay.width / 2, y: bay.top - 10 }, dt * (heli.speed || 65) * 2.5, dt)) {
             rescue.stage = "drop";
+            rescue.scrap=rescue.cars.map(makeJunkyardCar);
             rescue.elapsed = 0;
             playSound("pickup");
             status.textContent = "Lowering the recovered vehicles into the junkyard.";
@@ -4198,17 +4489,15 @@
         } else if (rescue.stage === "drop") {
           rescue.elapsed += dt;
           if (rescue.elapsed >= .9) {
-            recoveredCars.push(...rescue.cars.map(vehicle => ({ paint: vehicle.paint, long: vehicle.long, kind: vehicle.kind })));
-            recoveredCars.splice(0, Math.max(0, recoveredCars.length - 8));
+            recoveredCars.push(...rescue.scrap.map(vehicle=>({...vehicle,deliveredAt:junkyardTime})));
+            junkyardReadyTime=0;
             recoveredCount += rescue.cars.length;
             recordCityEvent("recovered",`The helicopter delivered ${rescue.cars.length} wreck${rescue.cars.length===1?"":"s"} to the junkyard. The streets have room to breathe again.`,rescue.cars.length);
-            rescue.stage = "exit";
-            releaseHelicopter(heli);
+            beginHelicopterExit(rescue);
             syncJunkyard();
           }
         } else if (rescue.stage === "exit") {
-          const margin = Math.max(40, 40 * heli.screen.scale);
-          const target = { x: heli.screen.x < innerWidth / 2 ? -margin : innerWidth + margin, y: -margin };
+          const target = helicopterExitTarget(rescue);
           if (moveToward(heli.screen, target, dt * (heli.speed || 65) * 3.3, dt)) {
             helicopters.delete(heli.id);
             incidents.splice(incidents.indexOf(rescue),1);
@@ -4219,6 +4508,7 @@
       }
       function step(dt) {
         time += dt;
+        advanceWaterLife(dt);
         updateCrossings();
         {
           trafficTime += dt * trafficPace;
@@ -4298,26 +4588,320 @@
           airspacePainted = false;
         }
         const galleryVisible = document.querySelector(".city-options").open && !recovery.hidden;
-        const hasContent = galleryVisible && recoveredCars.length > 0 || incidents.some(rescue=>rescue.roadCleared);
+        const hasContent = galleryVisible || incidents.some(rescue=>rescue.roadCleared) || !!junkyardTrain;
         if (!hasContent && !airspacePainted) return;
         air.setTransform(dpr, 0, 0, dpr, 0, 0);
         air.clearRect(0, 0, innerWidth, innerHeight);
         airspacePainted = hasContent;
         if (!hasContent) return;
         const bay = junkyardBounds();
-        const baySlot=index=>({x:bay.left+bay.width*(.125+index%4*.25),y:bay.top+bay.height*(.4+Math.floor(index/4)*.31)});
         const rail=document.querySelector(".city-journal").getBoundingClientRect();
         air.save();air.beginPath();
         air.rect(bay.left,Math.max(bay.top,rail.top),bay.width,Math.max(0,Math.min(bay.bottom,rail.bottom)-Math.max(bay.top,rail.top)));air.clip();
-        if (galleryVisible) recoveredCars.forEach((vehicle,index)=>{
-          const slot=baySlot(index);
-          air.save();air.translate(slot.x,slot.y);air.scale(2,2);
-          drawVehicle({...vehicle,x:0,y:0,angle:index%2?.1:-.1},air);air.restore();
-        });
+        if (galleryVisible) drawJunkyard(bay);
         air.restore();
-        for(const rescue of incidents)if(rescue.roadCleared)drawAirborneRescue(rescue,baySlot);
+        if(junkyardTrain)drawJunkyardTrain(bay);
+        for(const rescue of incidents)if(rescue.roadCleared)drawAirborneRescue(rescue,bay);
       }
-      function drawAirborneRescue(rescue,baySlot) {
+      function drawScrapVehicle(vehicle,g,compression=vehicle.crushed?1:0) {
+        if(compression<1){
+          g.save();g.scale(1,1-compression*.7);
+          drawVehicle({...vehicle,x:0,y:0,angle:0},g);g.restore();
+        }else{
+          rect(g,vehicle.paint,-6,-3,12,6);
+          stroke(g,"black",.7,[[-6,-3],[6,-3],[6,3],[-6,3]],true);
+          stroke(g,"chrome",.6,[[-4,-3],[-2,0],[-4,3]]);
+          stroke(g,"black",.6,[[2,-3],[0,-1],[3,1],[1,3]]);
+        }
+      }
+      function drawJunkyard(bay) {
+        const motion=uiMotion&&!reducedMotion.matches;
+        const press=junkyardCrusher,t=press?.elapsed||0;
+        const down=press?.phase==="press"&&motion?smooth(0,.8,t)*(1-smooth(1,1.4,t)):0;
+        air.save();air.translate(bay.left,bay.top);air.scale(bay.width/240,bay.height/148);
+        air.fillStyle=baseColors.sand;air.fillRect(5,26,230,113);
+        for(let i=0;i<28;i++){
+          const x=12+hash(i,0,3110)*212,y=36+hash(i,0,3111)*93;
+          stroke(air,"wall-dark",.7,[[x,y],[x+4,y+2]]);
+        }
+        stroke(air,"wall-dark",1,[[8,38],[232,38]]);
+        for(let x=8;x<235;x+=14)stroke(air,"wall-dark",1,[[x,29],[x,48]]);
+        stroke(air,"roof-red",3,[[18,104],[21,130],[37,130]]);
+        stroke(air,"black",2,[[23,131],[19,138]]);
+        stroke(air,"black",2,[[34,131],[39,138]]);
+        rect(air,"gold",20,123,17,4);
+        const container=junkyardTrain?.batch.length?junkyardTrain.batch:recoveredCars.filter(vehicle=>vehicle.packed);
+        if(junkyardTrain?.stage!=="load")drawScrapContainer(air,container,205,113,1,!!junkyardTrain?.batch.length);
+        for(const [left,right,active] of [[14,113,press?.phase==="intake"],[113,208,press?.phase==="output"]]){
+          rect(air,"black",left,85,right-left,11);
+          const offset=motion&&active?mod(junkyardWorker.time*22,12):0;
+          for(let x=left+offset;x<right;x+=12)stroke(air,"chrome",1,[[x,86],[x+4,94]]);
+          for(let x=left+5;x<right;x+=14){disc(air,"wall-dark",x,96,3);disc(air,"gold",x,96,1)}
+          stroke(air,"wall-dark",2,[[left+8,99],[left+8,108]]);
+          stroke(air,"wall-dark",2,[[right-8,99],[right-8,108]]);
+        }
+        air.font="bold 7px Consolas,monospace";air.fillStyle=colors.black;
+        air.fillText("IN >",17,66);air.fillText("PACKS >",151,66);
+        rect(air,"wall-dark",85,101,55,7);
+        rect(air,"black",94,70,38,24);
+        const waiting=recoveredCars.filter(vehicle=>!vehicle.packed&&vehicle!==press?.vehicle);
+        for(const vehicle of [...waiting.slice(-6),...(press?[press.vehicle]:[])]){
+          const point=junkyardCarPose(vehicle);
+          air.save();air.translate(point.x,point.y);air.rotate(point.angle);air.scale(2,2);
+          const compression=press?.vehicle===vehicle&&motion?Math.max(vehicle.crushed?1:0,down):vehicle.crushed?1:0;
+          drawScrapVehicle(vehicle,air,compression);air.restore();
+        }
+        if(waiting.length>6)air.fillText(`+${waiting.length-6} waiting`,14,57);
+        rect(air,"gold",87,43,6,61);rect(air,"gold",133,43,6,61);
+        rect(air,"black",83,39,60,10);
+        rect(air,"chrome",110,49,6,7+down*22);
+        rect(air,"gold",94,55+down*22,38,7);
+        for(let i=0;i<4;i++)polygon(air,"black",[[95+i*9,55+down*22],[100+i*9,55+down*22],[95+i*9,62+down*22]]);
+        rect(air,"roof-red",139,90,10,17);disc(air,"gold",144,95,2);
+        air.fillStyle=colors.black;
+        air.fillText(junkyardTrain?"PICKUP":junkyardPackedReady()?`READY ${Math.max(0,5-junkyardReadyTime).toFixed(1)}s`:"CONVEYOR",78,128);
+        drawFarmhand();
+        air.restore();
+      }
+      function drawScrapContainer(g,vehicles,x,y,scale=1,sealed=false) {
+        g.save();g.translate(x,y);g.scale(scale,scale);
+        rect(g,"black",-29,-18,58,36);
+        g.save();g.beginPath();g.rect(-27,-16,54,32);g.clip();
+        vehicles.slice(-12).forEach((vehicle,i)=>{
+          g.save();g.translate(-19+i%4*13,-10+Math.floor(i/4)*7);g.scale(.9,.9);
+          drawScrapVehicle(vehicle,g);g.restore();
+        });
+        g.restore();
+        rect(g,"leaf-light",-29,0,58,18);
+        for(let x=-25;x<=25;x+=10)stroke(g,"black",1,[[x,2],[x,16]]);
+        rect(g,"gold",-31,-19,62,3);
+        if(sealed)rect(g,"wall-dark",-29,-17,58,4);
+        g.fillStyle=baseColors.white;g.fillRect(-21,4,42,10);
+        g.font="bold 7px Consolas,monospace";g.fillStyle=baseColors.black;g.textAlign="center";
+        g.fillText(`${vehicles.length} PACKS`,0,11);g.restore();
+      }
+      function drawFarmhand() {
+        const worker=junkyardWorker,pose=farmhandPose(),motion=uiMotion&&!reducedMotion.matches;
+        const sleepy=worker.phase==="sleep",sneezing=worker.phase==="sneeze";
+        const neck=sleepy?27:sneezing?30:worker.phase==="wake"?43:39;
+        air.save();air.translate(pose.x,pose.y);air.lineCap="round";
+        stroke(air,"black",2.2,[[-3,-9],[-4-pose.stride,0],[-1-pose.stride,0]]);
+        stroke(air,"black",2.2,[[3,-9],[5+pose.stride,0],[8+pose.stride,0]]);
+        rect(air,"roof-red",-5,-21,10,12);
+        stroke(air,"white",.7,[[-5,-17],[5,-17]]);
+        rect(air,"roof-blue",-3,-18,6,10);
+        disc(air,"gold",-1,-16,.7);disc(air,"gold",2,-16,.7);
+        air.strokeStyle=colors.black;air.lineWidth=4;
+        air.beginPath();air.moveTo(0,-21);air.bezierCurveTo(-3,-30,pose.lean,-neck+9,pose.lean,-neck);air.stroke();
+        air.strokeStyle=colors.warm;air.lineWidth=2.5;air.stroke();
+        disc(air,"warm",pose.lean,-neck,3.5);
+        disc(air,"warm",pose.lean+3,-neck+1,1.4);
+        stroke(air,"black",.8,[[pose.lean+1,-neck],[pose.lean+2,-neck+(sleepy||sneezing?0:-.5)]]);
+        stroke(air,"black",.8,[[pose.lean+2,-neck+2],[pose.lean+4,-neck+2]]);
+        air.save();air.translate(pose.lean,-neck-4);air.rotate(sleepy?-.3:sneezing?.25:-.12);
+        rect(air,"gold",-4,-4,8,5);
+        stroke(air,"black",.7,[[-4,-1],[4,-1]]);
+        air.fillStyle=colors.gold;air.beginPath();air.ellipse(0,1,8,1.6,0,0,Math.PI*2);air.fill();air.restore();
+        if(["guide","dodge"].includes(worker.phase)){
+          const wave=motion?Math.sin(worker.time*8)*4:0;
+          const arriving=incidents.find(rescue=>rescue.cars.length&&["carry","drop"].includes(rescue.stage));
+          const landing=arriving?.scrap?.[0]?junkyardPlacement(arriving.scrap[0]):{x:40/240,y:79/148};
+          const dx=landing.x*240-pose.x,dy=landing.y*148-(pose.y-20),length=Math.max(1,Math.hypot(dx,dy));
+          const hx=dx/length*23,hy=-20+dy/length*23-wave,side=Math.sign(dx)||-1;
+          stroke(air,"warm",2,[[side*4,-19],[hx*.6,-23],[hx,hy]]);
+          stroke(air,"warm",2,[[-side*4,-19],[-side*11,-14],[-side*15,-14]]);
+          stroke(air,"gold",1.4,[[hx,hy],[hx+side*3,hy-1]]);
+        }else{
+          stroke(air,"warm",2,[[-4,-19],[-7,-11],[-4,-9]]);
+          stroke(air,"warm",2,[[4,-19],[7,-11],[5,-8]]);
+        }
+        air.restore();
+        if(sleepy){
+          air.font="bold 9px Georgia,serif";air.fillStyle=colors.black;
+          air.fillText("z",45,106);air.fillText("Z",53,98);
+        }
+        const sneezeAge=worker.time-worker.sneezeAt;
+        if(sneezeAge>=0&&sneezeAge<1.5){
+          air.save();air.translate(43,115-(motion?sneezeAge*5:0));
+          air.rotate(motion?-.12+Math.sin(sneezeAge*18)*.05:0);
+          const pop=motion?1+.12*Math.sin(Math.min(1,sneezeAge/.2)*Math.PI):1;air.scale(pop,pop);
+          air.globalAlpha=1-smooth(.9,1.5,sneezeAge);
+          air.font="bold 12px Consolas,monospace";air.lineWidth=3;air.strokeStyle=colors.white;air.fillStyle=colors.black;
+          air.strokeText("AH-CHOO!",0,0);air.fillText("AH-CHOO!",0,0);air.restore();
+        }
+      }
+      function railwayMapBounds() {
+        const map=canvas.getBoundingClientRect(),window=document.querySelector(".view-window").getBoundingClientRect();
+        const bounds={left:Math.max(0,map.left,window.left),right:Math.min(innerWidth,map.right,window.right),
+          top:Math.max(0,map.top,window.top),bottom:Math.min(innerHeight,map.bottom,window.bottom)};
+        return bounds.right>bounds.left&&bounds.bottom>bounds.top?bounds:null;
+      }
+      function ensureJunkyardRailway(train,bay=junkyardBounds()) {
+        const map=railwayMapBounds();
+        const signature=[innerWidth,innerHeight,...(map?Object.values(map):[]),bay.left,bay.top,bay.width,bay.height]
+          .map(value=>Math.round(value)).join(":");
+        if(train.route?.signature===signature)return train.route;
+        const scale=Math.min(1.05,(innerWidth-32)/400),trainLength=178*scale,gap=65*scale+10;
+        const obstacle=map?{left:map.left-gap,right:map.right+gap,top:map.top-gap,bottom:map.bottom+gap}:null;
+        let depot={x:Math.max(gap,Math.min(innerWidth-gap,bay.left+bay.width*205/240)),
+          y:Math.max(gap,Math.min(innerHeight-gap,bay.top+bay.height*107/148))};
+        if(obstacle&&depot.x>obstacle.left&&depot.x<obstacle.right&&depot.y>obstacle.top&&depot.y<obstacle.bottom){
+          const options=[{x:obstacle.left,y:depot.y},{x:obstacle.right,y:depot.y},
+            {x:depot.x,y:obstacle.top},{x:depot.x,y:obstacle.bottom}];
+          const cost=p=>Math.hypot(p.x-depot.x,p.y-depot.y)+(p.x<0||p.x>innerWidth||p.y<0||p.y>innerHeight?100000:0);
+          options.sort((a,b)=>cost(a)-cost(b));depot=options[0];
+        }
+        const spur=shortestJunkyardSpur(depot,obstacle,innerWidth,innerHeight);
+        const edge=spur.points[0],clearance=trainLength+60;
+        const outside={x:edge.x+(spur.edge===1?clearance:spur.edge===3?-clearance:0),
+          y:edge.y+(spur.edge===2?clearance:spur.edge===0?-clearance:0)};
+        const points=[...spur.points.reverse(),outside];
+        let length=0;
+        points.forEach((p,i)=>{if(i)length+=Math.hypot(p.x-points[i-1].x,p.y-points[i-1].y);p.distance=length});
+        train.route={signature,points,length,dock:140*scale,scale,trainLength,map,edge:spur.edge};
+        return train.route;
+      }
+      function railwayBlocked(a,b,box) {
+        if(!box)return false;
+        let from=0,to=1;
+        for(const [axis,min,max] of [["x",box.left+.01,box.right-.01],["y",box.top+.01,box.bottom-.01]]){
+          const delta=b[axis]-a[axis];
+          if(Math.abs(delta)<1e-9){if(a[axis]<min||a[axis]>max)return false}
+          else{
+            const t1=(min-a[axis])/delta,t2=(max-a[axis])/delta;
+            from=Math.max(from,Math.min(t1,t2));to=Math.min(to,Math.max(t1,t2));
+            if(from>to)return false;
+          }
+        }
+        return from<=to;
+      }
+      function shortestJunkyardSpur(depot,obstacle,width,height) {
+        const nodes=[depot];
+        if(obstacle)for(const x of [obstacle.left,obstacle.right])for(const y of [obstacle.top,obstacle.bottom])nodes.push({x,y});
+        for(const p of [...nodes]){
+          const x=Math.max(0,Math.min(width,p.x)),y=Math.max(0,Math.min(height,p.y));
+          nodes.push({x,y:0,edge:0},{x:width,y,edge:1},{x,y:height,edge:2},{x:0,y,edge:3});
+        }
+        if(depot.x<0||depot.x>width||depot.y<0||depot.y>height){
+          nodes.push({x:depot.x,y:0,edge:0},{x:width,y:depot.y,edge:1},
+            {x:depot.x,y:height,edge:2},{x:0,y:depot.y,edge:3});
+        }
+        // Visibility-graph shortest path to any viewport edge, not a tour around the city.
+        const distance=nodes.map(()=>Infinity),previous=nodes.map(()=>-1),visited=new Set();
+        distance[0]=0;
+        let goal=-1;
+        while(visited.size<nodes.length){
+          let next=-1;
+          nodes.forEach((_,i)=>{if(!visited.has(i)&&(next<0||distance[i]<distance[next]))next=i});
+          if(next<0||!Number.isFinite(distance[next]))break;
+          if(nodes[next].edge!==undefined){goal=next;break}
+          visited.add(next);
+          nodes.forEach((p,i)=>{
+            if(visited.has(i)||railwayBlocked(nodes[next],p,obstacle))return;
+            const candidate=distance[next]+Math.hypot(p.x-nodes[next].x,p.y-nodes[next].y);
+            if(candidate<distance[i]){distance[i]=candidate;previous[i]=next}
+          });
+        }
+        if(goal<0)throw new Error("No safe railway spur could be found for the junkyard.");
+        const points=[];
+        for(let i=goal;i!==-1;i=previous[i])points.push({...nodes[i]});
+        return {points,edge:nodes[goal].edge};
+      }
+      function railwayPoint(route,distance) {
+        const points=route.points;
+        let end=1;
+        while(end<points.length-1&&points[end].distance<distance)end++;
+        const a=points[end-1],b=points[end],length=b.distance-a.distance;
+        const t=length?(distance-a.distance)/length:0;
+        return {x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,angle:Math.atan2(b.y-a.y,b.x-a.x)};
+      }
+      function railwayHead(train,route,motion=uiMotion&&!reducedMotion.matches) {
+        if(!motion||train.stage==="load")return route.dock;
+        return route.dock+(route.length-route.dock)*smooth(0,train.departureSeconds,train.elapsed);
+      }
+      function railwayOpacity(distance,head,length,scale) {
+        return (1-smooth(length,length*3,head-distance))*(1-smooth(0,16*scale,distance-head));
+      }
+      function drawJunkyardTrain(bay) {
+        const train=junkyardTrain,motion=uiMotion&&!reducedMotion.matches,route=ensureJunkyardRailway(train,bay);
+        const {scale,trainLength,map}=route,head=railwayHead(train,route,motion);
+        air.save();air.beginPath();air.rect(0,0,innerWidth,innerHeight);
+        if(map)air.rect(map.left,map.top,map.right-map.left,map.bottom-map.top);
+        air.clip("evenodd");
+        const fade=train.stage==="depart"?1-smooth(.75,1,train.elapsed/train.departureSeconds):1;
+        const start=Math.max(0,head-trainLength*3),end=Math.min(route.length,head+16*scale),step=8*scale;
+        for(let d=Math.floor(start/step)*step;d<end;d+=step){
+          const a=railwayPoint(route,d),b=railwayPoint(route,Math.min(end,d+step));
+          air.globalAlpha=.6*fade*railwayOpacity(d,head,trainLength,scale);
+          for(const side of [-1,1]){
+            stroke(air,"black",.8*scale,[[a.x-Math.sin(a.angle)*side*3*scale,a.y+Math.cos(a.angle)*side*3*scale],
+              [b.x-Math.sin(b.angle)*side*3*scale,b.y+Math.cos(b.angle)*side*3*scale]]);
+          }
+          stroke(air,"wall-dark",2*scale,[[a.x-Math.sin(a.angle)*6*scale,a.y+Math.cos(a.angle)*6*scale],
+            [a.x+Math.sin(a.angle)*6*scale,a.y-Math.cos(a.angle)*6*scale]]);
+        }
+        air.globalAlpha=1;
+        const onTrack=(offset,paint)=>{
+          const point=railwayPoint(route,head+offset*scale);
+          air.save();air.translate(point.x,point.y);air.rotate(point.angle);
+          air.scale(scale,Math.cos(point.angle)<0?-scale:scale);air.translate(-offset,-10);
+          paint();air.restore();
+        };
+        const phase=motion?head/(8*scale):0;
+        const wheel=(cx,radius)=>{
+          disc(air,"black",cx,2,radius);
+          air.strokeStyle=colors.gold;air.lineWidth=1.3;
+          air.beginPath();air.arc(cx,2,radius-1,0,Math.PI*2);air.stroke();
+          stroke(air,"gold",1.3,[[cx-Math.cos(phase)*radius,2-Math.sin(phase)*radius],
+            [cx+Math.cos(phase)*radius,2+Math.sin(phase)*radius]]);
+        };
+        onTrack(-140,()=>{
+          rect(air,"black",-168,-7,56,7);rect(air,"red",-168,-6,56,5);
+          rect(air,"gold",-112,-3,6,2);wheel(-160,5);wheel(-120,5);
+        });
+        onTrack(-88,()=>{
+          rect(air,"black",-109,-19,43,20);rect(air,"gold",-109,-8,43,2);
+          for(let i=0;i<7;i++)disc(air,"black",-103+i*5,-19,4);
+          wheel(-99,5);wheel(-76,5);
+        });
+        onTrack(-30,()=>{
+          if(motion)for(let i=0;i<12;i++){
+            const age=(train.travel*1.5+i/4)%3;
+            air.globalAlpha=(1-age/3)*.55;
+            disc(air,"black",-18-age*25+Math.sin(i*2.4+age)*4,-34-age*20,3+age*5);
+          }
+          air.globalAlpha=1;
+          rect(air,"black",-66,-30,25,29);rect(air,"black",-69,-34,30,4);rect(air,"gold",-60,-27,12,11);
+          rect(air,"black",-42,-23,40,23);
+          for(const bx of [-37,-22,-8])rect(air,"gold",bx,-23,2,21);
+          rect(air,"black",-22,-36,9,14);rect(air,"black",-25,-38,15,4);disc(air,"gold",-33,-26,5);
+          rect(air,"red",-67,-3,72,5);polygon(air,"black",[[0,-7],[9,5],[-1,5]]);
+          for(const cx of [-52,-33,-14])wheel(cx,8);
+          stroke(air,"gold",2,[[-52,3+Math.sin(phase)*4],[-14,3+Math.sin(phase)*4]]);
+          disc(air,"gold",1,-18,3);
+        });
+        const wagon=railwayPoint(route,head-140*scale),upright=Math.cos(wagon.angle)<0?-1:1;
+        const berth={x:wagon.x+Math.sin(wagon.angle)*34*scale*upright,
+          y:wagon.y-Math.cos(wagon.angle)*34*scale*upright,
+          angle:Math.atan2(Math.sin(wagon.angle)*upright,Math.cos(wagon.angle)*upright)};
+        if(train.cargo.length){
+          air.save();air.translate(berth.x,berth.y);air.rotate(berth.angle);
+          drawScrapContainer(air,train.cargo,0,0,.85*scale,true);air.restore();
+        }
+        if(train.stage==="load"){
+          const progress=motion?smooth(0,.8,train.elapsed):0;
+          const target=berth;
+          const from={x:bay.left+bay.width*205/240,y:bay.top+bay.height*113/148};
+          const x=from.x+(target.x-from.x)*progress,y=from.y+(target.y-from.y)*progress-Math.sin(progress*Math.PI)*24;
+          stroke(air,"black",1.5,[[from.x,Math.min(from.y,target.y)-65],[target.x,Math.min(from.y,target.y)-65]]);
+          stroke(air,"gold",1.5,[[x,Math.min(from.y,target.y)-65],[x,y-18]]);
+          air.save();air.translate(x,y);air.rotate(berth.angle*progress);
+          drawScrapContainer(air,train.batch,0,0,(bay.width/240)*(1-progress)+.85*scale*progress,true);
+          air.restore();
+        }
+        air.restore();
+      }
+      function drawAirborneRescue(rescue,bay) {
         const { heli, stage, cars, elapsed, cargoAngle } = rescue;
         const point = heli.screen;
         const flightScale = point.scale;
@@ -4328,16 +4912,16 @@
             const liftX = point.x + Math.cos(cargoAngle) * offsetX - Math.sin(cargoAngle) * offsetY;
             const liftY = point.y + Math.sin(cargoAngle) * offsetX + Math.cos(cargoAngle) * offsetY;
             const lower = stage === "drop" ? Math.min(1, elapsed / .9) : 0;
-            const finalIndex = Math.min(8-cars.length, recoveredCars.length) + index;
-            const {x:dropX,y:dropY}=baySlot(finalIndex);
+            const drop=rescue.scrap?junkyardDropPoint(rescue.scrap[index],bay):{x:bay.left+bay.width*.3,y:bay.top+bay.height*.6,angle:0};
+            const {x:dropX,y:dropY}=drop;
             const cx = liftX + (dropX - liftX) * lower;
             const cy = liftY + (dropY - liftY) * lower * lower;
             air.strokeStyle = colors.black;
             air.lineWidth = .5;
             air.beginPath(); air.moveTo(point.x, point.y); air.lineTo(cx, cy); air.stroke();
-            const cargoScale = flightScale + (2 - flightScale) * lower;
+            const cargoScale = flightScale + (2*bay.width/240 - flightScale) * lower;
             air.save(); air.translate(cx, cy); air.scale(cargoScale, cargoScale);
-            drawVehicle({ ...vehicle, x: 0, y: 0, angle: (vehicle.angle + cargoAngle) * (1 - lower) }, air);
+            drawVehicle({ ...vehicle, x: 0, y: 0, angle: (vehicle.angle + cargoAngle) * (1 - lower)+drop.angle*lower }, air);
             air.restore();
           });
         }
@@ -4486,6 +5070,7 @@
             removedCars.delete(id);
           }
         }
+        drawWaterLife();
         for (const [bx,by] of blocks) drawJunction({x:bx,y:by});
         for (const vehicle of trafficVehicles(cameraX, cameraY, radius)) drawVehicle(vehicle);
         drawWalkers();
@@ -4573,6 +5158,8 @@
           const dt=(now-lastSimulationFrame)/1000;
           lastSimulationFrame=now;
           if (!clockDrag) advanceClock(dt * cityClockRate);
+          trackAnalyticsPlayTime(dt);
+          advanceJunkyard(dt,clockDrag?0:dt*cityClockRate);
           step(Math.min(dt, .1));
           lastFrame = Math.min(now,lastFrame+steps*FRAME_TIME);
           draw();
@@ -4585,7 +5172,7 @@
         lastFrame = null;
         document.getElementById("pause").textContent = paused ? "Play" : "Pause";
         document.getElementById("pause").setAttribute("aria-pressed", String(paused));
-        if (paused || document.hidden) stopSounds();
+        if (paused || document.hidden) { stopSounds();flushAnalyticsPlayTime(); }
         else syncRotorSound();
         if (!paused && !document.hidden) request = requestAnimationFrame(tick);
       }
@@ -4693,6 +5280,9 @@
         helicopters.clear();
         removedCars.clear();
         recoveredCars.length = 0;
+        junkyardTime=0;junkyardReadyTime=0;junkyardTrain=null;junkyardCrusher=null;
+        junkyardWorker=freshJunkyardWorker();
+        marineTime=0;nextSurfacing=75+hash(0,0,3200)*60;surfacingIndex=0;surfacing=null;
         syncJunkyard();
         spawnedCars.length = 0;
         spawnKinds.length = 0;
@@ -4736,6 +5326,7 @@
         draw();
       });
       const clock = document.getElementById("clock");
+      document.getElementById("clock-daylight").addEventListener("click",()=>setCityTime(12*3600));
       for (const [id,factor] of [["clock-slower",.5],["clock-faster",2]]) {
         document.getElementById(id).addEventListener("click", () => {
           cityClockRate=Math.max(MIN_CLOCK_RATE,Math.min(MAX_CLOCK_RATE,cityClockRate*factor));
@@ -4910,13 +5501,12 @@
           clearTimeout(popTimer);popTimer=setTimeout(hide,5000);
         }
         function begin(element) {
-          if(document.documentElement.dataset.guide==="on")return;
           clearTimeout(hideTimer);
           if(target===element&&tooltip.classList.contains("is-visible"))return;
           const delay=tooltip.classList.contains("is-visible")||performance.now()<reshowUntil?100:500;
           hide();target=element;
           showTimer=setTimeout(()=>{
-            if(document.documentElement.dataset.guide==="on"||!target?.isConnected||!target.getClientRects().length){hide();return}
+            if(!target?.isConnected||!target.getClientRects().length){hide();return}
             tooltip.textContent=description(target);
             if(!tooltip.textContent){hide();return}
             const box=target.getBoundingClientRect(),width=tooltip.offsetWidth,height=tooltip.offsetHeight;
@@ -4981,30 +5571,20 @@
         }).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["title"]});
         return hide;
       }
-      const dismissControlTooltip=installControlTooltips();
+      installControlTooltips();
       function installFirstPlayGuide() {
-        const key="fuji-city:first-play:v1",panel=document.getElementById("first-play-guide");
-        const pointer=document.getElementById("guide-pointer"),highlight=document.getElementById("guide-highlight");
-        const feedback=document.getElementById("guide-feedback"),next=document.getElementById("guide-next");
-        const steps=[
-          {target:"#city",title:"Put someone on the road",text:"Tap a road near the hand to add a car or motorcycle. The hand is only a hint: it never clicks for you. Keyboard: focus the city, press L, then Enter. Press Play if the city is paused."},
-          {target:"#city-selector",change:"destination",title:"Take a different trip",text:"Click, drag or scroll the city wheel to travel. With it focused, use the arrow keys. Each destination brings its own streets, landmarks and greeting."},
-          {target:'[data-wheel-for="film"]',change:"film",title:"Choose the film",text:"Turn this wheel to change the film treatment. Nearby controls let you pause, toggle sound or change the camera view without starting a new roll."},
-          {target:'[data-wheel-for="view-size"]',change:"view-size",title:"Make room for the city",text:"Turn the size wheel for a tiny print or a full-window view. Escape returns from full-window mode. Auto FPS adapts to the traffic nearby."},
-          {target:"#clock",title:"Wind the day forward",text:"Drag the clock or use its arrow keys. Beside it, reset restores 09:00 and x1800; the sun jumps to noon. The lower buttons change clock speed, not driving speed. Replay this guide in City notebook & extras."}
-        ];
-        let index=0,active=false,timer=0,startTimer=0,pending=false,roadPoint=null,storageAvailable=true,returnFocus=null;
+        const key="fuji-city:first-play:v1",pointer=document.getElementById("guide-pointer");
+        const lesson=document.getElementById("spawn-lesson");
+        let active=false,timer=0,startTimer=0,roadPoint=null,storageAvailable=true,completed=false;
+        canvas.parentElement.append(pointer);
         function storageError(error) {
           if(!(error instanceof DOMException))throw error;
-          console.warn("First-play guide preference could not be saved or read:",error);
+          console.warn("Road-click hint preference could not be saved or read:",error);
           storageAvailable=false;
-          const notice=document.getElementById("guide-storage");
-          notice.textContent="Browser storage is unavailable. This guide may reappear on your next visit.";notice.hidden=false;
+          toastUi("Browser storage is unavailable. The road-click hint may reappear next visit.");
         }
-        let remembered=false;
-        try { remembered=["done","skipped"].includes(localStorage.getItem(key)); } catch(error) { storageError(error); }
-        function target() { return document.querySelector(steps[index].target); }
-        function visibleRoad(blocked=null) {
+        try { completed=localStorage.getItem(key)==="done"; } catch(error) { storageError(error); }
+        function visibleRoad() {
           const viewport=canvas.closest(".view-window"),left=viewport.scrollLeft,top=viewport.scrollTop;
           const right=Math.min(viewWidth,left+viewport.clientWidth),bottom=Math.min(viewHeight,top+viewport.clientHeight);
           pointer.hidden=false;pointer.style.left="0px";pointer.style.top="0px";
@@ -5013,7 +5593,6 @@
           for(let x=left+24;x<right-24;x+=12)for(let y=top+24;y<bottom-24;y+=12){
             const cx=origin.x+matrix.a*x+matrix.c*y,cy=origin.y+matrix.b*x+matrix.d*y;
             if(cx<24||cx>innerWidth-54||cy<24||cy>innerHeight-64)continue;
-            if(blocked&&cx+54>blocked.left&&cx-24<blocked.right&&cy+64>blocked.top&&cy-24<blocked.bottom)continue;
             const point=aimWorld(x,y);
             if(!lanesAt(point.x,point.y).length)continue;
             const score=Math.hypot(x-(left+right)/2,y-(top+bottom)/2);
@@ -5036,112 +5615,145 @@
         }
         function place() {
           if(!active||document.hidden)return;
-          const element=target(),rect=element.getBoundingClientRect();
-          let avoid;
-          if(index===0){
-            const viewport=canvas.closest(".view-window");
-            let point=roadScreen();
-            if(!point||point.x<viewport.scrollLeft+24||point.x>viewport.scrollLeft+viewport.clientWidth-24
-              ||point.y<viewport.scrollTop+24||point.y>viewport.scrollTop+viewport.clientHeight-24){
-              roadPoint=visibleRoad();point=roadScreen();
-            }
-            highlight.hidden=true;
-            avoid=placeRoad();
-            if(avoid&&(avoid.left<0||avoid.right>innerWidth||avoid.top<0||avoid.bottom>innerHeight)){
-              roadPoint=visibleRoad();avoid=placeRoad();
-            }
-            if(!avoid){
-              avoid=rect;
-              feedback.textContent="No road in this crop. Scroll the photo or press L on the city to find a lane.";
-            }
-          }else{
-            const visible=rect.bottom>0&&rect.top<innerHeight&&rect.right>0&&rect.left<innerWidth&&element.getClientRects().length;
-            pointer.hidden=highlight.hidden=!visible;
-            pointer.style.left=rect.left+rect.width/2+"px";pointer.style.top=rect.top+rect.height/2+"px";
-            Object.assign(highlight.style,{left:rect.left-4+"px",top:rect.top-4+"px",width:rect.width+8+"px",height:rect.height+8+"px"});
-            avoid={left:rect.left-8,right:rect.right+8,top:rect.top-8,bottom:rect.bottom+60};
+          const viewport=canvas.closest(".view-window"),point=roadScreen();
+          if(!point||point.x<viewport.scrollLeft+24||point.x>viewport.scrollLeft+viewport.clientWidth-54
+            ||point.y<viewport.scrollTop+24||point.y>viewport.scrollTop+viewport.clientHeight-64){
+            roadPoint=visibleRoad();
           }
-          const width=panel.offsetWidth,height=panel.offsetHeight;
-          const candidates=[[innerWidth-width-12,innerHeight-height-12],[12,innerHeight-height-12],[innerWidth-width-12,12],[12,12]];
-          const placement=candidates.find(([x,y])=>x+width+8<=avoid.left||x-8>=avoid.right||y+height+8<=avoid.top||y-8>=avoid.bottom);
-          const [x,y]=placement||candidates[0];
-          panel.style.left=Math.max(12,x)+"px";panel.style.top=Math.max(12,y)+"px";
-          if(!placement&&index===0){
-            roadPoint=visibleRoad({left:x-8,right:x+width+8,top:y-8,bottom:y+height+8});
-            if(!placeRoad())feedback.textContent="No uncovered road here. Use Try control, then Enter, or choose Next.";
+          const bounds=placeRoad();
+          if(bounds&&(bounds.left<0||bounds.right>innerWidth||bounds.top<0||bounds.bottom>innerHeight)){
+            roadPoint=visibleRoad();placeRoad();
           }
         }
         function runTimer() {
           clearInterval(timer);timer=0;
-          document.documentElement.dataset.guideSleeping=String(document.hidden);
           if(active&&!document.hidden){place();timer=setInterval(place,120);}
-          else pointer.hidden=highlight.hidden=true;
-        }
-        function showStep() {
-          const element=target();
-          for(let ancestor=element.parentElement;ancestor;ancestor=ancestor.parentElement)if(ancestor instanceof HTMLDetailsElement)ancestor.open=true;
-          roadPoint=null;
-          document.getElementById("guide-progress").textContent=`First play · ${index+1} / ${steps.length}`;
-          document.getElementById("guide-title").textContent=steps[index].title;
-          document.getElementById("guide-description").textContent=steps[index].text;
-          feedback.textContent="";
-          document.getElementById("guide-back").disabled=index===0;
-          next.textContent=index===steps.length-1?"Finish":"Next";
-          panel.dataset.step=String(index);
-          pointer.classList.toggle("on-road",index===0);
-          (index===0?canvas.parentElement:document.body).append(pointer);
-          pointer.classList.remove("is-tapping");
-          element.scrollIntoView({block:"center",inline:"nearest",behavior:"instant"});
-          place();
-          requestAnimationFrame(()=>{if(active)pointer.classList.add("is-tapping");});
+          else pointer.hidden=true;
         }
         function start(replay=false) {
-          if(active)return;
-          clearTimeout(startTimer);pending=false;
-          returnFocus=replay?document.getElementById("replay-guide"):null;
-          active=true;index=0;panel.hidden=false;
-          document.documentElement.dataset.guide="on";
-          dismissControlTooltip();
-          showStep();runTimer();
-          if(replay)next.focus({preventScroll:true});
+          if(active||completed&&!replay)return;
+          clearTimeout(startTimer);
+          active=true;roadPoint=null;
+          pointer.classList.add("is-tapping");
+          lesson.textContent="Click a road to add a vehicle. Keyboard: focus the city, press L, then Enter. City options contains Play if paused.";
+          runTimer();
         }
-        function finish(result) {
-          const restoreFocus=panel.contains(document.activeElement);
-          active=false;pending=false;clearTimeout(startTimer);clearInterval(timer);timer=0;
-          panel.hidden=pointer.hidden=highlight.hidden=true;
-          delete document.documentElement.dataset.guide;
-          delete document.documentElement.dataset.guideSleeping;
-          if(storageAvailable)try { localStorage.setItem(key,result); } catch(error) { storageError(error); }
-          if(!storageAvailable)toastUi("Guide closed. Browser storage is unavailable, so it may appear next visit.");
-          if(restoreFocus) (returnFocus||target()).focus({preventScroll:true});
+        function finish() {
+          active=false;completed=true;clearTimeout(startTimer);clearInterval(timer);timer=0;
+          pointer.hidden=true;pointer.classList.remove("is-tapping");
+          lesson.textContent="Vehicle added.";
+          if(storageAvailable)try { localStorage.setItem(key,"done"); } catch(error) { storageError(error); }
         }
-        next.addEventListener("click",()=>{if(index===steps.length-1)finish("done");else{index++;showStep();}});
-        document.getElementById("guide-back").addEventListener("click",()=>{if(index>0){index--;showStep();}});
-        document.getElementById("guide-skip").addEventListener("click",()=>finish("skipped"));
-        document.getElementById("replay-guide").addEventListener("click",()=>start(true));
-        document.getElementById("guide-focus").addEventListener("click",()=>{
-          target().scrollIntoView({block:"center",inline:"nearest",behavior:"instant"});
-          place();
-          if(index===0){const point=roadScreen();if(point)Object.assign(aim,point);}
-          target().focus({preventScroll:true});
-          if(index===0)aimAtLane();
+        document.getElementById("replay-guide").addEventListener("click",()=>{
+          canvas.scrollIntoView({block:"center",inline:"nearest",behavior:"instant"});
+          start(true);
         });
-        canvas.addEventListener("vehicle-added",()=>{
-          if(active&&index===0)feedback.textContent=paused?"Vehicle added! Press Play to see it move, or choose Next.":"Vehicle added! Try another, or choose Next.";
-        });
-        document.addEventListener("change",event=>{
+        canvas.addEventListener("vehicle-added",()=>{if(active||!completed)finish();});
+        document.addEventListener("change",()=>{
           if(!active)return;
-          if(event.target.id===steps[index].change)feedback.textContent="Changed! Keep exploring, or choose Next.";
           roadPoint=null;requestAnimationFrame(place);
         });
-        document.addEventListener("keydown",event=>{
-          if(active&&event.key==="Escape"){event.preventDefault();finish("skipped");}
-        },true);
+        document.getElementById("new").addEventListener("click",()=>{roadPoint=null;place();});
+        document.getElementById("reset-view").addEventListener("click",()=>{roadPoint=null;place();});
         document.addEventListener("scroll",place,{passive:true,capture:true});
         window.addEventListener("resize",place);
-        document.addEventListener("visibilitychange",()=>{if(pending&&!document.hidden)start();runTimer();});
-        new ResizeObserver(place).observe(panel);
-        if(!remembered)startTimer=setTimeout(()=>{pending=true;if(!document.hidden)start();},600);
+        document.addEventListener("visibilitychange",runTimer);
+        if(!completed)startTimer=setTimeout(()=>start(),600);
+      }
+      function installAnalytics() {
+        // Restore opt-in before worldwide release; automatic enablement is never saved as consent.
+        const REQUIRE_ANALYTICS_CONSENT = false;
+        const id="G-XPQERNETR9",key="fuji-city:analytics:v1";
+        const panel=document.getElementById("analytics-choice"),settings=document.getElementById("analytics-settings");
+        const notice=document.getElementById("analytics-status");
+        const production=location.origin==="https://gencay.github.io"
+          &&["/fuji-city/","/fuji-city/index.html","/fuji-city/city-flight.html"].includes(location.pathname);
+        if(!production)return;
+        settings.disabled=false;
+        window["ga-disable-"+id]=true;
+        let loading=false,pageSent=false,returnFocus=null;
+        function storageError(error){
+          if(!(error instanceof DOMException))throw error;
+          console.warn("Analytics consent could not be read or saved:",error);
+          toastUi("Analytics privacy choice cannot be saved in this browser. This visit only.");
+        }
+        function configure(){
+          if(!analytics.allowed||!analytics.ready)return;
+          window.gtag("consent","update",{analytics_storage:"granted"});
+          window.gtag("config",id,{
+            send_page_view:false,allow_google_signals:false,allow_ad_personalization_signals:false,
+            cookie_domain:"none",cookie_path:"/fuji-city/",cookie_prefix:"fuji_city",cookie_expires:60*60*24*90,
+            page_title:"Fuji City",page_location:"https://gencay.github.io/fuji-city/",
+            page_referrer:document.referrer?new URL(document.referrer).origin:""
+          });
+          if(!pageSent){analyticsEvent("page_view");pageSent=true}
+          if(!paused&&!document.hidden)analyticsEvent("play_start",{trigger:REQUIRE_ANALYTICS_CONSENT?"consent":"analytics_enabled"});
+          notice.textContent="Optional Google Analytics is on. You can turn it off here.";
+        }
+        function applyChoice(choice){
+          analytics.allowed=choice==="granted"||(!REQUIRE_ANALYTICS_CONSENT&&choice!=="denied");
+          analytics.seconds=0;analytics.city=cityId;
+          window["ga-disable-"+id]=!analytics.allowed;
+          if(!analytics.allowed){
+            if(window.gtag)window.gtag("consent","update",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});
+            for(const cookie of document.cookie.split(";")){
+              const name=cookie.split("=")[0].trim();
+              if(name.startsWith("fuji_city_"))document.cookie=name+"=; Max-Age=0; Path=/fuji-city/; SameSite=Lax; Secure";
+            }
+            notice.textContent="Optional analytics is off. No gameplay events are sent.";
+            return;
+          }
+          if(analytics.ready){configure();return}
+          if(loading)return;
+          loading=true;
+          notice.textContent="Loading optional Google Analytics...";
+          window.dataLayer=window.dataLayer||[];
+          window.gtag=function(){window.dataLayer.push(arguments)};
+          window.gtag("consent","default",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});
+          window.gtag("js",new Date());
+          const script=document.createElement("script");
+          script.id="google-analytics";script.async=true;
+          script.src="https://www.googletagmanager.com/gtag/js?id="+id;
+          script.addEventListener("load",()=>{loading=false;analytics.ready=true;configure()});
+          script.addEventListener("error",()=>{
+            loading=false;script.remove();
+            console.warn("Google Analytics could not load. It may be blocked by browser privacy settings.");
+            if(analytics.allowed){
+              notice.textContent="Google Analytics could not load. The game still works; retry via Analytics privacy.";
+              toastUi("Optional analytics could not load. The game still works.");
+            }
+          });
+          document.head.append(script);
+        }
+        function choose(choice){
+          applyChoice(choice);
+          try{localStorage.setItem(key,choice)}catch(error){storageError(error)}
+          panel.hidden=true;
+          if(panel.contains(document.activeElement))(returnFocus||canvas).focus({preventScroll:true});
+        }
+        document.getElementById("analytics-accept").addEventListener("click",()=>choose("granted"));
+        document.getElementById("analytics-decline").addEventListener("click",()=>choose("denied"));
+        settings.addEventListener("click",()=>{returnFocus=settings;panel.hidden=false;document.getElementById("analytics-decline").focus()});
+        let choice=null;
+        try{choice=localStorage.getItem(key)}catch(error){storageError(error)}
+        applyChoice(choice);
+        panel.hidden=!REQUIRE_ANALYTICS_CONSENT||choice==="granted"||choice==="denied";
+        window.addEventListener("storage",event=>{
+          if(event.key!==key&&event.key!==null)return;
+          applyChoice(event.key===null?null:event.newValue);
+          panel.hidden=!REQUIRE_ANALYTICS_CONSENT||event.newValue==="granted"||event.newValue==="denied";
+        });
+        canvas.addEventListener("vehicle-added",event=>analyticsEvent("vehicle_spawn",{vehicle_type:event.detail.kind}));
+        document.getElementById("destination").addEventListener("change",()=>{
+          flushAnalyticsPlayTime();analytics.city=cityId;analyticsEvent("city_selected");
+        });
+        document.getElementById("pause").addEventListener("click",()=>{
+          if(paused)flushAnalyticsPlayTime();
+          analyticsEvent(paused?"play_pause":"play_start",{trigger:"button"});
+        });
+        document.getElementById("new").addEventListener("click",()=>analyticsEvent("new_roll"));
+        document.addEventListener("visibilitychange",()=>{if(document.hidden)flushAnalyticsPlayTime()});
+        window.addEventListener("pagehide",flushAnalyticsPlayTime);
       }
       function updatePaperMargins() {
         const figure=document.querySelector("figure"),w=figure.offsetWidth,h=figure.offsetHeight;
@@ -5199,6 +5811,7 @@
       auditTrafficGovernor();
       syncPlayback();
       installFirstPlayGuide();
+      installAnalytics();
     })();
   </script>
 <!-- CITY VERSION SCRIPT START -->

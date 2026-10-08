@@ -108,6 +108,7 @@ try{
       assert.equal(await page.evaluate(()=>qa.state.cars),before+2,city+" keyboard spawn");
       await page.evaluate(()=>qa.jam(12));
       assert.equal(await page.evaluate(()=>qa.state.cars),before+14);
+      await page.locator(".city-options").evaluate(e=>e.open=true);
       await page.locator("#pause").click();
       await page.waitForTimeout(700);
       await page.evaluate(()=>qa.pause());

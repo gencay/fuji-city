@@ -7,15 +7,19 @@ const root=fileURLToPath(new URL("../",import.meta.url));
 const chrome=process.env.CHROME_PATH||"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
 const errors=[];
+const marker='      if (paused) status.textContent = "Motion is off. Press Play to take flight.";';
+const source=readFileSync(process.env.CITY_HTML||root+"city-flight.html","utf8");
+assert.equal(source.split(marker).length,2);
 try{
   const page=await browser.newPage({viewport:{width:1440,height:1100},reducedMotion:"no-preference"});
   await page.addInitScript(()=>localStorage.setItem("fuji-city:first-play:v1","done"));
   page.on("pageerror",e=>errors.push(e.message));
   await page.route("http://city.test/**",route=>route.fulfill({
-    contentType:"text/html",body:readFileSync(process.env.CITY_HTML||root+"city-flight.html","utf8")
+    contentType:"text/html",body:source.replace(marker,'window.wheelQA={refreshLight:()=>advanceClock(60,true)};\n'+marker)
   }));
   await page.goto("http://city.test/");
   await page.waitForFunction(()=>document.getElementById("worker-status").hidden);
+  await page.locator(".city-options").evaluate(e=>e.open=true);
   await page.locator("#pause").click();
   for(const ui of ["film","gamified"]){
     await page.selectOption("#ui-style",ui,{force:true});
@@ -78,6 +82,44 @@ try{
     assert(Math.abs(crossover.after.height-crossover.before.height)<.01,JSON.stringify(crossover));
     assert(crossover.after.opacity>crossover.before.opacity);
     await page.locator('[data-wheel-for="film"]').press("Escape");await page.waitForTimeout(600);
+    for(const direction of [-1,1]){
+      await page.selectOption("#film","chrome",{force:true});
+      const refreshed=await page.evaluate(direction=>{
+        const button=document.querySelector('[data-wheel-for="film"]'),reel=button.querySelector(".wheel-reel");
+        button.dispatchEvent(new WheelEvent("wheel",{deltaY:direction*19,cancelable:true}));
+        const sample=()=>({rows:[...reel.children].map(e=>e.textContent),transform:getComputedStyle(reel).transform,
+          preview:button.getAttribute("aria-valuetext"),selected:document.getElementById("film").value});
+        const before=sample();
+        wheelQA.refreshLight();
+        return {before,after:sample()};
+      },direction);
+      assert.deepEqual(refreshed.after,refreshed.before,"Clock lighting refresh must not replace the film preview at the midpoint");
+      await page.locator('[data-wheel-for="film"]').press("Escape");await page.waitForTimeout(600);
+    }
+    await page.selectOption("#film","chrome",{force:true});
+    await page.locator("#pause").click();
+    const playing=await page.evaluate(async()=>{
+      const button=document.querySelector('[data-wheel-for="film"]'),source=document.getElementById("film");
+      const expected=source.options[source.selectedIndex+1].textContent,wrong=[];
+      let samples=0,frame;
+      const sample=()=>{
+        const text=button.querySelector(".wheel-readout").textContent;
+        if(text!==expected)wrong.push(text);
+        samples++;frame=requestAnimationFrame(sample);
+      };
+      button.dispatchEvent(new WheelEvent("wheel",{deltaY:19,cancelable:true}));
+      frame=requestAnimationFrame(sample);
+      for(let i=0;i<8;i++){
+        await new Promise(resolve=>setTimeout(resolve,90));
+        button.dispatchEvent(new WheelEvent("wheel",{deltaY:.2,cancelable:true}));
+      }
+      cancelAnimationFrame(frame);
+      return {samples,wrong,selected:source.value};
+    });
+    assert(playing.samples>0);
+    assert.deepEqual(playing.wrong,[],"The preview remains stable between wheel events while the city is playing");
+    assert.equal(playing.selected,"chrome","Preview must not apply the film before release");
+    await page.locator("#pause").click();await page.waitForTimeout(600);
     for(const viewport of [{width:1440,height:900},{width:844,height:390}]){
       await page.setViewportSize(viewport);
       await page.selectOption("#view-size","full",{force:true});
@@ -99,5 +141,5 @@ try{
   assert.equal(await page.locator("#film").evaluate(e=>e.selectedIndex),1);
   assert.equal(await wheel.evaluate(e=>e.querySelector(".wheel-reel").getAnimations({subtree:true}).length),0);
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({result:"PASS",styles:2,slowGestures:true,interruptedSnap:true,continuousCrossover:true,fullWindowRows:true,reducedMotion:true,errors}));
+  console.log(JSON.stringify({result:"PASS",styles:2,slowGestures:true,interruptedSnap:true,continuousCrossover:true,lightingRefreshPreview:true,playingPreview:true,fullWindowRows:true,reducedMotion:true,errors}));
 }finally{await browser.close()}

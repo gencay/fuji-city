@@ -22,7 +22,7 @@ window.rescueQA={
   add(road,count=2){
     const rules=laneRules(road,0,0);
     for(let i=0;i<count;i++)spawnedCars.push({...rules,id:"spawn:"+nextCarId++,kind:"car",long:false,
-      paint:colors.red,x:80+i*.2,y:rules.across,angle:0,velocity:0,speed:0,personality:.5});
+      paint:"red",x:80+i*.2,y:rules.across,angle:0,velocity:0,speed:0,personality:.5});
   },
   detect(){detectCollision([...spawnedCars]);return this.snapshot()},
   tick(dt=.05){time+=dt;advanceRescue(dt);return this.snapshot()},
@@ -39,6 +39,23 @@ window.rescueQA={
     const expected={x:-500,y:800},heli={screen:pagePoint(expected.x,expected.y)};
     releaseHelicopter(heli);
     return Math.hypot(heli.x-expected.x,heli.y-expected.y);
+  },
+  exitPaths(){
+    const originalRandom=newSeed,paths=[];
+    try{
+      for(let edge=0;edge<4;edge++){
+        let reads=0;
+        newSeed=()=>{reads++;return reads===1?edge*1073741824:2147483648};
+        const rescue={heli:{screen:{x:innerWidth/2,y:innerHeight/2,scale:1},speed:100}};
+        beginHelicopterExit(rescue);
+        const target=helicopterExitTarget(rescue),same=JSON.stringify(target)===JSON.stringify(helicopterExitTarget(rescue));
+        let arrived=false;
+        for(let step=0;step<4000&&!arrived;step++)arrived=moveToward(rescue.heli.screen,helicopterExitTarget(rescue),16.5,.05);
+        paths.push({edge:rescue.exit.edge,target,same,reads,arrived,
+          outside:target.x<0||target.x>innerWidth||target.y<0||target.y>innerHeight});
+      }
+    }finally{newSeed=originalRandom}
+    return paths;
   },
   render(){
     let flying=0;
@@ -74,6 +91,9 @@ try{
   await page.route("http://city.test/**",r=>r.fulfill({contentType:"text/html",body:source.replace(marker,hook+marker)}));
   await page.goto("http://city.test/");
   await page.waitForFunction(()=>rescueQA.ready());
+  const paths=await page.evaluate(()=>rescueQA.exitPaths());
+  assert.deepEqual(paths.map(p=>p.edge),["left","right","top","bottom"]);
+  assert(paths.every(p=>p.same&&p.reads===2&&p.arrived&&p.outside),"Exit choices are sampled once and reach all four viewport edges");
   for(const ui of ["film","gamified"]){
     await page.selectOption("#ui-style",ui,{force:true});
     assert(await page.evaluate(()=>rescueQA.handoffGeometry())<.001,"Page-to-city handoff does not teleport the helicopter");
@@ -131,7 +151,7 @@ try{
   state=await page.evaluate(()=>rescueQA.finish());
   assert.equal(state.jobs.length,0,"Turning off new crashes does not strand queued rescues");
   assert.equal(state.recovered,12);
-  assert.equal(state.gallery,8,"Gallery remains bounded, while total recoveries remain exact");
+  assert.equal(state.gallery,12,"Every delivery stays queued until packed; none are evicted by the visual limit");
   await page.evaluate(()=>{rescueQA.reset();rescueQA.add(0);rescueQA.detect()});
   await page.selectOption("#destination","dublin",{force:true});
   state=await page.evaluate(()=>rescueQA.snapshot());

@@ -19,6 +19,7 @@ try{
   for(const ui of ["film","gamified"]){
     await page.goto(base);
     await page.waitForFunction(()=>document.getElementById("worker-status").hidden);
+    await page.locator(".city-options").evaluate(e=>e.open=true);
     await page.selectOption("#ui-style",ui,{force:true});
     assert.equal(await page.locator("#clock").evaluate(e=>e.getBoundingClientRect().width),132,"Clock is 75% of its previous 176 px desktop width");
     assert.equal(await page.locator("#clock-readout").count(),0);
@@ -63,11 +64,8 @@ try{
     assert.equal(await page.locator("#clock").getAttribute("aria-valuetext"),"12:00:00");
     assert.equal(await badge.textContent(),"x7200","Daylight preserves the selected rate");
     assert.match(await page.locator("#status").textContent(),/Daylight/);
-    await page.locator("#clock-reset").focus();
-    await page.keyboard.press("Enter");
-    assert.equal(await page.locator("#clock").getAttribute("aria-valuetext"),"09:00:00");
-    assert.equal(await badge.textContent(),"x1800");
-    assert(await page.locator("#clock-faster").isEnabled());
+    assert.equal(await page.locator("#clock-reset").count(),0);
+    assert.equal(await page.locator("#clock-faster").isEnabled(),false);
     assert(await page.locator("#clock-slower").isEnabled());
     assert.equal(await page.locator("#pause").textContent(),"Play","Shortcuts preserve pause");
     assert.equal(await page.locator("#newspaper-issue").textContent(),identity,"Shortcuts preserve the city roll");
@@ -85,7 +83,7 @@ try{
           await page.mouse.move(0,0);
           const layout=await page.evaluate(()=>{
             const box=id=>{const r=document.getElementById(id).getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right,width:r.width,height:r.height};};
-            return {clock:box("clock"),buttons:["clock-reset","clock-daylight","clock-faster","clock-slower"].map(box)};
+            return {clock:box("clock"),buttons:["clock-daylight","clock-faster","clock-slower"].map(box)};
           });
           layout.buttons.forEach((button,index)=>{
             assert(button.width>=24&&button.height>=24,JSON.stringify({ui,width,size,layout}));
