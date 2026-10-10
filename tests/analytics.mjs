@@ -13,7 +13,7 @@ window.analyticsQA={
   commands(){return Array.from(window.dataLayer||[],entry=>Array.from(entry))}
 };`;
 assert.equal(source.split(marker).length,2);
-const origin="https://gencay.github.io",base=origin+"/fuji-city/",key="fuji-city:analytics:v1";
+const origin="https://fuji-city.toyling.com",base=origin+"/",key="fuji-city:analytics:v1";
 const chrome=process.env.CHROME_PATH||"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
 const errors=[];
@@ -48,7 +48,7 @@ async function settings(page){
   await page.locator("#analytics-settings").click();
 }
 try{
-  for(const url of ["http://city.test/","http://localhost/fuji-city/",origin+"/other/",base+"versions/city-flight-v14.html"]){
+  for(const url of ["http://city.test/","http://localhost:8000/","https://gencay.github.io/fuji-city/",origin+"/other/",base+"versions/city-flight-v14.html"]){
     const {page,requests}=await open({url,saved:"granted"});
     assert.equal(await page.locator("#google-analytics").count(),0);
     assert.equal(await page.locator("#analytics-choice").evaluate(e=>e.hidden),true);
@@ -99,7 +99,7 @@ try{
   assert.equal(config[2].page_referrer,"https://example.com");
   assert.equal(config[2].allow_google_signals,false);
   assert.equal(config[2].allow_ad_personalization_signals,false);
-  assert.equal(config[2].cookie_path,"/fuji-city/");
+  assert.equal(config[2].cookie_path,"/");
   assert.equal(config[2].send_page_view,false);
   assert.equal((await events(page)).filter(c=>c[1]==="page_view").length,1);
   assert(!JSON.stringify(calls).includes("do-not-send"));
@@ -116,7 +116,7 @@ try{
   await page.evaluate(()=>analyticsQA.time(30));
   play=(await events(page)).filter(c=>c[1]==="play_time");
   assert.equal(play.at(-1)[2].city_id,"dublin");assert.equal(play.at(-1)[2].play_seconds,30);
-  await page.evaluate(()=>{document.cookie="fuji_city_ga=test; Path=/fuji-city/; Secure";document.cookie="unrelated=keep; Path=/; Secure"});
+  await page.evaluate(()=>{document.cookie="fuji_city_ga=test; Path=/; Secure";document.cookie="unrelated=keep; Path=/; Secure"});
   const before=(await events(page)).length;
   await settings(page);await page.locator("#analytics-decline").click();
   assert(await page.evaluate(()=>window["ga-disable-G-XPQERNETR9"]));

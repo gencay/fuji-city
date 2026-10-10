@@ -2,7 +2,7 @@
 
 A tiny, procedural city movie in an instant-photo frame: moving people, homebound cars and motorcycles, an east-to-west day/night cycle, original synthesized sound, and film-inspired color treatments.
 
-**Play:** https://gencay.github.io/fuji-city/
+**Play:** https://fuji-city.toyling.com/
 
 The application is the self-contained [`city-flight.html`](city-flight.html). Open it directly in a modern browser, or serve this directory with `python3 -m http.server 8000`. There is no build step, backend, or application dependency. Optional Google Fonts need a connection; local font fallbacks keep the city usable offline.
 
@@ -64,11 +64,11 @@ Film treatments and instant-paper proportions are visual approximations, not off
 
 ## Optional production analytics
 
-GA4 stream **`G-XPQERNETR9`** is configured only for the current page at `https://gencay.github.io/fuji-city/` (including its `index.html` and `city-flight.html` aliases). Local files, development servers and archived versions never load the analytics tag. This integration must be explicitly published before it can collect production traffic.
+GA4 stream **`G-XPQERNETR9`** is configured only for the current page at `https://fuji-city.toyling.com/` (including its `index.html` and `city-flight.html` aliases). Local files, development servers and archived versions never load the analytics tag. This integration must be explicitly published before it can collect production traffic.
 
 **Temporary pre-worldwide-release mode:** `REQUIRE_ANALYTICS_CONSENT = false` in `installAnalytics()` hides the automatic consent prompt and enables production analytics by default, while respecting existing explicit opt-outs. Default enablement is never written as consent. **Set this flag to `true` before worldwide release** to restore the automatic opt-in prompt and prevent analytics loading until permission is given.
 
-In either mode, **City notebook & extras → Analytics privacy** opens the allow/decline controls. Explicit choices are stored locally as `fuji-city:analytics:v1`. Withdrawal disables the stream, stops application events and deletes this application's host-only, `/fuji-city/`-scoped `fuji_city_` cookies without deleting unrelated cookies. Advertising storage, ad personalization, ad user data and Google signals stay disabled. Analytics failures do not block play and are reported visibly.
+In either mode, **City notebook & extras → Analytics privacy** opens the allow/decline controls. Explicit choices are stored locally as `fuji-city:analytics:v1`. Withdrawal disables the stream, stops application events and deletes this application's host-only `fuji_city_` cookies on `fuji-city.toyling.com` (path `/`) without deleting unrelated cookies. Advertising storage, ad personalization, ad user data and Google signals stay disabled. Analytics failures do not block play and are reported visibly.
 
 GA4 can report measured visitors' referral sites, approximate countries, browsers/devices and repeat visits using pseudonymous cookies, **not named identities**. The integration sends a canonical page URL without query strings or fragments and only the referring origin, not its path or query. It never sends poem text, coordinates, seeds, names or email addresses. Cookie lifetime is 90 days, refreshed by visits. Reports exclude opt-outs and blocked tags, so they are not a complete visitor count.
 
@@ -128,4 +128,4 @@ Archives live in [`versions/`](versions/), with the catalog at [`versions/manife
 
 Work locally by default. Do not push changes or deploy without explicit approval.
 
-Pushing `main` runs the GitHub Pages workflow. `scripts/build-site.mjs` prepares the ignored `_site/` output, and `tests/versions.mjs` verifies source hashes and navigation before deployment. The site publishes the current application and the `versions/` folder, creating `index.html` from the current application so the repository keeps a single current source. Previously published flat archive URLs redirect to their new locations, preserving theme parameters and fragments; the old catalog URL remains compatible. Tests, dependencies, and local reports are not published.
+Pushing `main` runs the GitHub Pages workflow. `scripts/build-site.mjs` prepares the ignored `_site/` output, and `tests/versions.mjs` verifies source hashes and navigation before deployment. The site publishes the current application and the `versions/` folder, creating `index.html` from the current application so the repository keeps a single current source. Previously published flat archive URLs redirect to their new locations, preserving theme parameters and fragments; the old catalog URL remains compatible. Tests, dependencies, and local reports are not published. The custom domain `fuji-city.toyling.com` is set in the repository's Pages settings, not a `CNAME` file (Actions deployments ignore it); the former `https://gencay.github.io/fuji-city/` address redirects there, keeping paths.

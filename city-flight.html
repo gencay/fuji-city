@@ -5666,8 +5666,8 @@
         const id="G-XPQERNETR9",key="fuji-city:analytics:v1";
         const panel=document.getElementById("analytics-choice"),settings=document.getElementById("analytics-settings");
         const notice=document.getElementById("analytics-status");
-        const production=location.origin==="https://gencay.github.io"
-          &&["/fuji-city/","/fuji-city/index.html","/fuji-city/city-flight.html"].includes(location.pathname);
+        const production=location.origin==="https://fuji-city.toyling.com"
+          &&["/","/index.html","/city-flight.html"].includes(location.pathname);
         if(!production)return;
         settings.disabled=false;
         window["ga-disable-"+id]=true;
@@ -5682,8 +5682,8 @@
           window.gtag("consent","update",{analytics_storage:"granted"});
           window.gtag("config",id,{
             send_page_view:false,allow_google_signals:false,allow_ad_personalization_signals:false,
-            cookie_domain:"none",cookie_path:"/fuji-city/",cookie_prefix:"fuji_city",cookie_expires:60*60*24*90,
-            page_title:"Fuji City",page_location:"https://gencay.github.io/fuji-city/",
+            cookie_domain:"none",cookie_path:"/",cookie_prefix:"fuji_city",cookie_expires:60*60*24*90,
+            page_title:"Fuji City",page_location:"https://fuji-city.toyling.com/",
             page_referrer:document.referrer?new URL(document.referrer).origin:""
           });
           if(!pageSent){analyticsEvent("page_view");pageSent=true}
@@ -5698,7 +5698,7 @@
             if(window.gtag)window.gtag("consent","update",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});
             for(const cookie of document.cookie.split(";")){
               const name=cookie.split("=")[0].trim();
-              if(name.startsWith("fuji_city_"))document.cookie=name+"=; Max-Age=0; Path=/fuji-city/; SameSite=Lax; Secure";
+              if(name.startsWith("fuji_city_"))document.cookie=name+"=; Max-Age=0; Path=/; SameSite=Lax; Secure";
             }
             notice.textContent="Optional analytics is off. No gameplay events are sent.";
             return;
