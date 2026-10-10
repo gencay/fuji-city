@@ -645,7 +645,7 @@
     <header class="city-heading">
       <p class="eyebrow">A little window / an endless city</p>
       <div class="city-identity">
-      <h1><span>Somewhere,</span>
+      <h1><span>Somewhere in,</span>
         <button id="city-selector" type="button" class="wheel caption-city" data-wheel-for="destination"><span id="city-caption" data-wheel-value>Original</span></button>
       </h1>
       <p id="city-greeting" class="city-greeting" lang="en" aria-live="polite" aria-atomic="true">
@@ -757,7 +757,7 @@
             <p><strong>Current version · v15</strong><br>Nineteen cities, a hundred landmarks</p>
             <p>city-flight.html always opens the latest version. Choose a milestone to explore how the city evolved.</p>
             <ol class="version-list">
-              <li><a href="city-flight.html" aria-current="page"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations and 102 seeded motifs with randomized startup. A 132 px clock with daylight and speed controls, collapsed City options and a single road-click hint. Inline station greetings, comic postcards and a fictional local paper. Procedural boats with wakes and rare coastal whales and belugas surfacing to breathe. Concurrent helicopter rescues with random departures. A sleepy long-necked guard directs deliveries onto an intake belt; a crusher and output belt fill a scrap container. Five real running seconds after everything is packed, a steam train appears at the pickup point, hoists the container and drives forward offscreen along the shortest safe spur, with fading rails, smoke and whistles. A 600 px Polaroid / Close up with city-specific film and Auto FPS. Optional production analytics with a reversible preview default. v14 preserves the prior layout.</span></a></li>
+              <li><a href="city-flight.html" aria-current="page"><strong>v15 · current — Nineteen cities, a hundred landmarks</strong><span>19 destinations and 102 seeded motifs with randomized startup. A 132 px clock with daylight and speed controls, collapsed City options and a single road-click hint. Inline station greetings, comic postcards and a fictional local paper. Procedural boats with wakes and rare coastal whales and belugas surfacing to breathe. Concurrent helicopter rescues with random departures. A sleepy straw-hatted guard directs deliveries onto an intake belt; a crusher and output belt fill a scrap container. Five real running seconds after everything is packed, a steam train appears at the pickup point, hoists the container and drives forward offscreen along the shortest safe spur, with fading rails, smoke and whistles. A 600 px Polaroid / Close up with city-specific film and Auto FPS. Optional production analytics with a reversible preview default. v14 preserves the prior layout.</span></a></li>
               <li><a href="versions/city-flight-v0.html"><strong>v0 — The first miniature</strong><span>200 px procedural city, pedestrians, traffic and faded Chrome-style film.</span></a></li>
               <li><a href="versions/city-flight-v1.html"><strong>v1 — Click a lane</strong><span>Lane-click cars, legal directions, keyboard aiming and an original WAV chime.</span></a></li>
               <li><a href="versions/city-flight-v2.html"><strong>v2 — Helicopter recovery</strong><span>Rooftop helicopters lift crashed vehicles into a collection bay.</span></a></li>
@@ -830,7 +830,7 @@
       <p>The paper proportions use a documented square-window approximation: a 79 mm image on an 88 × 107 mm print, with 4.5 mm top/side borders and a 23.5 mm footer. The footer is 47/9 (about 5.22) times the header, and about 29.75% of the image width. Borders scale with the visible picture width; full-window mode caps their height while preserving the header/footer ratio. The simulation stays square and retains its selected pixel size. These are approximate display proportions, not a precise cutting template: <a href="https://support.polaroid.com/hc/en-us/articles/115012363647-What-are-Polaroid-photo-dimensions">Polaroid's official dimensions</a> specify an 88.47 × 107.52 mm print and 76.801 × 78.94 mm image, without separate top/bottom measurements. The square-window border breakdown comes from <a href="https://collage.recipes/guides/polaroid-photo-sizes/">Collage Recipes' measured print guide</a>.</p>
       <p>The Junkyard is hidden on a fresh roll. A rescue reveals it and expands City options; the bay fades in and gently shakes until delivery. Every wreck stays queued: the intake conveyor feeds the hydraulic crusher, and an output conveyor carries each compacted pack to a large scrap container. After all cars are packed and no delivery is pending, five real running seconds pass before collection. New rescues reset that wait; city-clock speed and manual winding do not affect it. Playback pauses and hidden tabs freeze the machinery and timer.</p>
       <p>Multiple crashes can be recovered at once. Each gets the nearest available helicopter; busy crews keep their current job. If all crews are busy, calls queue in arrival order and their wrecks continue blocking the affected roads. A crew can take the next call immediately after delivery, from its current location. An empty fleet receives one backup crew. The Junkyard keeps receiving while any recovery remains, counts every delivery once and displays the latest eight vehicles. Disabling new collisions does not cancel queued rescues; changing the city or roll does.</p>
-      <p>Helicopters without another call depart toward a stable random screen edge. A straw-hatted, long-necked guard wakes in his chair and sneezes once per roll with an AH-CHOO! text effect. He guides arrivals onto the intake belt and dodges dropping cars, but never carries them. The steam locomotive appears beside the yard with its flatcar at the pickup point, hoists the packed container in 0.8 seconds, then drives forward offscreen along the shortest map-avoiding spur in at most 1.8 seconds. It never reverses, and the last carriage clears the screen before cleanup. Tracks reveal and fade behind its movement; black smoke and original whistle/chuff sounds remain. New deliveries belong to a separate container and resume processing after loading. Recovery totals never decrease. Sound obeys mute and playback, reduced motion suppresses decorative animation, and a new city or roll clears all yard state.</p>
+      <p>Helicopters without another call depart toward a stable random screen edge. A straw-hatted guard wakes in his chair and sneezes once per roll with an AH-CHOO! text effect. He guides arrivals onto the intake belt and dodges dropping cars, but never carries them. The steam locomotive appears beside the yard with its flatcar at the pickup point, hoists the packed container in 0.8 seconds, then drives forward offscreen along the shortest map-avoiding spur in at most 1.8 seconds. It never reverses, and the last carriage clears the screen before cleanup. Tracks reveal and fade behind its movement; black smoke and original whistle/chuff sounds remain. New deliveries belong to a separate container and resume processing after loading. Recovery totals never decrease. Sound obeys mute and playback, reduced motion suppresses decorative animation, and a new city or roll clears all yard state.</p>
       <p>Each steam pickup chooses a random entry, exit, direction and rounded route around the visible map. The locomotive, tender and wagons turn individually. Tracks appear just ahead of the engine and fade over two train lengths behind the last carriage. Route-length-based travel and a two-second loading stop use running time, not the town clock rate. The route adjusts to scrolling and resizing without choosing a new random seed; the map is also clipped out of all train, smoke and rail drawing. Where the viewport has no safe margin, the route stays offscreen rather than crossing the city. The entire rail tail leaves before the collection ends.</p>
       <p>Launches, ferries and coastal cargo boats follow the waterways with gentle course changes and trailing wakes; bridge decks conceal passing boats, and moored dock boats stay put. Coastal scenes occasionally reveal a whale or beluga: an underwater shadow rises, a brief breath blooms above its blowhole, then the tail lifts and the ripples fade. These are rare, stylized cameos, not a local wildlife map. Sightings last about 14 seconds, with opportunities spaced two to five running minutes apart after an initial 75–135 seconds. Water life freezes with pause, hidden tabs or reduced motion and resets with the roll.</p>
       <p>Custom action tooltips replace native title bubbles. Hover or focus a control for 500 ms to reveal its explanation. Moving between controls while a tooltip is visible, or within half a second of its dismissal on leaving, reveals the next tooltip after 100 ms. A tooltip automatically dismisses after five seconds without pointer movement. Leaving or blurring the control waits half a second before a short fade; Escape dismisses immediately. Tooltips follow the active theme, stay within the viewport, preserve keyboard descriptions and respect reduced-motion settings.</p>
@@ -1278,6 +1278,7 @@
       const SIZE = 200;
       const BLOCK = 152;
       const ROAD = 30;
+      const NIGHT_TINT = [.62, .68, .84];
       let ZOOM = 1.44;
       const cameraScales = {close:1.44,drone:.72,space:.48};
       let automaticFps = cityDefaults[cityId].fps, nextFpsAudit = 0;
@@ -2023,12 +2024,13 @@
           const paletteToken = currentCity().palette[key];
           let pigment = paletteToken ? base.getPropertyValue("--cp-" + paletteToken).trim() : baseColors[key];
           if (!["lamp", "night"].includes(key)) {
-            const source = pigment.slice(1), shade = baseColors.night.slice(1);
-            const amount = .15 + .85 * light.day;
+            // Night scales each channel toward a moonlit tint instead of blending into one shade,
+            // preserving the relative contrast between roads, banks, water and vehicles.
+            const source = pigment.slice(1), dusk = 1 - light.day;
             const warmth = light.day * (1 - light.day) * 28;
-            pigment = "#" + [0, 2, 4].map(offset => Math.round(
-              Math.max(0, Math.min(255, parseInt(source.slice(offset, offset + 2), 16) * amount
-              + parseInt(shade.slice(offset, offset + 2), 16) * (1 - amount)
+            pigment = "#" + [0, 2, 4].map((offset, channel) => Math.round(
+              Math.max(0, Math.min(255, parseInt(source.slice(offset, offset + 2), 16)
+              * (1 - dusk * (1 - NIGHT_TINT[channel]))
               + warmth * (offset === 0 ? 1 : offset === 2 ? .25 : -.4)))
             ).toString(16).padStart(2, "0")).join("");
           }
@@ -2455,21 +2457,39 @@
           g.restore();
         }
         // Raised earth, a dark vertical face and a waterline make unbridged banks visibly hazardous.
-        for (let y = 0; y < BLOCK; y += 4) {
+        // Faces are clipped to the water and lips to land, so corners meet bridges and roads cleanly.
+        const sides = coast ? ["left"] : ["left", "right"];
+        const bankLine = (side, offset, dy) => {
+          const points = [];
+          for (let y = -8; y <= BLOCK + 8; y += 4) points.push([waterBounds(oy + y)[side] - ox + offset, y + dy]);
+          return points;
+        };
+        g.save();
+        g.beginPath();
+        for (let y = -8; y < BLOCK + 8; y += 4) {
           const a = waterBounds(oy + y), b = waterBounds(oy + y + 4);
-          for (const side of coast ? ["left"] : ["left", "right"]) {
-            const x1 = a[side] - ox, x2 = b[side] - ox;
-            const inward = side === "left" ? 1 : -1;
-            if (!coast && (mod(a[side], BLOCK) < ROAD + 3 || y < ROAD + 3)) continue;
-            polygon(g, "wall-dark", [[x1, y], [x2, y + 4], [x2 + inward * 5, y + 9], [x1 + inward * 5, y + 5]]);
-            stroke(g, "sand", 2, [[x1 - inward, y], [x2 - inward, y + 4]]);
-            g.globalAlpha = .36;
-            stroke(g, "shadow", 3, [[x1 + inward * 6, y + 6], [x2 + inward * 6, y + 10]]);
-            g.globalAlpha = .75;
-            stroke(g, "foam", .65, [[x1 + inward * 5, y + 5], [x2 + inward * 5, y + 9]]);
-            g.globalAlpha = 1;
-          }
+          g.moveTo(a.left - ox, y); g.lineTo(coast ? BLOCK + 8 : a.right - ox, y);
+          g.lineTo(coast ? BLOCK + 8 : b.right - ox, y + 4); g.lineTo(b.left - ox, y + 4); g.closePath();
         }
+        g.clip();
+        for (const side of sides) {
+          const inward = side === "left" ? 1 : -1;
+          const top = bankLine(side, 0, 0), bottom = bankLine(side, inward * 5, 5);
+          polygon(g, "wall-dark", [...top, ...bottom.toReversed()]);
+          g.globalAlpha = .36;
+          stroke(g, "shadow", 3, bankLine(side, inward * 6, 6));
+          g.globalAlpha = .75;
+          stroke(g, "foam", .65, bankLine(side, inward * 5, 5));
+          g.globalAlpha = 1;
+        }
+        g.restore();
+        g.save();
+        if (!coast) {
+          g.beginPath(); g.rect(0,0,BLOCK,BLOCK);
+          g.rect(0,0,BLOCK,ROAD); g.rect(0,ROAD,ROAD,BLOCK-ROAD); g.clip("evenodd");
+        }
+        for (const side of sides) stroke(g, "sand", 2, bankLine(side, side === "left" ? -1 : 1, 0));
+        g.restore();
         for (let i = 0; i < 28; i++) {
           const x = hash(bx, by, 1500 + i) * BLOCK;
           const y = hash(bx, by, 1600 + i) * BLOCK;
@@ -4216,7 +4236,7 @@
           else if(worker.phase==="wake"&&worker.elapsed>=.9){
             worker.phase="sneeze";worker.elapsed=0;worker.sneezeAt=worker.time;worker.sneezes++;
             playSound("sneeze");
-            recordCityEvent("farmhand-woke","The long-necked guard woke in his chair. AH-CHOO! Then he waved the helicopter toward the intake belt.");
+            recordCityEvent("farmhand-woke","The straw-hatted guard woke in his chair. AH-CHOO! Then he waved the helicopter toward the intake belt.");
           }else if(worker.phase==="sneeze"&&worker.elapsed>=.8){
             worker.awake=true;worker.phase="idle";worker.elapsed=0;
           }
@@ -4683,7 +4703,7 @@
       function drawFarmhand() {
         const worker=junkyardWorker,pose=farmhandPose(),motion=uiMotion&&!reducedMotion.matches;
         const sleepy=worker.phase==="sleep",sneezing=worker.phase==="sneeze";
-        const neck=sleepy?27:sneezing?30:worker.phase==="wake"?43:39;
+        const neck=sleepy?25:sneezing?26:worker.phase==="wake"?28:27,tilt=pose.lean*.3;
         air.save();air.translate(pose.x,pose.y);air.lineCap="round";
         stroke(air,"black",2.2,[[-3,-9],[-4-pose.stride,0],[-1-pose.stride,0]]);
         stroke(air,"black",2.2,[[3,-9],[5+pose.stride,0],[8+pose.stride,0]]);
@@ -4692,13 +4712,13 @@
         rect(air,"roof-blue",-3,-18,6,10);
         disc(air,"gold",-1,-16,.7);disc(air,"gold",2,-16,.7);
         air.strokeStyle=colors.black;air.lineWidth=4;
-        air.beginPath();air.moveTo(0,-21);air.bezierCurveTo(-3,-30,pose.lean,-neck+9,pose.lean,-neck);air.stroke();
+        air.beginPath();air.moveTo(0,-20);air.lineTo(tilt*.7,-neck+2);air.stroke();
         air.strokeStyle=colors.warm;air.lineWidth=2.5;air.stroke();
-        disc(air,"warm",pose.lean,-neck,3.5);
-        disc(air,"warm",pose.lean+3,-neck+1,1.4);
-        stroke(air,"black",.8,[[pose.lean+1,-neck],[pose.lean+2,-neck+(sleepy||sneezing?0:-.5)]]);
-        stroke(air,"black",.8,[[pose.lean+2,-neck+2],[pose.lean+4,-neck+2]]);
-        air.save();air.translate(pose.lean,-neck-4);air.rotate(sleepy?-.3:sneezing?.25:-.12);
+        disc(air,"warm",tilt,-neck,3.5);
+        disc(air,"warm",tilt+3,-neck+1,1.4);
+        stroke(air,"black",.8,[[tilt+1,-neck],[tilt+2,-neck+(sleepy||sneezing?0:-.5)]]);
+        stroke(air,"black",.8,[[tilt+2,-neck+2],[tilt+4,-neck+2]]);
+        air.save();air.translate(tilt,-neck-4);air.rotate(sleepy?-.3:sneezing?.25:-.12);
         rect(air,"gold",-4,-4,8,5);
         stroke(air,"black",.7,[[-4,-1],[4,-1]]);
         air.fillStyle=colors.gold;air.beginPath();air.ellipse(0,1,8,1.6,0,0,Math.PI*2);air.fill();air.restore();
@@ -4707,7 +4727,7 @@
           const arriving=incidents.find(rescue=>rescue.cars.length&&["carry","drop"].includes(rescue.stage));
           const landing=arriving?.scrap?.[0]?junkyardPlacement(arriving.scrap[0]):{x:40/240,y:79/148};
           const dx=landing.x*240-pose.x,dy=landing.y*148-(pose.y-20),length=Math.max(1,Math.hypot(dx,dy));
-          const hx=dx/length*23,hy=-20+dy/length*23-wave,side=Math.sign(dx)||-1;
+          const hx=dx/length*16,hy=-20+dy/length*16-wave,side=Math.sign(dx)||-1;
           stroke(air,"warm",2,[[side*4,-19],[hx*.6,-23],[hx,hy]]);
           stroke(air,"warm",2,[[-side*4,-19],[-side*11,-14],[-side*15,-14]]);
           stroke(air,"gold",1.4,[[hx,hy],[hx+side*3,hy-1]]);

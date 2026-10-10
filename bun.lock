@@ -1,0 +1,17 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "fuji-city",
+      "devDependencies": {
+        "playwright": "1.63.0",
+      },
+    },
+  },
+  "packages": {
+    "playwright": ["playwright@1.63.0", "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/playwright/-/playwright-1.63.0.tgz", { "dependencies": { "playwright-core": "1.63.0" }, "bin": { "playwright": "cli.js" } }, "sha1-mbVvn2mxtwxE8Av4Sy/lI0iuJRE="],
+
+    "playwright-core": ["playwright-core@1.63.0", "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/playwright-core/-/playwright-core-1.63.0.tgz", { "bin": { "playwright-core": "cli.js" } }, "sha1-5XZlvDKEbCE6w5oeTVvGIo52s3Y="],
+  }
+}
