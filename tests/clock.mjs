@@ -73,6 +73,24 @@ try{
     await page.locator("#clock-daylight").focus();
     await page.keyboard.press("Space");
     assert.equal(await page.locator("#clock").getAttribute("aria-valuetext"),"12:00:00");
+    const tonalSpread=async()=>{
+      await page.waitForTimeout(1200);
+      return page.locator("#city").evaluate(canvas=>{
+        const data=canvas.getContext("2d").getImageData(0,0,canvas.width,canvas.height).data,values=[];
+        const linear=c=>(c/=255)<=.04045?c/12.92:((c+.055)/1.055)**2.4;
+        for(let i=0;i<data.length;i+=4*37)values.push(.2126*linear(data[i])+.7152*linear(data[i+1])+.0722*linear(data[i+2]));
+        values.sort((a,b)=>a-b);
+        const low=values[Math.floor(values.length*.1)],high=values[Math.floor(values.length*.9)];
+        return {low,high,ratio:(high+.05)/(low+.05)};
+      });
+    };
+    const noon=await tonalSpread();
+    await page.locator("#clock").press("Home");
+    for(let hour=0;hour<6;hour++)await page.locator("#clock").press("PageDown");
+    assert.equal(await page.locator("#clock").getAttribute("aria-valuetext"),"00:00:00");
+    const midnight=await tonalSpread();
+    assert(midnight.ratio>=noon.ratio*.8&&midnight.high>=.1,`Night keeps readable city contrast: ${JSON.stringify({noon,midnight})}`);
+    await page.locator("#clock-daylight").click();
     for(const theme of ["light","dark"]){
       await page.selectOption("#ui-theme",theme,{force:true});
       for(const [width,height] of [[1440,1000],[390,844],[320,568],[844,390]]){
