@@ -36,7 +36,7 @@ try{
       assert.equal(await page.locator(".city-extras .version-picker").count(),1);
       assert.equal(await page.locator(".version-picker > summary").isVisible(),false);
       await openPicker();
-      assert.equal(await page.locator(".version-list a").count(),16);
+      assert.equal(await page.locator(".version-list a").count(),17);
       const panel=await page.locator(".version-panel").boundingBox();
       assert(panel.x>=0&&panel.x+panel.width<=width+1,"Picker fits the viewport");
       await page.keyboard.press("Escape");
@@ -49,8 +49,8 @@ try{
       const sidebar=await page.locator(".city-journal").boundingBox();
       assert(fullPanel.x>=sidebar.x&&fullPanel.x+fullPanel.width<=sidebar.x+sidebar.width+1,"Full-window picker fits its sidebar");
       await page.screenshot({path:root+`test-results/notebook-versions-${ui}-${width}.png`});
-      await page.locator('.version-list a[href="versions/city-flight-v14.html"]').click();
-      await page.waitForURL(base+"versions/city-flight-v14.html");
+      await page.locator('.version-list a[href="versions/city-flight-v15.html"]').click();
+      await page.waitForURL(base+"versions/city-flight-v15.html");
     }
   }
   const checkPager=async version=>{
@@ -58,7 +58,7 @@ try{
     assert.equal(await page.locator("html").getAttribute("data-theme"),"dark");
     assert.equal(await page.locator(".version-pager").evaluate(e=>e.parentElement===document.body),true);
     const next=page.locator(".version-pager a[rel=next]");
-    const expected=version===14?"city-flight.html":`versions/city-flight-v${version+1}.html`;
+    const expected=version===15?"city-flight.html":`versions/city-flight-v${version+1}.html`;
     assert.equal(await next.evaluate(e=>e.href),base+expected+"?scoutTheme=dark");
     for(const step of await page.locator(".version-step").all()){
       const box=await step.boundingBox();
@@ -76,24 +76,24 @@ try{
     await page.setViewportSize({width,height:900});
     await go("city-flight-v0.html?scoutTheme=dark#archive");
     await page.waitForURL(base+"versions/city-flight-v0.html?scoutTheme=dark#archive");
-    for(let version=0;version<15;version++){
+    for(let version=0;version<16;version++){
       await checkPager(version);
-      if([0,7,14].includes(version))await page.screenshot({path:root+`test-results/archive-v${version}-${width}.png`});
+      if([0,7,15].includes(version))await page.screenshot({path:root+`test-results/archive-v${version}-${width}.png`});
       await page.locator(".version-pager a[rel=next]").click();
-      await page.waitForURL(base+(version===14?"city-flight.html":`versions/city-flight-v${version+1}.html`)+"?scoutTheme=dark");
+      await page.waitForURL(base+(version===15?"city-flight.html":`versions/city-flight-v${version+1}.html`)+"?scoutTheme=dark");
     }
     assert.equal(await page.locator(".version-pager").count(),0);
   }
   await page.setViewportSize({width:1440,height:1000});
-  await go("versions/city-flight-v14.html?scoutTheme=dark");
-  for(let version=14;version>0;version--){
+  await go("versions/city-flight-v15.html?scoutTheme=dark");
+  for(let version=15;version>0;version--){
     const previous=page.locator(".version-pager a[rel=prev]");
     await previous.focus();
     await page.keyboard.press("Enter");
     await page.waitForURL(base+`versions/city-flight-v${version-1}.html?scoutTheme=dark`);
     await checkPager(version-1);
   }
-  for(const version of [11,14]){
+  for(const version of [11,15]){
     for(const viewport of [{width:1440,height:900},{width:390,height:844},{width:844,height:390},{width:844,height:550}]){
       await page.setViewportSize(viewport);
       await go(`versions/city-flight-v${version}.html?scoutTheme=light`);
@@ -114,5 +114,5 @@ try{
     }
   }
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({result:"PASS",pickerStyles:2,archives:15,widths:[1440,390],reverseKeyboardSteps:14,fullWindowCases:8,errors}));
+  console.log(JSON.stringify({result:"PASS",pickerStyles:2,archives:16,widths:[1440,390],reverseKeyboardSteps:15,fullWindowCases:8,errors}));
 }finally{await browser.close()}

@@ -1,6 +1,6 @@
 # Fuji City
 
-A tiny, procedural city movie in an instant-photo frame: moving people, homebound cars and motorcycles, an east-to-west day/night cycle, original synthesized sound, and film-inspired color treatments.
+A tiny, procedural city movie in an instant-photo frame: moving people, homebound cars and motorcycles, an east-to-west day/night cycle, original synthesized sound, and film-inspired color treatments. Watch it as a Sandbox, or **Play a day**: a gentle rail game where you send taxis to waving passengers before their landmark scrolls away.
 
 **Play:** https://fuji-city.toyling.com/
 
@@ -27,6 +27,23 @@ Each destination's postcard is signed on the right with an absurd, invented hono
 **Read the local paper** in the notebook changes with the selected city, combining local landmark jokes with miniature-traffic absurdities. It is labeled **entirely made up / local satire**; none of its headlines or poet titles represent real reporting, offices or writers. The stories work offline as accessible, high-contrast text following the existing light/dark palette. The page and full-window backgrounds retain the original film or Gamified styling, without newspaper wallpaper.
 
 The opening landmark is drawn from each city's complete set using the fresh roll's random seed, including on first load. The notebook identifies it; revisiting keeps it. Random selection allows repeats. Wheel gestures wait for 350 ms of quiet before committing, preserve their visible fractional position when a snap is interrupted, and use matching current/neighbor typography to avoid flicker. The wheel owns its preview label; city-clock lighting refreshes never overwrite an in-progress film selection.
+
+## Play a day
+
+**Play a day** (City options, beside Pause) turns one 06:00–21:00 day over the selected city into a short run. Sandbox stays the default on every visit and behaves exactly as before; nothing here changes while a day isn't running. This is milestone M1 of [`GAME-DESIGN.md`](GAME-DESIGN.md), built as described in [`M1-BUILD-PLAN.md`](M1-BUILD-PLAN.md).
+
+- **The camera is the timer.** A start card picks a pace (**Sunday drive**, **Commute** or **Rush**: ×0.8, ×1 or ×1.15 flight speed, fares every 35, 25 or 18 s, signal holds of 12, 10 or 8 s, token refills every 5, 6 or 8 s) and a 6- or 10-minute day (x150 or x90 clock). Choices are saved in `fuji-city:game-settings:v1`. Start day resets the roll, sets 06:00 and plays the city, even with reduced motion.
+- **Passengers and taxis.** A passenger appears in the top half of the print waving a gold flag lettered with a landmark ahead. Tap within 35 world units to send a gold taxi from their curb; it routes to that landmark's curb. Arrive before the drop-off scrolls off the bottom: +40, plus 1 per second left (up to +20), with streak multipliers of ×1.1, ×1.2 and ×1.3 at 3, 5 and 10 fares. A taxi that crashes, falls behind or misses its deadline costs −10. Unpicked passengers who scroll away cost nothing but the streak. At most two passengers wait at once. Each fare is validated once with a real route and only offered when an estimated trip fits comfortably inside its deadline.
+- **Spawn tokens.** Every taxi or car costs one of three tokens, which refill on their own. The cursor ring previews each tap: green for a clear lane, amber and dashed for a crowded gap, gold over a passenger with a clear curb, white over a junction.
+- **One-tap signals.** Tapping a junction gives green to the other direction: 1 s amber, 0.5 s all-red, the preset's hold, a 1 s amber tail, then the normal 24 s cycle. If your taxi is waiting there, the tap gives green to its side and a taxi crossing on your green earns +5. Busy approaches show count badges, and **+N through** pops when the hold ends. Taps during a pedestrian crossing wait for the walkers. Mini-roundabouts are self-running. Taps never cause crashes; only spawns can.
+- **Crash causes.** When a vehicle you added crashes, both vehicles are outlined in red and the gap it was dropped into is ringed for 0.6 s (a static 1.5 s with reduced motion), and the status line says why: *dropped into a crowded gap* or *met cross traffic N s after you added it*.
+- **Score and no hard game over.** Any vehicle reaching home in view adds +10 (+15 if you added it); each crashed vehicle −30; a vehicle lost in water −50. Waiting longer than a full signal cycle costs −0.125 per vehicle-second, capped so busy cities cannot drain a good day. Junctions you flipped are graded as they leave: Smooth +5, Jammed −5. The score never drops below 0 and nothing ends a day early. With Collisions off, the run is **Relaxed** and capped at ★★.
+- **HUD and locks.** The Polaroid footer shows a day bar with rush-hour ticks at 08:00 and 17:00, the score, tokens, streak and pace, collapsing to one line on small prints. The Chronicle gains a **Today** row. Clock, print size, frame rate and camera are locked during a day (*"Locked for today. Try it in Sandbox."*). Changing city, rolling or revisiting asks *"Abandon today?"*. A reload resumes nothing.
+- **Sunset.** At 21:00 taps stop for five quiet seconds. The postcard becomes your score card (`9/11 fares · 142 home · 2 wrecks · ★★☆`, the city's evening line, and the poet *certifying* your points), and the local paper prints a **DAY N EDITION** led by up to three stories about your day, still labeled entirely made up. Stars: 300, 600 and 900 points for a 10-minute day, ×0.6 for 6 minutes. **Play another day**, **Back to Sandbox** (a fresh poem and paper) or **Read today's paper**.
+- **Keyboard.** Focus the city: **F** cycles waiting passengers, **T** sends a taxi, **J** / **Shift+J** cycles junctions, **Enter** acts on the aim (taxi, flip or spawn). Status announcements cover fares, deadlines under 10 s, crash causes and the end of the day, never score ticks.
+- **Tips.** Three one-time tips (`fuji-city:game-tips:v1`): send a taxi, wave it through a junction, and taps never cause crashes. Game storage is only read once you open the start card, and the game still plays when storage is unavailable.
+
+Pace, deadlines, scoring and stars were tuned in scripted full-day simulations across Original, Paris, London, Lisbon and Tokyo: a passive day scores about 0, and a player who sends taxis on clear curbs and flips junctions for them scores roughly 100–1,000. The base flight speed matches Sandbox (about 42 s from top to bottom at 600 px Close) rather than the design draft's faster ×1.4, which let the camera outrun taxis queued on single-lane streets. Human playtests (M1 Step 12) are still to come.
 
 ## Controls
 
@@ -105,6 +122,11 @@ bun tests/rescue.mjs
 bun tests/train.mjs
 bun tests/water-life.mjs
 bun tests/analytics.mjs
+bun tests/game-mode.mjs
+bun tests/day-run.mjs
+bun tests/fares.mjs
+bun tests/signals.mjs
+bun tests/day-card.mjs
 bun tests/stress.mjs --rounds=10
 ```
 
@@ -116,13 +138,15 @@ Reports and screenshots are saved locally in ignored `test-results/`. Browser an
 
 Analytics regression uses a stub vendor script: no test traffic reaches the real GA4 property. It checks preview default-on behavior without saved consent, existing opt-outs, the restored opt-in mode's no-requests-before-consent behavior, the production allowlist, remembered decisions, withdrawal and cookie cleanup, safe URL fields, gameplay/time events, mobile consent controls and blocked-script behavior.
 
+Play a day regressions drive the game through a test-only `?game-test=1` hook (`window.__fujiGame`) that advances the same frame function as playback in fixed 0.02 s steps; production pages never expose it. `game-mode` checks the hidden hook, Sandbox's unchanged flight pace and global signals, the start card and saved choices, and abandoning. `day-run` covers x90/x150 days, every clock and view lock, abandon prompts, preset pacing, a 20-crash storm that floors the score at 0 and still reaches dusk, the +15 homecoming, HUD fit from 100 to 1000 px and full window, and reduced-motion starts. `fares` checks steady, dry, routable fares in five cities (including left-hand London and Tokyo), a real pointer tap that sends a taxi, delivery, deadline failure, free misses, tokens, crash flashes in both motion modes and F/T keys. `signals` samples the amber/all-red/hold/tail sequence, pending flips during crossings, roundabouts, J/Enter, pointer taps, 1,000 random junction taps without a single crash, and taxi priority. `day-card` checks the score postcard, end card, DAY N paper, postcard fit across print sizes, Back to Sandbox and Play another day.
+
 The startup regression controls only the initial random draw to verify all 19 destinations, their matching controls, city defaults and workers, plus preserved manual selection and roll behavior. The rescue regression covers simultaneous collision detection, nearest-available assignment, busy-crew queues, immediate reassignment after delivery, multi-incident road blocking and rendering, backup dispatch, exact recovery totals, retention of every uncollected delivery, cancelled empty calls and city resets.
 
 Junkyard checks also cover intake-belt landing positions, four-direction helicopter exits, the guard's once-per-roll wake/sneeze, delivery guidance and lean-away dodge, fixed guard position during processing, and safe container handoff. Railway checks verify shortest-path fixtures and sample rendered pixels across loading/departure, both interfaces, themes, narrow screens and full-window mode: no map overlap, stable routes without extra laps, a pickup duration of at most 2.6 seconds, forward-only travel for every carriage, the tail clearing the screen, two-train-length rail fading, and complete track cleanup. The water-life regression checks world-space motion and tangent headings across all 19 cities, bounded generation, bank/bridge masking, pause and both motion preferences, deterministic routes, both species' animation phases, rarity over a simulated hour, small-print rendering and reset.
 
 ## Versions and deployment
 
-The version picker lives inside **City notebook & extras**, keeping the city heading clear. It preserves v0–v14 alongside the current v15. Archived pages have large, labeled previous/next chevrons at the top: left goes older, right goes newer, and v14 leads back to the current page. The first version disables the older control. Links support keyboard focus/Enter and preserve explicit light/dark theme parameters without taking over the city's arrow-key controls. Archives with a notebook also keep their picker there; earlier pages retain their original picker location.
+The version picker lives inside **City notebook & extras**, keeping the city heading clear. It preserves v0–v15 alongside the current v16. Archived pages have large, labeled previous/next chevrons at the top: left goes older, right goes newer, and v15 leads back to the current page. The first version disables the older control. Links support keyboard focus/Enter and preserve explicit light/dark theme parameters without taking over the city's arrow-key controls. Archives with a notebook also keep their picker there; earlier pages retain their original picker location.
 
 Archives live in [`versions/`](versions/), with the catalog at [`versions/manifest.json`](versions/manifest.json); catalog paths are relative to that folder. Only the current application stays in the repository root. Archived simulation code is intentionally unchanged; only the marked version-navigation blocks are updated, with their full-file hashes refreshed. Old limitations remain. The navigation regression checks the notebook picker, chronological links, boundary controls, theme propagation, mobile layouts, and full-window access.
 
